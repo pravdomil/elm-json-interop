@@ -3921,29 +3921,11 @@ var $author$project$TypeScript$fromDeclaration = function (_v0) {
 	}
 };
 var $author$project$TypeScript$fromFileToTs = function (file) {
-	var name = A2(
-		$elm$core$String$join,
-		'.',
-		$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(file.bB)));
-	var definitions = A2(
-		$elm$core$String$join,
-		'\n',
-		A2(
-			$elm$core$List$map,
-			$elm$core$Basics$append('  '),
-			A2(
-				$elm$core$String$split,
-				'\n',
-				A2(
-					$elm$core$String$join,
-					'\n\n',
-					A2($elm$core$List$filterMap, $author$project$TypeScript$fromDeclaration, file.bm)))));
-	return A2(
-		$elm$core$String$join,
-		'\n',
+	var definitions = _Utils_ap(
 		_List_fromArray(
-			['export namespace ' + (name + ' {'), '  export type Maybe<a> = a | null', '  ', definitions, '}', '']));
+			['export type Maybe<a> = a | null']),
+		A2($elm$core$List$filterMap, $author$project$TypeScript$fromDeclaration, file.bm));
+	return A2($elm$core$String$join, '\n\n', definitions) + '\n';
 };
 var $elm$core$Basics$identity = function (x) {
 	return x;

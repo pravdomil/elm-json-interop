@@ -3,7 +3,6 @@ module TypeScript exposing (fromFileToTs)
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
-import Elm.Syntax.Module as Module
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Range exposing (emptyRange)
@@ -15,24 +14,11 @@ import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 fromFileToTs : File -> String
 fromFileToTs file =
     let
-        name =
-            String.join "." <| Module.moduleName <| Node.value file.moduleDefinition
-
         definitions =
-            String.join "\n" <|
-                List.map ((++) "  ") <|
-                    String.split "\n" <|
-                        String.join "\n\n" <|
-                            List.filterMap fromDeclaration file.declarations
+            [ "export type Maybe<a> = a | null" ]
+                ++ List.filterMap fromDeclaration file.declarations
     in
-    String.join "\n"
-        [ "export namespace " ++ name ++ " {"
-        , "  export type Maybe<a> = a | null"
-        , "  "
-        , definitions
-        , "}"
-        , ""
-        ]
+    String.join "\n\n" definitions ++ "\n"
 
 
 fromDeclaration : Node Declaration -> Maybe String
