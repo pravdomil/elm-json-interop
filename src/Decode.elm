@@ -29,6 +29,7 @@ fromFileToDecoder file =
         , "import Set"
         , ""
         , "decodeSet a = map Set.fromList (list a)"
+        , ""
         , "decodeDict _ a = dict a"
         , ""
         , definitions

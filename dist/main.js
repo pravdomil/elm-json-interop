@@ -3390,7 +3390,7 @@ var $author$project$Decode$fromFileToDecoder = function (file) {
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module ' + (name + '.Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'decodeSet a = map Set.fromList (list a)', 'decodeDict _ a = dict a', '', definitions, '']));
+			['module ' + (name + '.Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'decodeSet a = map Set.fromList (list a)', '', 'decodeDict _ a = dict a', '', definitions, '']));
 };
 var $author$project$Utils$Argument = F4(
 	function (prefix, _char, suffix, disabled) {
@@ -3714,7 +3714,7 @@ var $author$project$Encode$fromFileToEncoder = function (file) {
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module ' + (name + '.Encode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Encode exposing (..)', '', 'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null', 'encodeDict _ b c = dict identity b c', '', definitions, '']));
+			['module ' + (name + '.Encode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Encode exposing (..)', '', 'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null', '', 'encodeDict _ b c = dict identity b c', '', definitions, '']));
 };
 var $author$project$TypeScript$fromRecord = function (a) {
 	return '{ ' + (A2(

@@ -29,6 +29,7 @@ fromFileToEncoder file =
         , "import Json.Encode exposing (..)"
         , ""
         , "encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null"
+        , ""
         , "encodeDict _ b c = dict identity b c"
         , ""
         , definitions
