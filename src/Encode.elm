@@ -79,7 +79,7 @@ fromType a =
 
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
-    fromType a ++ fromTypeAnnotation (Argument "" 0 False) a.typeAnnotation
+    fromType a ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
 
 
 fromCustomType : Type -> String
@@ -121,8 +121,11 @@ fromCustomTypeConstructor (Node _ a) =
 
                 _ ->
                     Tupled a.arguments
+
+        decoder =
+            fromTypeAnnotation (Argument "" 1 "" False) (Node emptyRange val)
     in
-    name ++ params ++ " -> " ++ fromRecord (Argument "" 1 False) [ Node emptyRange ( Node emptyRange name, Node emptyRange val ) ]
+    name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ decoder ++ " ) ]"
 
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
@@ -223,4 +226,4 @@ fromRecord argument a =
 
 fromRecordField : Argument -> Node RecordField -> String
 fromRecordField argument (Node _ ( Node _ a, b )) =
-    "( " ++ toJsonString a ++ ", " ++ fromTypeAnnotation argument b ++ " )"
+    "( " ++ toJsonString a ++ ", " ++ fromTypeAnnotation { argument | suffix = "." ++ a } b ++ " )"

@@ -4,22 +4,26 @@ import Json.Encode
 
 
 type alias Argument =
-    { prefix : String, char : Int, disabled : Bool }
+    { prefix : String, char : Int, suffix : String, disabled : Bool }
 
 
 argumentToString : Argument -> String
-argumentToString { char, prefix, disabled } =
+argumentToString { prefix, char, suffix, disabled } =
     case disabled of
         True ->
             ""
 
         False ->
+            let
+                constant =
+                    stringFromAlphabet char ++ suffix
+            in
             case prefix == "" of
                 True ->
-                    " " ++ stringFromAlphabet char
+                    " " ++ constant
 
                 False ->
-                    " (" ++ prefix ++ " " ++ stringFromAlphabet char ++ ")"
+                    " (" ++ prefix ++ " " ++ constant ++ ")"
 
 
 type alias Prefix =
