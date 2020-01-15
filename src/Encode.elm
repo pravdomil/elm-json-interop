@@ -10,7 +10,7 @@ import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
-import Utils exposing (Argument, argumentToString, stringFromAlphabet, toJsonString, tupleDestructor)
+import Utils exposing (Argument, argumentToString, stringFromAlphabet, toJsonString)
 
 
 fromFileToEncoder : File -> String
@@ -204,10 +204,13 @@ fromTyped argument (Node _ ( name, str )) nodes =
 fromTuple : Argument -> List (Node TypeAnnotation) -> String
 fromTuple argument a =
     let
+        arguments =
+            String.join ", " <| List.indexedMap (\i _ -> stringFromAlphabet (i + argument.char + 1)) a
+
         map i b =
-            fromTypeAnnotation { argument | prefix = tupleDestructor (List.length a) i } b
+            fromTypeAnnotation { argument | char = i + argument.char + 1, disabled = False } b
     in
-    "list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ]"
+    "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 
 
 fromCustomTuple : Argument -> List (Node TypeAnnotation) -> String

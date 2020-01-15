@@ -50,38 +50,6 @@ stringFromAlphabet a =
     String.fromChar <| Char.fromCode <| (+) 97 a
 
 
-tupleDestructor : Int -> Int -> String
-tupleDestructor len i =
-    case len of
-        2 ->
-            case i + 1 of
-                1 ->
-                    "Tuple.first"
-
-                2 ->
-                    "Tuple.second"
-
-                _ ->
-                    ""
-
-        3 ->
-            case i + 1 of
-                1 ->
-                    "(\\( first, _, _ ) -> first)"
-
-                2 ->
-                    "(\\( _, second, _ ) -> second)"
-
-                3 ->
-                    "(\\( _, _, third ) -> third)"
-
-                _ ->
-                    ""
-
-        _ ->
-            ""
-
-
 tupleConstructor : Int -> String
 tupleConstructor len =
     case len of
