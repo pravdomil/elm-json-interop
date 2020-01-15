@@ -3928,13 +3928,22 @@ var $author$project$TypeScript$fromFileToTs = function (file) {
 			$stil4m$elm_syntax$Elm$Syntax$Node$value(file.bB)));
 	var definitions = A2(
 		$elm$core$String$join,
-		'\n\n',
-		A2($elm$core$List$filterMap, $author$project$TypeScript$fromDeclaration, file.bm));
+		'\n',
+		A2(
+			$elm$core$List$map,
+			$elm$core$Basics$append('  '),
+			A2(
+				$elm$core$String$split,
+				'\n',
+				A2(
+					$elm$core$String$join,
+					'\n\n',
+					A2($elm$core$List$filterMap, $author$project$TypeScript$fromDeclaration, file.bm)))));
 	return A2(
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['namespace ' + (name + ' {'), 'export type Maybe<a> = a | null', '', definitions, '}', '']));
+			['namespace ' + (name + ' {'), '  export type Maybe<a> = a | null', '  ', definitions, '}', '']));
 };
 var $elm$core$Basics$identity = function (x) {
 	return x;

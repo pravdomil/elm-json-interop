@@ -19,12 +19,16 @@ fromFileToTs file =
             String.join "." <| Module.moduleName <| Node.value file.moduleDefinition
 
         definitions =
-            String.join "\n\n" <| List.filterMap fromDeclaration file.declarations
+            String.join "\n" <|
+                List.map ((++) "  ") <|
+                    String.split "\n" <|
+                        String.join "\n\n" <|
+                            List.filterMap fromDeclaration file.declarations
     in
     String.join "\n"
         [ "namespace " ++ name ++ " {"
-        , "export type Maybe<a> = a | null"
-        , ""
+        , "  export type Maybe<a> = a | null"
+        , "  "
         , definitions
         , "}"
         , ""
