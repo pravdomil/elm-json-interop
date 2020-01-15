@@ -1,4 +1,4 @@
-# elm-json-interop
+# Elm JSON Interop
 
 ## Usage
 
