@@ -211,7 +211,7 @@ fromCustomTuple : Argument -> List (Node TypeAnnotation) -> String
 fromCustomTuple argument a =
     let
         map i b =
-            fromTypeAnnotation { argument | i = argument.i + i } b
+            fromTypeAnnotation { argument | char = argument.char + i } b
     in
     "list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ]"
 
