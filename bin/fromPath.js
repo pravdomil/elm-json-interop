@@ -21,7 +21,7 @@ const file = async p => {
   writeFileSync(newFolder + "/Decode.elm", decode)
   writeFileSync(newFolder + "/" + pathBasename + ".ts", ts)
 
-  return "I have created encoders, decoders and TypeScript definitions in folder:\n" + newFolder
+  return "I have generated JSON encoders/decoders and TypeScript definitions in folder:\n" + newFolder
 }
 
 const convert = a => {
