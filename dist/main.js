@@ -3943,7 +3943,7 @@ var $author$project$TypeScript$fromFileToTs = function (file) {
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['namespace ' + (name + ' {'), '  export type Maybe<a> = a | null', '  ', definitions, '}', '']));
+			['export namespace ' + (name + ' {'), '  export type Maybe<a> = a | null', '  ', definitions, '}', '']));
 };
 var $elm$core$Basics$identity = function (x) {
 	return x;

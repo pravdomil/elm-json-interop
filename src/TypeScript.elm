@@ -26,7 +26,7 @@ fromFileToTs file =
                             List.filterMap fromDeclaration file.declarations
     in
     String.join "\n"
-        [ "namespace " ++ name ++ " {"
+        [ "export namespace " ++ name ++ " {"
         , "  export type Maybe<a> = a | null"
         , "  "
         , definitions
