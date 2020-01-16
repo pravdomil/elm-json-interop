@@ -10,7 +10,7 @@ elm-json-interop "src/Main.elm"
 
 ## Example
 
-**Main.elm**
+input file Main.elm
 ```elm
 module Main exposing (..)
 
@@ -28,7 +28,7 @@ type User
     | Anonymous
 ```
 
-**Main/Main.ts**
+generated Main/Main.ts
 ```ts
 export type Maybe<a> = a | null
 
@@ -44,7 +44,7 @@ export type User =
   | ["Anonymous"]
 ```
 
-**Main/Encode.elm**
+generated Main/Encode.elm
 ```elm
 module Main.Encode exposing (..)
 
@@ -94,7 +94,7 @@ encodeUser a =
             list identity [ string "Anonymous" ]
 ```
 
-**Main/Decode.elm**
+generated Main/Decode.elm
 ```elm
 module Main.Decode exposing (..)
 
