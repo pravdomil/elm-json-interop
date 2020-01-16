@@ -119,27 +119,27 @@ fromCustomTypeConstructor (Node _ a) =
 
 
 fromTypeAnnotation : Prefix -> Node TypeAnnotation -> String
-fromTypeAnnotation argument (Node _ a) =
+fromTypeAnnotation prefix (Node _ a) =
     let
         result =
             case a of
                 GenericType b ->
-                    "t_" ++ b ++ prefixToString argument
+                    "t_" ++ b ++ prefixToString prefix
 
                 Typed b c ->
-                    fromTyped argument b c
+                    fromTyped prefix b c
 
                 Unit ->
                     "succeed ()"
 
                 Tupled nodes ->
-                    fromTuple argument nodes
+                    fromTuple prefix nodes
 
                 Record b ->
-                    fromRecord argument b
+                    fromRecord prefix b
 
                 GenericRecord _ (Node _ b) ->
-                    fromRecord argument b
+                    fromRecord prefix b
 
                 FunctionTypeAnnotation _ _ ->
                     "Debug.todo \"I don't know how to decode function.\""
@@ -148,7 +148,7 @@ fromTypeAnnotation argument (Node _ a) =
 
 
 fromTyped : Prefix -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-fromTyped argument (Node _ ( name, str )) nodes =
+fromTyped prefix (Node _ ( name, str )) nodes =
     let
         generics =
             case List.isEmpty nodes of
@@ -156,7 +156,7 @@ fromTyped argument (Node _ ( name, str )) nodes =
                     ""
 
                 False ->
-                    (++) " " <| String.join " " <| List.map (fromTypeAnnotation argument) nodes
+                    (++) " " <| String.join " " <| List.map (fromTypeAnnotation prefix) nodes
 
         normalizedStr =
             case String.join "." (name ++ [ str ]) of
@@ -191,13 +191,13 @@ fromTyped argument (Node _ ( name, str )) nodes =
 
 
 fromTuple : Prefix -> List (Node TypeAnnotation) -> String
-fromTuple argument a =
+fromTuple prefix a =
     let
         len =
             List.length a
 
         tup =
-            List.indexedMap (tupleMap argument 0) a
+            List.indexedMap (tupleMap prefix 0) a
     in
     mapFn len ++ " " ++ tupleConstructor len ++ " " ++ String.join " " tup
 
@@ -208,7 +208,7 @@ tupleMap prefix offset i a =
 
 
 fromRecord : Prefix -> RecordDefinition -> String
-fromRecord argument a =
+fromRecord prefix a =
     let
         len =
             List.length a
@@ -222,9 +222,9 @@ fromRecord argument a =
         lambda =
             "(\\" ++ String.join " " args ++ " -> { " ++ String.join ", " fields ++ " })"
     in
-    mapFn len ++ " " ++ lambda ++ " " ++ (String.join " " <| List.map (fromRecordField argument) a)
+    mapFn len ++ " " ++ lambda ++ " " ++ (String.join " " <| List.map (fromRecordField prefix) a)
 
 
 fromRecordField : Prefix -> Node RecordField -> String
-fromRecordField argument (Node _ ( Node _ a, b )) =
-    "(field " ++ toJsonString a ++ " " ++ fromTypeAnnotation argument b ++ ")"
+fromRecordField prefix (Node _ ( Node _ a, b )) =
+    "(field " ++ toJsonString a ++ " " ++ fromTypeAnnotation prefix b ++ ")"

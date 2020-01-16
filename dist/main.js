@@ -3147,7 +3147,7 @@ var $author$project$Utils$tupleConstructor = function (len) {
 	}
 };
 var $author$project$Decode$fromRecord = F2(
-	function (argument, a) {
+	function (prefix, a) {
 		var len = $elm$core$List$length(a);
 		var fields = A2(
 			$elm$core$List$indexedMap,
@@ -3172,50 +3172,50 @@ var $author$project$Decode$fromRecord = F2(
 			' ',
 			A2(
 				$elm$core$List$map,
-				$author$project$Decode$fromRecordField(argument),
+				$author$project$Decode$fromRecordField(prefix),
 				a)))));
 	});
 var $author$project$Decode$fromRecordField = F2(
-	function (argument, _v7) {
+	function (prefix, _v7) {
 		var _v8 = _v7.b;
 		var _v9 = _v8.a;
 		var a = _v9.b;
 		var b = _v8.b;
-		return '(field ' + ($author$project$Utils$toJsonString(a) + (' ' + (A2($author$project$Decode$fromTypeAnnotation, argument, b) + ')')));
+		return '(field ' + ($author$project$Utils$toJsonString(a) + (' ' + (A2($author$project$Decode$fromTypeAnnotation, prefix, b) + ')')));
 	});
 var $author$project$Decode$fromTuple = F2(
-	function (argument, a) {
+	function (prefix, a) {
 		var tup = A2(
 			$elm$core$List$indexedMap,
-			A2($author$project$Decode$tupleMap, argument, 0),
+			A2($author$project$Decode$tupleMap, prefix, 0),
 			a);
 		var len = $elm$core$List$length(a);
 		return $author$project$Utils$mapFn(len) + (' ' + ($author$project$Utils$tupleConstructor(len) + (' ' + A2($elm$core$String$join, ' ', tup))));
 	});
 var $author$project$Decode$fromTypeAnnotation = F2(
-	function (argument, _v4) {
+	function (prefix, _v4) {
 		var a = _v4.b;
 		var result = function () {
 			switch (a.$) {
 				case 0:
 					var b = a.a;
-					return 't_' + (b + $author$project$Utils$prefixToString(argument));
+					return 't_' + (b + $author$project$Utils$prefixToString(prefix));
 				case 1:
 					var b = a.a;
 					var c = a.b;
-					return A3($author$project$Decode$fromTyped, argument, b, c);
+					return A3($author$project$Decode$fromTyped, prefix, b, c);
 				case 2:
 					return 'succeed ()';
 				case 3:
 					var nodes = a.a;
-					return A2($author$project$Decode$fromTuple, argument, nodes);
+					return A2($author$project$Decode$fromTuple, prefix, nodes);
 				case 4:
 					var b = a.a;
-					return A2($author$project$Decode$fromRecord, argument, b);
+					return A2($author$project$Decode$fromRecord, prefix, b);
 				case 5:
 					var _v6 = a.b;
 					var b = _v6.b;
-					return A2($author$project$Decode$fromRecord, argument, b);
+					return A2($author$project$Decode$fromRecord, prefix, b);
 				default:
 					return 'Debug.todo \"I don\'t know how to decode function.\"';
 			}
@@ -3223,7 +3223,7 @@ var $author$project$Decode$fromTypeAnnotation = F2(
 		return '(' + (result + ')');
 	});
 var $author$project$Decode$fromTyped = F3(
-	function (argument, _v0, nodes) {
+	function (prefix, _v0, nodes) {
 		var _v1 = _v0.b;
 		var name = _v1.a;
 		var str = _v1.b;
@@ -3272,7 +3272,7 @@ var $author$project$Decode$fromTyped = F3(
 					' ',
 					A2(
 						$elm$core$List$map,
-						$author$project$Decode$fromTypeAnnotation(argument),
+						$author$project$Decode$fromTypeAnnotation(prefix),
 						nodes));
 			}
 		}();
