@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
-Promise.resolve()
-  .then(readStdin)
-  .then(stdin => run(process.argv, stdin))
-  .then(v => exit(v.code, v.stdout, v.stderr))
-  .catch(e => exit(1, "", String(e)))
+const main = () =>
+  Promise.resolve()
+    .then(readStdin)
+    .then(stdin => run(process.argv, stdin))
+    .then(v => exit(v.code, v.stdout, v.stderr))
+    .catch(e => exit(1, "", String(e)))
 
-function readStdin() {
-  return new Promise(resolve => {
+const readStdin = () =>
+  new Promise(resolve => {
     let buffer = ""
     if (process.stdin.isTTY) {
       resolve(buffer)
@@ -24,18 +25,18 @@ function readStdin() {
       resolve(buffer)
     })
   })
-}
 
-function run(argv, stdin) {
-  return new Promise(resolve => {
+const run = (argv, stdin) =>
+  new Promise(resolve => {
     require("../dist/main.js")
       .Elm.Main.init({ flags: { argv, stdin } })
       .ports.exit.subscribe(resolve)
   })
-}
 
-function exit(code, stdout, stderr) {
+const exit = (code, stdout, stderr) => {
   process.stdout.write(stdout)
   process.stderr.write(stderr)
   process.exit(code)
 }
+
+main()
