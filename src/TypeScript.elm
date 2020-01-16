@@ -47,14 +47,14 @@ fromType a =
                     "<" ++ String.join ", " (List.map Node.value a.generics) ++ ">"
 
         declaration =
-            "export type " ++ Node.value a.name ++ generics ++ " = "
+            "export type " ++ Node.value a.name ++ generics ++ " ="
     in
     fromDocumentation a.documentation ++ declaration
 
 
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
-    fromType a ++ fromTypeAnnotation a.typeAnnotation
+    fromType a ++ " " ++ fromTypeAnnotation a.typeAnnotation
 
 
 fromCustomType : Type -> String

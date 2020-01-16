@@ -3330,7 +3330,7 @@ var $author$project$Decode$fromType = function (a) {
 					a.W));
 		}
 	}();
-	var declaration = 'decode' + (name + (generics + ' = '));
+	var declaration = 'decode' + (name + (generics + ' ='));
 	return _Utils_ap(signature, declaration);
 };
 var $author$project$Decode$fromCustomType = function (a) {
@@ -3341,12 +3341,10 @@ var $author$project$Decode$fromCustomType = function (a) {
 	return $author$project$Decode$fromType(a) + ('\n  index 0 string |> andThen (\\tag -> case tag of\n    ' + (cases + '\n  )'));
 };
 var $author$project$Decode$fromTypeAlias = function (a) {
-	return _Utils_ap(
-		$author$project$Decode$fromType(a),
-		A2(
-			$author$project$Decode$fromTypeAnnotation,
-			$author$project$Utils$Prefix(''),
-			a.bO));
+	return $author$project$Decode$fromType(a) + (' ' + A2(
+		$author$project$Decode$fromTypeAnnotation,
+		$author$project$Utils$Prefix(''),
+		a.bO));
 };
 var $author$project$Decode$fromDeclaration = function (_v0) {
 	var a = _v0.b;
@@ -3617,7 +3615,7 @@ var $author$project$Encode$fromType = function (a) {
 					a.W));
 		}
 	}();
-	var declaration = 'encode' + (name + (generics + ' a = '));
+	var declaration = 'encode' + (name + (generics + ' a ='));
 	return _Utils_ap(signature, declaration);
 };
 var $author$project$Encode$fromCustomType = function (a) {
@@ -3628,12 +3626,10 @@ var $author$project$Encode$fromCustomType = function (a) {
 	return $author$project$Encode$fromType(a) + ('\n  case a of\n    ' + cases);
 };
 var $author$project$Encode$fromTypeAlias = function (a) {
-	return _Utils_ap(
-		$author$project$Encode$fromType(a),
-		A2(
-			$author$project$Encode$fromTypeAnnotation,
-			A4($author$project$Utils$Argument, '', 0, '', false),
-			a.bO));
+	return $author$project$Encode$fromType(a) + (' ' + A2(
+		$author$project$Encode$fromTypeAnnotation,
+		A4($author$project$Utils$Argument, '', 0, '', false),
+		a.bO));
 };
 var $author$project$Encode$fromDeclaration = function (_v0) {
 	var a = _v0.b;
@@ -3806,7 +3802,7 @@ var $author$project$TypeScript$fromType = function (a) {
 				A2($elm$core$List$map, $stil4m$elm_syntax$Elm$Syntax$Node$value, a.W)) + '>');
 		}
 	}();
-	var declaration = 'export type ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.aR) + (generics + ' = '));
+	var declaration = 'export type ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.aR) + (generics + ' ='));
 	return _Utils_ap(
 		$author$project$TypeScript$fromDocumentation(a.bq),
 		declaration);
@@ -3818,9 +3814,7 @@ var $author$project$TypeScript$fromCustomType = function (a) {
 		A2($elm$core$List$map, $author$project$TypeScript$fromCustomTypeConstructor, a.bl)));
 };
 var $author$project$TypeScript$fromTypeAlias = function (a) {
-	return _Utils_ap(
-		$author$project$TypeScript$fromType(a),
-		$author$project$TypeScript$fromTypeAnnotation(a.bO));
+	return $author$project$TypeScript$fromType(a) + (' ' + $author$project$TypeScript$fromTypeAnnotation(a.bO));
 };
 var $author$project$TypeScript$fromDeclaration = function (_v0) {
 	var a = _v0.b;

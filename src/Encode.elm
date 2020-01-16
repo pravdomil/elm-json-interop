@@ -72,14 +72,14 @@ fromType a =
                     (++) " " <| String.join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
         declaration =
-            "encode" ++ name ++ generics ++ " a = "
+            "encode" ++ name ++ generics ++ " a ="
     in
     signature ++ declaration
 
 
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
-    fromType a ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
+    fromType a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
 
 
 fromCustomType : Type -> String
