@@ -87,9 +87,9 @@ fromCustomType : Type -> String
 fromCustomType a =
     let
         cases =
-            String.join "\n    , " <| List.map fromCustomTypeConstructor a.constructors
+            String.join "\n    " <| List.map fromCustomTypeConstructor a.constructors
     in
-    fromType a ++ "\n  oneOf\n    [ " ++ cases ++ "\n    ]"
+    fromType a ++ "\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ "\n  )"
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
@@ -109,7 +109,7 @@ fromCustomTypeConstructor (Node _ a) =
                 _ ->
                     mapFn len ++ " " ++ name ++ " " ++ (String.join " " <| List.map (fromTypeAnnotation (Prefix "")) a.arguments)
     in
-    "field " ++ toJsonString name ++ " (" ++ val ++ ")"
+    toJsonString name ++ " -> " ++ val
 
 
 fromTypeAnnotation : Prefix -> Node TypeAnnotation -> String

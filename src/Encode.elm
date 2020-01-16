@@ -106,27 +106,13 @@ fromCustomTypeConstructor (Node _ a) =
                 False ->
                     " " ++ (String.join " " <| List.indexedMap (\b _ -> stringFromAlphabet (b + 1)) a.arguments)
 
-        val : TypeAnnotation
-        val =
-            case List.length a.arguments of
-                0 ->
-                    Unit
+        map i b =
+            fromTypeAnnotation (Argument "" (1 + i) "" False) b
 
-                1 ->
-                    case List.head a.arguments of
-                        Just b ->
-                            Node.value b
-
-                        Nothing ->
-                            Unit
-
-                _ ->
-                    Tupled a.arguments
-
-        decoder =
-            fromTypeAnnotation (Argument "" 1 "" False) (Node emptyRange val)
+        encoder =
+            String.join ", " <| (::) ("string " ++ toJsonString name) <| List.indexedMap map a.arguments
     in
-    name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ decoder ++ " ) ]"
+    name ++ params ++ " -> list identity [ " ++ encoder ++ " ]"
 
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
@@ -142,12 +128,7 @@ fromTypeAnnotation argument (Node r a) =
             "list identity []"
 
         Tupled b ->
-            case r == emptyRange of
-                True ->
-                    fromCustomTuple argument b
-
-                False ->
-                    fromTuple argument b
+            fromTuple argument b
 
         Record b ->
             fromRecord argument b
@@ -212,15 +193,6 @@ fromTuple argument a =
             fromTypeAnnotation { argument | char = i + argument.char + 1, disabled = False } b
     in
     "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
-
-
-fromCustomTuple : Argument -> List (Node TypeAnnotation) -> String
-fromCustomTuple argument a =
-    let
-        map i b =
-            fromTypeAnnotation { argument | char = argument.char + i } b
-    in
-    "list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ]"
 
 
 fromRecord : Argument -> RecordDefinition -> String
