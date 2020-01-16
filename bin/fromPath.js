@@ -32,4 +32,6 @@ const convert = a => {
   })
 }
 
-main(process.argv.slice(2)).then(a => console.log(a)).catch(a => console.error(a))
+main(process.argv.slice(2))
+  .then(a => console.log(a))
+  .catch(a => console.error(a))
