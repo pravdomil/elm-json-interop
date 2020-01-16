@@ -104,13 +104,16 @@ fromCustomTypeConstructor (Node _ a) =
         len =
             List.length a.arguments
 
+        tup =
+            List.indexedMap (tupleMap (Prefix "") 1) a.arguments
+
         val =
             case List.length a.arguments of
                 0 ->
                     "succeed " ++ name
 
                 _ ->
-                    mapFn len ++ " " ++ name ++ " " ++ (String.join " " <| List.map (fromTypeAnnotation (Prefix "")) a.arguments)
+                    mapFn len ++ " " ++ name ++ " " ++ String.join " " tup
     in
     toJsonString name ++ " -> " ++ val
 
@@ -194,9 +197,14 @@ fromTuple argument a =
             List.length a
 
         tup =
-            List.map (fromTypeAnnotation argument) a
+            List.indexedMap (tupleMap argument 0) a
     in
     mapFn len ++ " " ++ tupleConstructor len ++ " " ++ String.join " " tup
+
+
+tupleMap : Prefix -> Int -> Int -> Node TypeAnnotation -> String
+tupleMap prefix offset i a =
+    "(index " ++ String.fromInt (offset + i) ++ " " ++ fromTypeAnnotation prefix a ++ ")"
 
 
 fromRecord : Prefix -> RecordDefinition -> String

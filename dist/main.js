@@ -3083,6 +3083,20 @@ var $elm$core$List$filterMap = F2(
 var $author$project$Utils$Prefix = function (prefix) {
 	return {R: prefix};
 };
+var $author$project$Utils$mapFn = function (a) {
+	if (a === 1) {
+		return 'map';
+	} else {
+		var b = a;
+		return 'map' + $elm$core$String$fromInt(b);
+	}
+};
+var $author$project$Utils$toJsonString = function (a) {
+	return A2(
+		$elm$json$Json$Encode$encode,
+		0,
+		$elm$json$Json$Encode$string(a));
+};
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
 		return true;
@@ -3104,14 +3118,6 @@ var $elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var $author$project$Utils$mapFn = function (a) {
-	if (a === 1) {
-		return 'map';
-	} else {
-		var b = a;
-		return 'map' + $elm$core$String$fromInt(b);
-	}
-};
 var $author$project$Utils$prefixToString = function (_v0) {
 	var prefix = _v0.R;
 	var _v1 = prefix === '';
@@ -3129,12 +3135,6 @@ var $elm$core$Char$fromCode = _Char_fromCode;
 var $author$project$Utils$stringFromAlphabet = function (a) {
 	return $elm$core$String$fromChar(
 		$elm$core$Char$fromCode(97 + a));
-};
-var $author$project$Utils$toJsonString = function (a) {
-	return A2(
-		$elm$json$Json$Encode$encode,
-		0,
-		$elm$json$Json$Encode$string(a));
 };
 var $author$project$Utils$tupleConstructor = function (len) {
 	switch (len) {
@@ -3186,8 +3186,8 @@ var $author$project$Decode$fromRecordField = F2(
 var $author$project$Decode$fromTuple = F2(
 	function (argument, a) {
 		var tup = A2(
-			$elm$core$List$map,
-			$author$project$Decode$fromTypeAnnotation(argument),
+			$elm$core$List$indexedMap,
+			A2($author$project$Decode$tupleMap, argument, 0),
 			a);
 		var len = $elm$core$List$length(a);
 		return $author$project$Utils$mapFn(len) + (' ' + ($author$project$Utils$tupleConstructor(len) + (' ' + A2($elm$core$String$join, ' ', tup))));
@@ -3278,12 +3278,23 @@ var $author$project$Decode$fromTyped = F3(
 		}();
 		return _Utils_ap(normalizedStr, generics);
 	});
+var $author$project$Decode$tupleMap = F4(
+	function (prefix, offset, i, a) {
+		return '(index ' + ($elm$core$String$fromInt(offset + i) + (' ' + (A2($author$project$Decode$fromTypeAnnotation, prefix, a) + ')')));
+	});
 var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
 	var v = _v0.b;
 	return v;
 };
 var $author$project$Decode$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;
+	var tup = A2(
+		$elm$core$List$indexedMap,
+		A2(
+			$author$project$Decode$tupleMap,
+			$author$project$Utils$Prefix(''),
+			1),
+		a.S);
 	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.Y);
 	var len = $elm$core$List$length(a.S);
 	var val = function () {
@@ -3291,14 +3302,7 @@ var $author$project$Decode$fromCustomTypeConstructor = function (_v0) {
 		if (!_v1) {
 			return 'succeed ' + name;
 		} else {
-			return $author$project$Utils$mapFn(len) + (' ' + (name + (' ' + A2(
-				$elm$core$String$join,
-				' ',
-				A2(
-					$elm$core$List$map,
-					$author$project$Decode$fromTypeAnnotation(
-						$author$project$Utils$Prefix('')),
-					a.S)))));
+			return $author$project$Utils$mapFn(len) + (' ' + (name + (' ' + A2($elm$core$String$join, ' ', tup))));
 		}
 	}();
 	return $author$project$Utils$toJsonString(name) + (' -> ' + val);
