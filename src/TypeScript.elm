@@ -142,7 +142,7 @@ fromTyped (Node _ ( name, str )) nodes =
                     "Record"
 
                 "Encode.Value" ->
-                    "any"
+                    "unknown"
 
                 a ->
                     a

@@ -3751,7 +3751,7 @@ var $author$project$TypeScript$fromTyped = F2(
 				case 'Dict':
 					return 'Record';
 				case 'Encode.Value':
-					return 'any';
+					return 'unknown';
 				default:
 					var a = _v3;
 					return a;
