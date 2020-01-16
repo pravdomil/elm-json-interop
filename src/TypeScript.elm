@@ -59,7 +59,7 @@ fromTypeAlias a =
 
 fromCustomType : Type -> String
 fromCustomType a =
-    fromType a ++ (String.join " | " <| List.map fromCustomTypeConstructor a.constructors)
+    fromType a ++ "\n  | " ++ (String.join "\n  | " <| List.map fromCustomTypeConstructor a.constructors)
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String

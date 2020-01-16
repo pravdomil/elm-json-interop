@@ -3812,12 +3812,10 @@ var $author$project$TypeScript$fromType = function (a) {
 		declaration);
 };
 var $author$project$TypeScript$fromCustomType = function (a) {
-	return _Utils_ap(
-		$author$project$TypeScript$fromType(a),
-		A2(
-			$elm$core$String$join,
-			' | ',
-			A2($elm$core$List$map, $author$project$TypeScript$fromCustomTypeConstructor, a.bl)));
+	return $author$project$TypeScript$fromType(a) + ('\n  | ' + A2(
+		$elm$core$String$join,
+		'\n  | ',
+		A2($elm$core$List$map, $author$project$TypeScript$fromCustomTypeConstructor, a.bl)));
 };
 var $author$project$TypeScript$fromTypeAlias = function (a) {
 	return _Utils_ap(
