@@ -6,7 +6,6 @@ import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Module as Module
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
@@ -116,7 +115,7 @@ fromCustomTypeConstructor (Node _ a) =
 
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
-fromTypeAnnotation argument (Node r a) =
+fromTypeAnnotation argument (Node _ a) =
     case a of
         GenericType b ->
             "t_" ++ b ++ argumentToString argument

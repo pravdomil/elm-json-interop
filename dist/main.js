@@ -3466,7 +3466,6 @@ var $author$project$Encode$fromTuple = F2(
 	});
 var $author$project$Encode$fromTypeAnnotation = F2(
 	function (argument, _v4) {
-		var r = _v4.a;
 		var a = _v4.b;
 		switch (a.$) {
 			case 0:
