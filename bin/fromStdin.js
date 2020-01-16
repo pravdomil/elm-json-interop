@@ -7,6 +7,19 @@ const main = () =>
     .then(v => exit(v.code, v.stdout, v.stderr))
     .catch(e => exit(1, "", String(e)))
 
+const run = (argv, stdin) =>
+  new Promise(resolve => {
+    require("../dist/main.js")
+      .Elm.Main.init({ flags: { argv, stdin } })
+      .ports.exit.subscribe(resolve)
+  })
+
+const exit = (code, stdout, stderr) => {
+  process.stdout.write(stdout)
+  process.stderr.write(stderr)
+  process.exit(code)
+}
+
 const readStdin = () =>
   new Promise(resolve => {
     let buffer = ""
@@ -25,18 +38,5 @@ const readStdin = () =>
       resolve(buffer)
     })
   })
-
-const run = (argv, stdin) =>
-  new Promise(resolve => {
-    require("../dist/main.js")
-      .Elm.Main.init({ flags: { argv, stdin } })
-      .ports.exit.subscribe(resolve)
-  })
-
-const exit = (code, stdout, stderr) => {
-  process.stdout.write(stdout)
-  process.stderr.write(stderr)
-  process.exit(code)
-}
 
 main()
