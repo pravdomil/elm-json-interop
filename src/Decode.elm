@@ -88,8 +88,11 @@ fromCustomType a =
     let
         cases =
             String.join "\n    " <| List.map fromCustomTypeConstructor a.constructors
+
+        fail =
+            "\n    _ -> fail <| \"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
     in
-    fromType a ++ "\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ "\n  )"
+    fromType a ++ "\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )"
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
