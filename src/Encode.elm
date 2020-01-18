@@ -124,7 +124,7 @@ fromTypeAnnotation argument (Node _ a) =
             fromTyped argument b c
 
         Unit ->
-            "list identity []"
+            "(\\_ -> list identity [])"
 
         Tupled b ->
             fromTuple argument b

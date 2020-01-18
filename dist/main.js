@@ -3480,7 +3480,7 @@ var $author$project$Encode$fromTypeAnnotation = F2(
 				var c = a.b;
 				return A3($author$project$Encode$fromTyped, argument, b, c);
 			case 2:
-				return 'list identity []';
+				return '(\\_ -> list identity [])';
 			case 3:
 				var b = a.a;
 				return A2($author$project$Encode$fromTuple, argument, b);
