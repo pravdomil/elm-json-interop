@@ -3814,10 +3814,20 @@ var $author$project$TypeScript$fromType = function (a) {
 		declaration);
 };
 var $author$project$TypeScript$fromCustomType = function (a) {
-	return $author$project$TypeScript$fromType(a) + ('\n  | ' + A2(
+	var types = $author$project$TypeScript$fromType(a) + ('\n  | ' + A2(
 		$elm$core$String$join,
 		'\n  | ',
 		A2($elm$core$List$map, $author$project$TypeScript$fromCustomTypeConstructor, a.bl)));
+	var mapConst = function (b) {
+		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(
+			$stil4m$elm_syntax$Elm$Syntax$Node$value(b).Y);
+		return name + (' = ' + $author$project$Utils$toJsonString(name));
+	};
+	var constants = 'export const ' + A2(
+		$elm$core$String$join,
+		',\n  ',
+		A2($elm$core$List$map, mapConst, a.bl));
+	return types + ('\n\n' + constants);
 };
 var $author$project$TypeScript$fromTypeAlias = function (a) {
 	return $author$project$TypeScript$fromType(a) + (' ' + $author$project$TypeScript$fromTypeAnnotation(a.bO));

@@ -59,7 +59,21 @@ fromTypeAlias a =
 
 fromCustomType : Type -> String
 fromCustomType a =
-    fromType a ++ "\n  | " ++ (String.join "\n  | " <| List.map fromCustomTypeConstructor a.constructors)
+    let
+        mapConst b =
+            let
+                name =
+                    Node.value <| .name <| Node.value b
+            in
+            name ++ " = " ++ toJsonString name
+
+        constants =
+            (++) "export const " <| String.join ",\n  " <| List.map mapConst a.constructors
+
+        types =
+            fromType a ++ "\n  | " ++ (String.join "\n  | " <| List.map fromCustomTypeConstructor a.constructors)
+    in
+    types ++ "\n\n" ++ constants
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
