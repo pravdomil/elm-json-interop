@@ -38,10 +38,19 @@ export type Msg =
   | ["ReceivedMessage", { user: User, message: string }]
   | ["ClickedExit"]
 
+export const PressedEnter = "PressedEnter",
+  ChangedDraft = "ChangedDraft",
+  ReceivedMessage = "ReceivedMessage",
+  ClickedExit = "ClickedExit"
+
 export type User =
   | ["Regular", string, number]
   | ["Visitor", string]
   | ["Anonymous"]
+
+export const Regular = "Regular",
+  Visitor = "Visitor",
+  Anonymous = "Anonymous"
 ```
 
 generated Main/Encode.elm
