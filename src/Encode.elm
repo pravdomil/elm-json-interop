@@ -189,7 +189,7 @@ fromTuple argument a =
             String.join ", " <| List.indexedMap (\i _ -> stringFromAlphabet (i + argument.char + 1)) a
 
         map i b =
-            fromTypeAnnotation { argument | char = i + argument.char + 1, disabled = False } b
+            fromTypeAnnotation (Argument "" (i + argument.char + 1) "" False) b
     in
     "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 
