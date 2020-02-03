@@ -108,10 +108,11 @@ fromCustomTypeConstructor (Node _ a) =
         map i b =
             fromTypeAnnotation (Argument "" (1 + i) "" False) b
 
+        encoder : String
         encoder =
-            String.join ", " <| (::) ("string " ++ toJsonString name) <| List.indexedMap map a.arguments
+            "list identity [ " ++ (String.join ", " <| List.indexedMap map a.arguments) ++ " ]"
     in
-    name ++ params ++ " -> list identity [ " ++ encoder ++ " ]"
+    name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ encoder ++ " ) ]"
 
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String

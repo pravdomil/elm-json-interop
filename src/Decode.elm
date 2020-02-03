@@ -87,12 +87,9 @@ fromCustomType : Type -> String
 fromCustomType a =
     let
         cases =
-            String.join "\n    " <| List.map fromCustomTypeConstructor a.constructors
-
-        fail =
-            "\n    _ -> fail <| \"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
+            String.join "\n    , " <| List.map fromCustomTypeConstructor a.constructors
     in
-    fromType a ++ "\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )"
+    fromType a ++ "\n  oneOf\n    [ " ++ cases ++ "\n    ]"
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
@@ -105,7 +102,7 @@ fromCustomTypeConstructor (Node _ a) =
             List.length a.arguments
 
         tup =
-            List.indexedMap (tupleMap (Prefix "") 1) a.arguments
+            List.indexedMap (tupleMap (Prefix "") 0) a.arguments
 
         val =
             case List.length a.arguments of
@@ -115,7 +112,7 @@ fromCustomTypeConstructor (Node _ a) =
                 _ ->
                     mapFn len ++ " " ++ name ++ " " ++ String.join " " tup
     in
-    toJsonString name ++ " -> " ++ val
+    "field " ++ toJsonString name ++ " (" ++ val ++ ")"
 
 
 fromTypeAnnotation : Prefix -> Node TypeAnnotation -> String

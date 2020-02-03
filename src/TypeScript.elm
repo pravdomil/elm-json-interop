@@ -9,7 +9,6 @@ import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
-import Utils exposing (toJsonString)
 
 
 fromFileToTs : File -> String
@@ -65,11 +64,11 @@ fromCustomType a =
 fromCustomTypeConstructor : Node ValueConstructor -> String
 fromCustomTypeConstructor (Node _ a) =
     let
-        name : Node TypeAnnotation
-        name =
-            Node emptyRange <| GenericType <| toJsonString <| Node.value a.name
+        record : RecordField
+        record =
+            ( a.name, Node emptyRange <| Tupled a.arguments )
     in
-    fromTuple (name :: a.arguments)
+    fromRecord [ Node emptyRange record ]
 
 
 fromDocumentation : Maybe (Node Documentation) -> String
