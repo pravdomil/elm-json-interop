@@ -33,5 +33,5 @@ const convert = a => {
 }
 
 main(process.argv.slice(2))
-  .then(a => process.stdout.write(a))
-  .catch(a => process.stderr.write(a))
+  .then(a => process.stdout.write(String(a)))
+  .catch(a => process.stderr.write(String(a)))
