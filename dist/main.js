@@ -3779,6 +3779,29 @@ var $author$project$TypeScript$fromCustomTypeConstructor = function (_v0) {
 				A2($stil4m$elm_syntax$Elm$Syntax$Node$Node, $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange, record)
 			]));
 };
+var $author$project$TypeScript$fromTypeGenerics = function (a) {
+	var _v0 = $elm$core$List$isEmpty(a.V);
+	if (_v0) {
+		return '';
+	} else {
+		return '<' + (A2(
+			$elm$core$String$join,
+			', ',
+			A2($elm$core$List$map, $stil4m$elm_syntax$Elm$Syntax$Node$value, a.V)) + '>');
+	}
+};
+var $author$project$TypeScript$fromCustomTypeGuards = function (a) {
+	var generics = $author$project$TypeScript$fromTypeGenerics(a);
+	var mapGuard = function (b) {
+		var tag = $stil4m$elm_syntax$Elm$Syntax$Node$value(
+			$stil4m$elm_syntax$Elm$Syntax$Node$value(b).aQ);
+		return 'export const is' + (tag + (' = ' + (generics + ('(a: ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.aQ) + (generics + ('): a is ' + ($author$project$TypeScript$fromCustomTypeConstructor(b) + (' => ' + ($author$project$Utils$toJsonString(tag) + ' in a'))))))))));
+	};
+	return A2(
+		$elm$core$String$join,
+		'\n',
+		A2($elm$core$List$map, mapGuard, a.bk));
+};
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -3793,27 +3816,17 @@ var $author$project$TypeScript$fromDocumentation = function (a) {
 	}
 };
 var $author$project$TypeScript$fromType = function (a) {
-	var generics = function () {
-		var _v0 = $elm$core$List$isEmpty(a.V);
-		if (_v0) {
-			return '';
-		} else {
-			return '<' + (A2(
-				$elm$core$String$join,
-				', ',
-				A2($elm$core$List$map, $stil4m$elm_syntax$Elm$Syntax$Node$value, a.V)) + '>');
-		}
-	}();
-	var declaration = 'export type ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.aQ) + (generics + ' ='));
+	var declaration = 'export type ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.aQ) + ($author$project$TypeScript$fromTypeGenerics(a) + ' ='));
 	return _Utils_ap(
 		$author$project$TypeScript$fromDocumentation(a.bq),
 		declaration);
 };
 var $author$project$TypeScript$fromCustomType = function (a) {
-	return $author$project$TypeScript$fromType(a) + ('\n  | ' + A2(
+	var constructors = A2(
 		$elm$core$String$join,
 		'\n  | ',
-		A2($elm$core$List$map, $author$project$TypeScript$fromCustomTypeConstructor, a.bk)));
+		A2($elm$core$List$map, $author$project$TypeScript$fromCustomTypeConstructor, a.bk));
+	return $author$project$TypeScript$fromType(a) + ('\n  | ' + (constructors + ('\n\n' + $author$project$TypeScript$fromCustomTypeGuards(a))));
 };
 var $author$project$TypeScript$fromTypeAlias = function (a) {
 	return $author$project$TypeScript$fromType(a) + (' ' + $author$project$TypeScript$fromTypeAnnotation(a.bO));

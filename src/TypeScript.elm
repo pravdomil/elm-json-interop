@@ -9,6 +9,7 @@ import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
+import Utils exposing (toJsonString)
 
 
 fromFileToTs : File -> String
@@ -37,18 +38,20 @@ fromDeclaration (Node _ a) =
 fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 fromType a =
     let
-        generics =
-            case List.isEmpty a.generics of
-                True ->
-                    ""
-
-                False ->
-                    "<" ++ String.join ", " (List.map Node.value a.generics) ++ ">"
-
         declaration =
-            "export type " ++ Node.value a.name ++ generics ++ " ="
+            "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
     in
     fromDocumentation a.documentation ++ declaration
+
+
+fromTypeGenerics : { a | generics : List (Node String) } -> String
+fromTypeGenerics a =
+    case List.isEmpty a.generics of
+        True ->
+            ""
+
+        False ->
+            "<" ++ String.join ", " (List.map Node.value a.generics) ++ ">"
 
 
 fromTypeAlias : TypeAlias -> String
@@ -58,7 +61,39 @@ fromTypeAlias a =
 
 fromCustomType : Type -> String
 fromCustomType a =
-    fromType a ++ "\n  | " ++ (String.join "\n  | " <| List.map fromCustomTypeConstructor a.constructors)
+    let
+        constructors =
+            String.join "\n  | " <| List.map fromCustomTypeConstructor a.constructors
+    in
+    fromType a ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeGuards a
+
+
+fromCustomTypeGuards : Type -> String
+fromCustomTypeGuards a =
+    let
+        generics =
+            fromTypeGenerics a
+
+        mapGuard : Node ValueConstructor -> String
+        mapGuard b =
+            let
+                tag =
+                    Node.value <| .name <| Node.value b
+            in
+            "export const is"
+                ++ tag
+                ++ " = "
+                ++ generics
+                ++ "(a: "
+                ++ Node.value a.name
+                ++ generics
+                ++ "): a is "
+                ++ fromCustomTypeConstructor b
+                ++ " => "
+                ++ toJsonString tag
+                ++ " in a"
+    in
+    String.join "\n" <| List.map mapGuard a.constructors
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
