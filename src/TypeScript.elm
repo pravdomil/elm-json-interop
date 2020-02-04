@@ -46,11 +46,11 @@ fromType a =
 
 fromTypeGenerics : { a | generics : List (Node String) } -> String
 fromTypeGenerics a =
-    case List.isEmpty a.generics of
-        True ->
+    case a.generics of
+        [] ->
             ""
 
-        False ->
+        _ ->
             "<" ++ String.join ", " (List.map Node.value a.generics) ++ ">"
 
 
@@ -145,11 +145,11 @@ fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 fromTyped (Node _ ( name, str )) nodes =
     let
         generics =
-            case List.isEmpty nodes of
-                True ->
+            case nodes of
+                [] ->
                     ""
 
-                False ->
+                _ ->
                     "<" ++ (String.join ", " <| List.map fromTypeAnnotation nodes) ++ ">"
 
         normalizedStr =

@@ -56,19 +56,19 @@ fromType a =
             Node.value a.name
 
         signature =
-            case List.isEmpty a.generics of
-                True ->
+            case a.generics of
+                [] ->
                     "encode" ++ name ++ " : " ++ name ++ " -> Value\n"
 
-                False ->
+                _ ->
                     ""
 
         generics =
-            case List.isEmpty a.generics of
-                True ->
+            case a.generics of
+                [] ->
                     ""
 
-                False ->
+                _ ->
                     (++) " " <| String.join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
         declaration =
@@ -98,11 +98,11 @@ fromCustomTypeConstructor (Node _ a) =
             Node.value a.name
 
         params =
-            case List.isEmpty a.arguments of
-                True ->
+            case a.arguments of
+                [] ->
                     ""
 
-                False ->
+                _ ->
                     " " ++ (String.join " " <| List.indexedMap (\b _ -> stringFromAlphabet (b + 1)) a.arguments)
 
         map i b =
@@ -144,11 +144,11 @@ fromTyped : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation
 fromTyped argument (Node _ ( name, str )) nodes =
     let
         generics =
-            case List.isEmpty nodes of
-                True ->
+            case nodes of
+                [] ->
                     ""
 
-                False ->
+                _ ->
                     (++) " " <| String.join " " <| List.map (fromTypeAnnotation { argument | disabled = True }) nodes
 
         normalizedStr =

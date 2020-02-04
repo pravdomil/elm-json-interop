@@ -3097,13 +3097,6 @@ var $author$project$Utils$toJsonString = function (a) {
 		0,
 		$elm$json$Json$Encode$string(a));
 };
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
 var $elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -3263,8 +3256,7 @@ var $author$project$Decode$fromTyped = F3(
 			}
 		}();
 		var generics = function () {
-			var _v2 = $elm$core$List$isEmpty(nodes);
-			if (_v2) {
+			if (!nodes.b) {
 				return '';
 			} else {
 				return ' ' + A2(
@@ -3310,16 +3302,16 @@ var $author$project$Decode$fromCustomTypeConstructor = function (_v0) {
 var $author$project$Decode$fromType = function (a) {
 	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.aQ);
 	var signature = function () {
-		var _v2 = $elm$core$List$isEmpty(a.V);
-		if (_v2) {
+		var _v2 = a.V;
+		if (!_v2.b) {
 			return 'decode' + (name + (' : Decoder ' + (name + '\n')));
 		} else {
 			return '';
 		}
 	}();
 	var generics = function () {
-		var _v0 = $elm$core$List$isEmpty(a.V);
-		if (_v0) {
+		var _v0 = a.V;
+		if (!_v0.b) {
 			return '';
 		} else {
 			return ' ' + A2(
@@ -3532,8 +3524,7 @@ var $author$project$Encode$fromTyped = F3(
 			}
 		}();
 		var generics = function () {
-			var _v2 = $elm$core$List$isEmpty(nodes);
-			if (_v2) {
+			if (!nodes.b) {
 				return '';
 			} else {
 				return ' ' + A2(
@@ -3557,8 +3548,8 @@ var $author$project$Encode$fromTyped = F3(
 var $author$project$Encode$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;
 	var params = function () {
-		var _v1 = $elm$core$List$isEmpty(a.S);
-		if (_v1) {
+		var _v1 = a.S;
+		if (!_v1.b) {
 			return '';
 		} else {
 			return ' ' + A2(
@@ -3590,16 +3581,16 @@ var $author$project$Encode$fromCustomTypeConstructor = function (_v0) {
 var $author$project$Encode$fromType = function (a) {
 	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.aQ);
 	var signature = function () {
-		var _v2 = $elm$core$List$isEmpty(a.V);
-		if (_v2) {
+		var _v2 = a.V;
+		if (!_v2.b) {
 			return 'encode' + (name + (' : ' + (name + ' -> Value\n')));
 		} else {
 			return '';
 		}
 	}();
 	var generics = function () {
-		var _v0 = $elm$core$List$isEmpty(a.V);
-		if (_v0) {
+		var _v0 = a.V;
+		if (!_v0.b) {
 			return '';
 		} else {
 			return ' ' + A2(
@@ -3753,8 +3744,7 @@ var $author$project$TypeScript$fromTyped = F2(
 			}
 		}();
 		var generics = function () {
-			var _v2 = $elm$core$List$isEmpty(nodes);
-			if (_v2) {
+			if (!nodes.b) {
 				return '';
 			} else {
 				return '<' + (A2(
@@ -3780,8 +3770,8 @@ var $author$project$TypeScript$fromCustomTypeConstructor = function (_v0) {
 			]));
 };
 var $author$project$TypeScript$fromTypeGenerics = function (a) {
-	var _v0 = $elm$core$List$isEmpty(a.V);
-	if (_v0) {
+	var _v0 = a.V;
+	if (!_v0.b) {
 		return '';
 	} else {
 		return '<' + (A2(

@@ -57,19 +57,19 @@ fromType a =
             Node.value a.name
 
         signature =
-            case List.isEmpty a.generics of
-                True ->
+            case a.generics of
+                [] ->
                     "decode" ++ name ++ " : Decoder " ++ name ++ "\n"
 
-                False ->
+                _ ->
                     ""
 
         generics =
-            case List.isEmpty a.generics of
-                True ->
+            case a.generics of
+                [] ->
                     ""
 
-                False ->
+                _ ->
                     (++) " " <| String.join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
         declaration =
@@ -148,11 +148,11 @@ fromTyped : Prefix -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) 
 fromTyped prefix (Node _ ( name, str )) nodes =
     let
         generics =
-            case List.isEmpty nodes of
-                True ->
+            case nodes of
+                [] ->
                     ""
 
-                False ->
+                _ ->
                     (++) " " <| String.join " " <| List.map (fromTypeAnnotation prefix) nodes
 
         normalizedStr =
