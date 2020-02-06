@@ -1,27 +1,23 @@
 #!/usr/bin/env node
 
-const main = () =>
-  Promise.resolve()
-    .then(readStdin)
-    .then(stdin => run(process.argv, stdin))
-    .then(v => exit(v.code, v.stdout, v.stderr))
-    .catch(e => exit(1, "", String(e)))
-
-const run = (argv, stdin) =>
-  new Promise(resolve => {
-    require("../dist/main.js")
-      .Elm.Main.init({ flags: { argv, stdin } })
-      .ports.exit.subscribe(resolve)
+Promise.resolve()
+  .then(readStdin)
+  .then(stdin => generate(stdin))
+  .then(a => {
+    process.stdout.write(a.stdout)
+    process.stderr.write(a.stderr)
+    process.exit(a.code)
+  })
+  .catch(a => {
+    process.stderr.write(String(a))
+    process.exit(1)
   })
 
-const exit = (code, stdout, stderr) => {
-  process.stdout.write(stdout)
-  process.stderr.write(stderr)
-  process.exit(code)
-}
-
-const readStdin = () =>
-  new Promise(resolve => {
+/**
+ * @returns {Promise<string>}
+ */
+function readStdin() {
+  return new Promise(resolve => {
     let buffer = ""
     if (process.stdin.isTTY) {
       resolve(buffer)
@@ -38,5 +34,17 @@ const readStdin = () =>
       resolve(buffer)
     })
   })
+}
 
-main()
+/**
+ * @param {string} stdin
+ * @returns {Promise<{code : number, stdout : string, stderr : string}>}
+ */
+function generate(stdin) {
+  return new Promise(resolve => {
+    // @ts-ignore
+    require("../dist/main.js")
+      .Elm.Main.init({ flags: { argv: [], stdin } })
+      .ports.exit.subscribe(resolve)
+  })
+}

@@ -4,5 +4,8 @@
   "bin": {
     "elm-json-interop": "bin/fromPath.js",
     "elm-json-interop-stdin": "bin/fromStdin.js"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.0"
   }
 }
