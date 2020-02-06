@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-const { realpathSync, readFileSync, writeFileSync, mkdirSync } = require("fs")
-const { dirname, basename } = require("path")
+import { mkdirSync, readFileSync, realpathSync, writeFileSync } from "fs"
+import { basename, dirname } from "path"
+import { generate } from "./js/generate.js"
 
-Promise.resolve()
-  .then(() => main(process.argv.slice(2)))
+Promise.resolve(process.argv.slice(2))
+  .then(main)
   .then(a => {
     process.stdout.write(a)
     process.exit()
@@ -20,7 +21,7 @@ Promise.resolve()
  */
 async function main(a) {
   if (a.length === 0) {
-    return "Usage: elm-json-interop [file.elm ...]"
+    throw "Usage: elm-json-interop [file.elm ...]"
   }
   const result = await Promise.all(a.map(processFile))
   return result.join("\n")
@@ -34,8 +35,7 @@ async function processFile(a) {
   const path = realpathSync(a)
 
   const content = readFileSync(path, { encoding: "utf8" })
-  const { stdout } = await generate(content)
-  const [encode, decode, ts] = JSON.parse(stdout)
+  const [encode, decode, ts] = await generate(content)
 
   const elmBasename = basename(path, ".elm")
   const generatedFolder = dirname(path) + "/" + elmBasename
@@ -46,17 +46,4 @@ async function processFile(a) {
   writeFileSync(generatedFolder + "/" + elmBasename + ".ts", ts)
 
   return "I have generated JSON encoders/decoders and TypeScript definitions in folder:\n" + generatedFolder
-}
-
-/**
- * @param {string} stdin
- * @returns {Promise<{code : number, stdout : string, stderr : string}>}
- */
-function generate(stdin) {
-  return new Promise(resolve => {
-    // @ts-ignore
-    require("../dist/main.js")
-      .Elm.Main.init({ flags: { argv: [], stdin } })
-      .ports.exit.subscribe(resolve)
-  })
 }

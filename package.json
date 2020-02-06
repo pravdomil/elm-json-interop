@@ -1,6 +1,7 @@
 {
   "name": "elm-json-interop",
   "version": "1.0.0",
+  "type": "module",
   "bin": {
     "elm-json-interop": "bin/fromPath.js",
     "elm-json-interop-stdin": "bin/fromStdin.js"

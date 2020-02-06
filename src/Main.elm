@@ -1,37 +1,38 @@
 port module Main exposing (..)
 
+import Json.Decode as Decode exposing (decodeValue, errorToString)
+import Json.Encode exposing (Value, list, object, string)
 import Program exposing (parse)
 
 
-type alias Input =
-    { argv : List String, stdin : String }
-
-
-type alias Output =
-    { code : Int, stdout : String, stderr : String }
-
-
-main : Program Input () ()
+main : Program Decode.Value () ()
 main =
     Platform.worker
-        { init = \flags -> ( (), exit (run flags) )
+        { init = \flags -> ( (), done (run flags) )
         , update = \_ _ -> ( (), Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
 
 
-run : Input -> Output
-run { stdin, argv } =
-    let
-        result =
-            parse stdin
-    in
-    case result of
-        Ok value ->
-            Output 0 value ""
-
-        Err error ->
-            Output 1 "" ("I stopped because,\n" ++ error ++ "\n")
+port done : Value -> Cmd msg
 
 
-port exit : Output -> Cmd msg
+run : Decode.Value -> Value
+run value =
+    encodeResult <|
+        case decodeValue Decode.string value of
+            Ok a ->
+                parse a
+
+            Err a ->
+                Err <| errorToString a
+
+
+encodeResult : Result String Value -> Value
+encodeResult a =
+    case a of
+        Ok b ->
+            object [ ( "Ok", list identity [ b ] ) ]
+
+        Err b ->
+            object [ ( "Err", list identity [ string b ] ) ]
