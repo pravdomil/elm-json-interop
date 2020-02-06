@@ -1,13 +1,13 @@
 module Program exposing (..)
 
-import Decode exposing (fromFileToDecoder)
 import Elm.Parser
 import Elm.Processing as Processing
 import Elm.Syntax.File as Syntax exposing (File)
-import Encode exposing (fromFileToEncoder)
+import Generators.Decode exposing (fromFileToDecoder)
+import Generators.Encode exposing (fromFileToEncoder)
+import Generators.TypeScript exposing (fromFileToTs)
 import Json.Encode exposing (encode, list, string)
 import Parser exposing (deadEndsToString)
-import TypeScript exposing (fromFileToTs)
 
 
 parse : String -> Result String String

@@ -1,4 +1,4 @@
-module TypeScript exposing (fromFileToTs)
+module Generators.TypeScript exposing (fromFileToTs)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
