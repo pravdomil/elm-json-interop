@@ -11,7 +11,13 @@ export function generate(flags) {
      * @param {{ Ok: [[string, string, string]] } | { Err: [string] }} a
      */
     function callback(a) {
-      "Ok" in a ? resolve(a.Ok[0]) : reject(a.Err[0])
+      if ("Ok" in a) {
+        const [b] = a.Ok
+        resolve(b)
+      } else {
+        const [b] = a.Err
+        reject(b)
+      }
     }
 
     main.Elm.Main.init({ flags }).ports.done.subscribe(callback)
