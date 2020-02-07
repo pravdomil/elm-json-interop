@@ -105,9 +105,12 @@ fromCustomTypeConstructor (Node _ a) =
             List.indexedMap (tupleMap (Prefix "") 0) a.arguments
 
         val =
-            case List.length a.arguments of
-                0 ->
+            case a.arguments of
+                [] ->
                     "succeed " ++ name
+
+                b :: [] ->
+                    "map " ++ name ++ " " ++ fromTypeAnnotation (Prefix "") b
 
                 _ ->
                     mapFn len ++ " " ++ name ++ " " ++ String.join " " tup

@@ -110,7 +110,15 @@ fromCustomTypeConstructor (Node _ a) =
 
         encoder : String
         encoder =
-            "list identity [ " ++ (String.join ", " <| List.indexedMap map a.arguments) ++ " ]"
+            case a.arguments of
+                [] ->
+                    "list identity []"
+
+                b :: [] ->
+                    map 0 b
+
+                _ ->
+                    "list identity [ " ++ (String.join ", " <| List.indexedMap map a.arguments) ++ " ]"
     in
     name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ encoder ++ " ) ]"
 

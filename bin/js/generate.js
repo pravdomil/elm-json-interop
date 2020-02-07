@@ -8,16 +8,10 @@ import main from "../../dist/main.cjs"
 export function generate(flags) {
   return new Promise((resolve, reject) => {
     /**
-     * @param {{ Ok: [[string, string, string]] } | { Err: [string] }} a
+     * @param {{ Ok: [string, string, string] } | { Err: string }} a
      */
     function callback(a) {
-      if ("Ok" in a) {
-        const [b] = a.Ok
-        resolve(b)
-      } else {
-        const [b] = a.Err
-        reject(b)
-      }
+      "Ok" in a ? resolve(a.Ok) : reject(a.Err)
     }
 
     main.Elm.Main.init({ flags }).ports.done.subscribe(callback)

@@ -101,7 +101,19 @@ fromCustomTypeConstructor (Node _ a) =
     let
         record : RecordField
         record =
-            ( a.name, Node emptyRange <| Tupled a.arguments )
+            ( a.name, Node emptyRange arguments )
+
+        arguments : TypeAnnotation
+        arguments =
+            case a.arguments of
+                [] ->
+                    Unit
+
+                (Node _ b) :: [] ->
+                    b
+
+                _ ->
+                    Tupled a.arguments
     in
     fromRecord [ Node emptyRange record ]
 

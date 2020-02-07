@@ -32,7 +32,7 @@ encodeResult : Result String Value -> Value
 encodeResult a =
     case a of
         Ok b ->
-            object [ ( "Ok", list identity [ b ] ) ]
+            object [ ( "Ok", b ) ]
 
         Err b ->
-            object [ ( "Err", list identity [ string b ] ) ]
+            object [ ( "Err", string b ) ]

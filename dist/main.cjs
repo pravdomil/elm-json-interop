@@ -2970,15 +2970,6 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(0),
-				entries));
-	});
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
@@ -2999,13 +2990,7 @@ var $author$project$Main$encodeResult = function (a) {
 		return $elm$json$Json$Encode$object(
 			_List_fromArray(
 				[
-					_Utils_Tuple2(
-					'Ok',
-					A2(
-						$elm$json$Json$Encode$list,
-						$elm$core$Basics$identity,
-						_List_fromArray(
-							[b])))
+					_Utils_Tuple2('Ok', b)
 				]));
 	} else {
 		var b = a.a;
@@ -3014,13 +2999,7 @@ var $author$project$Main$encodeResult = function (a) {
 				[
 					_Utils_Tuple2(
 					'Err',
-					A2(
-						$elm$json$Json$Encode$list,
-						$elm$core$Basics$identity,
-						_List_fromArray(
-							[
-								$elm$json$Json$Encode$string(b)
-							])))
+					$elm$json$Json$Encode$string(b))
 				]));
 	}
 };
@@ -3103,20 +3082,6 @@ var $elm$core$List$filterMap = F2(
 var $author$project$Utils$Prefix = function (prefix) {
 	return {R: prefix};
 };
-var $author$project$Utils$mapFn = function (a) {
-	if (a === 1) {
-		return 'map';
-	} else {
-		var b = a;
-		return 'map' + $elm$core$String$fromInt(b);
-	}
-};
-var $author$project$Utils$toJsonString = function (a) {
-	return A2(
-		$elm$json$Json$Encode$encode,
-		0,
-		$elm$json$Json$Encode$string(a));
-};
 var $elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -3131,6 +3096,14 @@ var $elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var $author$project$Utils$mapFn = function (a) {
+	if (a === 1) {
+		return 'map';
+	} else {
+		var b = a;
+		return 'map' + $elm$core$String$fromInt(b);
+	}
+};
 var $author$project$Utils$prefixToString = function (_v0) {
 	var prefix = _v0.R;
 	var _v1 = prefix === '';
@@ -3148,6 +3121,12 @@ var $elm$core$Char$fromCode = _Char_fromCode;
 var $author$project$Utils$stringFromAlphabet = function (a) {
 	return $elm$core$String$fromChar(
 		$elm$core$Char$fromCode(97 + a));
+};
+var $author$project$Utils$toJsonString = function (a) {
+	return A2(
+		$elm$json$Json$Encode$encode,
+		0,
+		$elm$json$Json$Encode$string(a));
 };
 var $author$project$Utils$tupleConstructor = function (len) {
 	switch (len) {
@@ -3310,11 +3289,19 @@ var $author$project$Generators$Decode$fromCustomTypeConstructor = function (_v0)
 	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.aN);
 	var len = $elm$core$List$length(a.S);
 	var val = function () {
-		var _v1 = $elm$core$List$length(a.S);
-		if (!_v1) {
+		var _v1 = a.S;
+		if (!_v1.b) {
 			return 'succeed ' + name;
 		} else {
-			return $author$project$Utils$mapFn(len) + (' ' + (name + (' ' + A2($elm$core$String$join, ' ', tup))));
+			if (!_v1.b.b) {
+				var b = _v1.a;
+				return 'map ' + (name + (' ' + A2(
+					$author$project$Generators$Decode$fromTypeAnnotation,
+					$author$project$Utils$Prefix(''),
+					b)));
+			} else {
+				return $author$project$Utils$mapFn(len) + (' ' + (name + (' ' + A2($elm$core$String$join, ' ', tup))));
+			}
 		}
 	}();
 	return 'field ' + ($author$project$Utils$toJsonString(name) + (' (' + (val + ')')));
@@ -3568,8 +3555,8 @@ var $author$project$Generators$Encode$fromTyped = F3(
 var $author$project$Generators$Encode$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;
 	var params = function () {
-		var _v1 = a.S;
-		if (!_v1.b) {
+		var _v2 = a.S;
+		if (!_v2.b) {
 			return '';
 		} else {
 			return ' ' + A2(
@@ -3578,7 +3565,7 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = function (_v0)
 				A2(
 					$elm$core$List$indexedMap,
 					F2(
-						function (b, _v2) {
+						function (b, _v3) {
 							return $author$project$Utils$stringFromAlphabet(b + 1);
 						}),
 					a.S));
@@ -3592,10 +3579,22 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = function (_v0)
 				A4($author$project$Utils$Argument, '', 1 + i, '', false),
 				b);
 		});
-	var encoder = 'list identity [ ' + (A2(
-		$elm$core$String$join,
-		', ',
-		A2($elm$core$List$indexedMap, map, a.S)) + ' ]');
+	var encoder = function () {
+		var _v1 = a.S;
+		if (!_v1.b) {
+			return 'list identity []';
+		} else {
+			if (!_v1.b.b) {
+				var b = _v1.a;
+				return A2(map, 0, b);
+			} else {
+				return 'list identity [ ' + (A2(
+					$elm$core$String$join,
+					', ',
+					A2($elm$core$List$indexedMap, map, a.S)) + ' ]');
+			}
+		}
+	}();
 	return name + (params + (' -> object [ ( ' + ($author$project$Utils$toJsonString(name) + (', ' + (encoder + ' ) ]')))));
 };
 var $author$project$Generators$Encode$fromType = function (a) {
@@ -3679,6 +3678,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Node$Node = F2(
 var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Tupled = function (a) {
 	return {$: 3, a: a};
 };
+var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Unit = {$: 2};
 var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
 	aA: {ay: 0, a_: 0},
 	aq: {ay: 0, a_: 0}
@@ -3777,12 +3777,23 @@ var $author$project$Generators$TypeScript$fromTyped = F2(
 	});
 var $author$project$Generators$TypeScript$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;
+	var _arguments = function () {
+		var _v1 = a.S;
+		if (!_v1.b) {
+			return $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Unit;
+		} else {
+			if (!_v1.b.b) {
+				var _v2 = _v1.a;
+				var b = _v2.b;
+				return b;
+			} else {
+				return $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Tupled(a.S);
+			}
+		}
+	}();
 	var record = _Utils_Tuple2(
 		a.aN,
-		A2(
-			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
-			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
-			$stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Tupled(a.S)));
+		A2($stil4m$elm_syntax$Elm$Syntax$Node$Node, $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange, _arguments));
 	return $author$project$Generators$TypeScript$fromRecord(
 		_List_fromArray(
 			[
@@ -3867,6 +3878,15 @@ var $stil4m$elm_syntax$Elm$Processing$ProcessContext = $elm$core$Basics$identity
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $stil4m$elm_syntax$Elm$Processing$init = $elm$core$Dict$empty;
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(0),
+				entries));
+	});
 var $stil4m$elm_syntax$Elm$Parser$State$State = $elm$core$Basics$identity;
 var $stil4m$elm_syntax$Elm$Parser$State$emptyState = {P: _List_Nil, C: _List_Nil};
 var $stil4m$elm_syntax$Elm$Syntax$File$File = F4(
@@ -6354,7 +6374,6 @@ var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed = F2(
 	function (a, b) {
 		return {$: 1, a: a, b: b};
 	});
-var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Unit = {$: 2};
 var $stil4m$elm_syntax$Elm$Parser$TypeAnnotation$asTypeAnnotation = F2(
 	function (x, xs) {
 		var value = x.b;
