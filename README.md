@@ -33,15 +33,24 @@ generated Main/Main.ts
 export type Maybe<a> = a | null
 
 export type Msg =
-  | ["PressedEnter"]
-  | ["ChangedDraft", string]
-  | ["ReceivedMessage", { user: User, message: string }]
-  | ["ClickedExit"]
+  | { PressedEnter: [] }
+  | { ChangedDraft: string }
+  | { ReceivedMessage: { user: User, message: string } }
+  | { ClickedExit: [] }
+
+export const isPressedEnter = (a: Msg): a is { PressedEnter: [] } => "PressedEnter" in a
+export const isChangedDraft = (a: Msg): a is { ChangedDraft: string } => "ChangedDraft" in a
+export const isReceivedMessage = (a: Msg): a is { ReceivedMessage: { user: User, message: string } } => "ReceivedMessage" in a
+export const isClickedExit = (a: Msg): a is { ClickedExit: [] } => "ClickedExit" in a
 
 export type User =
-  | ["Regular", string, number]
-  | ["Visitor", string]
-  | ["Anonymous"]
+  | { Regular: [string, number] }
+  | { Visitor: string }
+  | { Anonymous: [] }
+
+export const isRegular = (a: User): a is { Regular: [string, number] } => "Regular" in a
+export const isVisitor = (a: User): a is { Visitor: string } => "Visitor" in a
+export const isAnonymous = (a: User): a is { Anonymous: [] } => "Anonymous" in a
 ```
 
 generated Main/Encode.elm
@@ -51,55 +60,34 @@ module Main.Encode exposing (..)
 import Main exposing (..)
 import Json.Encode exposing (..)
 
+encodeMaybe a b = case b of
+   Just c -> a c
+   Nothing -> null
 
-encodeMaybe a b =
-    case b of
-        Just c ->
-            a c
-
-        Nothing ->
-            null
-
-
-encodeDict _ b c =
-    dict identity b c
-
+encodeDict _ b c = dict identity b c
 
 encodeMsg : Msg -> Value
 encodeMsg a =
-    case a of
-        PressedEnter ->
-            list identity [ string "PressedEnter" ]
-
-        ChangedDraft b ->
-            list identity [ string "ChangedDraft", string b ]
-
-        ReceivedMessage b ->
-            list identity [ string "ReceivedMessage", object [ ( "user", encodeUser b.user ), ( "message", string b.message ) ] ]
-
-        ClickedExit ->
-            list identity [ string "ClickedExit" ]
-
+  case a of
+    PressedEnter -> object [ ( "PressedEnter", list identity [] ) ]
+    ChangedDraft b -> object [ ( "ChangedDraft", string b ) ]
+    ReceivedMessage b -> object [ ( "ReceivedMessage", object [ ( "user", encodeUser b.user ), ( "message", string b.message ) ] ) ]
+    ClickedExit -> object [ ( "ClickedExit", list identity [] ) ]
 
 encodeUser : User -> Value
 encodeUser a =
-    case a of
-        Regular b c ->
-            list identity [ string "Regular", string b, int c ]
-
-        Visitor b ->
-            list identity [ string "Visitor", string b ]
-
-        Anonymous ->
-            list identity [ string "Anonymous" ]
+  case a of
+    Regular b c -> object [ ( "Regular", list identity [ string b, int c ] ) ]
+    Visitor b -> object [ ( "Visitor", string b ) ]
+    Anonymous -> object [ ( "Anonymous", list identity [] ) ]
 ```
 
 generated Main/Decode.elm
 ```elm
 module Main.Decode exposing (..)
 
-import Main exposing (..)
 import Json.Decode exposing (..)
+import Main exposing (..)
 import Set
 
 
@@ -113,43 +101,19 @@ decodeDict _ a =
 
 decodeMsg : Decoder Msg
 decodeMsg =
-    index 0 string
-        |> andThen
-            (\tag ->
-                case tag of
-                    "PressedEnter" ->
-                        succeed PressedEnter
-
-                    "ChangedDraft" ->
-                        map ChangedDraft (index 1 string)
-
-                    "ReceivedMessage" ->
-                        map ReceivedMessage (index 1 (map2 (\a b -> { user = a, message = b }) (field "user" decodeUser) (field "message" string)))
-
-                    "ClickedExit" ->
-                        succeed ClickedExit
-
-                    _ ->
-                        fail <| "I can't decode " ++ "Msg" ++ ", what " ++ tag ++ " means?"
-            )
+    oneOf
+        [ field "PressedEnter" (succeed PressedEnter)
+        , field "ChangedDraft" (map ChangedDraft string)
+        , field "ReceivedMessage" (map ReceivedMessage (map2 (\a b -> { user = a, message = b }) (field "user" decodeUser) (field "message" string)))
+        , field "ClickedExit" (succeed ClickedExit)
+        ]
 
 
 decodeUser : Decoder User
 decodeUser =
-    index 0 string
-        |> andThen
-            (\tag ->
-                case tag of
-                    "Regular" ->
-                        map2 Regular (index 1 string) (index 2 int)
-
-                    "Visitor" ->
-                        map Visitor (index 1 string)
-
-                    "Anonymous" ->
-                        succeed Anonymous
-
-                    _ ->
-                        fail <| "I can't decode " ++ "User" ++ ", what " ++ tag ++ " means?"
-            )
+    oneOf
+        [ field "Regular" (map2 Regular (index 0 string) (index 1 int))
+        , field "Visitor" (map Visitor string)
+        , field "Anonymous" (succeed Anonymous)
+        ]
 ```
