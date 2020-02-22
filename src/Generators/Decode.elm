@@ -22,7 +22,7 @@ fromFileToDecoder file =
             String.join "\n\n" <| List.filterMap fromDeclaration file.declarations
     in
     String.join "\n"
-        [ "module " ++ name ++ ".Decode exposing (..)"
+        [ "module Interop." ++ name ++ "Decode exposing (..)"
         , ""
         , "import " ++ name ++ " exposing (..)"
         , "import Json.Decode exposing (..)"

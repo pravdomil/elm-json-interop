@@ -4,13 +4,17 @@
 
 ```sh
 npm i pravdomil/elm-json-interop -g
-elm-json-interop "src/Main.elm"
-# Generates: src/Main/Encode.elm, src/Main/Decode.elm, src/Main/Main.ts
+elm-json-interop src/Main.elm
+
+# Generates:
+# src/Interop/MainEncode.elm
+# src/Interop/MainDecode.elm
+# src/Interop/Main.ts
 ```
 
 ## Example
 
-input file Main.elm
+**Input file**
 ```elm
 module Main exposing (..)
 
@@ -28,7 +32,7 @@ type User
     | Anonymous
 ```
 
-generated Main/Main.ts
+**Generated TypeScript file**
 ```ts
 export type Maybe<a> = a | null
 
@@ -53,7 +57,7 @@ export const isVisitor = (a: User): a is { Visitor: string } => "Visitor" in a
 export const isAnonymous = (a: User): a is { Anonymous: [] } => "Anonymous" in a
 ```
 
-generated Main/Encode.elm
+**Generated Encoder**
 ```elm
 module Main.Encode exposing (..)
 
@@ -82,7 +86,7 @@ encodeUser a =
     Anonymous -> object [ ( "Anonymous", list identity [] ) ]
 ```
 
-generated Main/Decode.elm
+**Generated Decoder**
 ```elm
 module Main.Decode exposing (..)
 

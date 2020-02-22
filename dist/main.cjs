@@ -3391,7 +3391,7 @@ var $author$project$Generators$Decode$fromFileToDecoder = function (file) {
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module ' + (name + '.Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'decodeSet a = map Set.fromList (list a)', '', 'decodeDict _ a = dict a', '', definitions, '']));
+			['module Interop.' + (name + 'Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'decodeSet a = map Set.fromList (list a)', '', 'decodeDict _ a = dict a', '', definitions, '']));
 };
 var $author$project$Utils$Argument = F4(
 	function (prefix, _char, suffix, disabled) {
@@ -3669,7 +3669,7 @@ var $author$project$Generators$Encode$fromFileToEncoder = function (file) {
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module ' + (name + '.Encode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Encode exposing (..)', '', 'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null', '', 'encodeDict _ b c = dict identity b c', '', definitions, '']));
+			['module Interop.' + (name + 'Encode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Encode exposing (..)', '', 'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null', '', 'encodeDict _ b c = dict identity b c', '', definitions, '']));
 };
 var $stil4m$elm_syntax$Elm$Syntax$Node$Node = F2(
 	function (a, b) {

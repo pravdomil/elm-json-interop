@@ -38,12 +38,21 @@ async function processFile(a) {
   const [encode, decode, ts] = await generate(content)
 
   const elmBasename = basename(path, ".elm")
-  const generatedFolder = dirname(path) + "/" + elmBasename
+  const targetFolder = getTargetFolder(path)
 
-  mkdirSync(generatedFolder, { recursive: true })
-  writeFileSync(generatedFolder + "/Encode.elm", encode)
-  writeFileSync(generatedFolder + "/Decode.elm", decode)
-  writeFileSync(generatedFolder + "/" + elmBasename + ".ts", ts)
+  mkdirSync(targetFolder, { recursive: true })
+  writeFileSync(targetFolder + "/" + elmBasename + "Encode.elm", encode)
+  writeFileSync(targetFolder + "/" + elmBasename + "Decode.elm", decode)
+  writeFileSync(targetFolder + "/" + elmBasename + ".ts", ts)
 
-  return "I have generated JSON encoders/decoders and TypeScript definitions in folder:\n" + generatedFolder
+  return "I have generated JSON encoders/decoders and TypeScript definitions in folder:\n" + targetFolder
+}
+
+/**
+ * @param {string} a
+ * @returns {string}
+ */
+function getTargetFolder(a) {
+  if (!a.includes("/src/")) throw new Error("Folder called 'src' must be within file path.")
+  return dirname(a.replace(/^(.*)\/src\/(.*)$/, "$1/src/Interop/$2"))
 }
