@@ -3138,23 +3138,27 @@ var $author$project$Utils$tupleConstructor = function (len) {
 			return '';
 	}
 };
+var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
+	var v = _v0.b;
+	return v;
+};
 var $author$project$Generators$Decode$fromRecord = F2(
 	function (prefix, a) {
 		var len = $elm$core$List$length(a);
 		var fields = A2(
 			$elm$core$List$indexedMap,
 			F2(
-				function (i, _v11) {
-					var _v12 = _v11.b;
-					var _v13 = _v12.a;
-					var b = _v13.b;
+				function (i, _v14) {
+					var _v15 = _v14.b;
+					var _v16 = _v15.a;
+					var b = _v16.b;
 					return b + (' = ' + $author$project$Utils$stringFromAlphabet(i));
 				}),
 			a);
 		var args = A2(
 			$elm$core$List$indexedMap,
 			F2(
-				function (i, _v10) {
+				function (i, _v13) {
 					return $author$project$Utils$stringFromAlphabet(i);
 				}),
 			a);
@@ -3173,7 +3177,17 @@ var $author$project$Generators$Decode$fromRecordField = F2(
 		var _v9 = _v8.a;
 		var a = _v9.b;
 		var b = _v8.b;
-		return '(field ' + ($author$project$Utils$toJsonString(a) + (' ' + (A2($author$project$Generators$Decode$fromTypeAnnotation, prefix, b) + ')')));
+		var maybeField = function () {
+			var _v10 = $stil4m$elm_syntax$Elm$Syntax$Node$value(b);
+			if ((_v10.$ === 1) && (_v10.a.b.b === 'Maybe')) {
+				var _v11 = _v10.a;
+				var _v12 = _v11.b;
+				return 'maybe <| ';
+			} else {
+				return '';
+			}
+		}();
+		return '(' + (maybeField + ('field ' + ($author$project$Utils$toJsonString(a) + (' ' + (A2($author$project$Generators$Decode$fromTypeAnnotation, prefix, b) + ')')))));
 	});
 var $author$project$Generators$Decode$fromTuple = F2(
 	function (prefix, a) {
@@ -3273,10 +3287,6 @@ var $author$project$Generators$Decode$tupleMap = F4(
 	function (prefix, offset, i, a) {
 		return '(index ' + ($elm$core$String$fromInt(offset + i) + (' ' + (A2($author$project$Generators$Decode$fromTypeAnnotation, prefix, a) + ')')));
 	});
-var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
-	var v = _v0.b;
-	return v;
-};
 var $author$project$Generators$Decode$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;
 	var tup = A2(

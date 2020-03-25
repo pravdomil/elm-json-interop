@@ -227,4 +227,13 @@ fromRecord prefix a =
 
 fromRecordField : Prefix -> Node RecordField -> String
 fromRecordField prefix (Node _ ( Node _ a, b )) =
-    "(field " ++ toJsonString a ++ " " ++ fromTypeAnnotation prefix b ++ ")"
+    let
+        maybeField =
+            case Node.value b of
+                Typed (Node _ ( _, "Maybe" )) _ ->
+                    "maybe <| "
+
+                _ ->
+                    ""
+    in
+    "(" ++ maybeField ++ "field " ++ toJsonString a ++ " " ++ fromTypeAnnotation prefix b ++ ")"
