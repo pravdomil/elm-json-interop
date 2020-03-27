@@ -3082,6 +3082,29 @@ var $elm$core$List$filterMap = F2(
 var $author$project$Utils$Prefix = function (prefix) {
 	return {R: prefix};
 };
+var $elm$core$String$fromList = _String_fromList;
+var $elm$core$String$foldr = _String_foldr;
+var $elm$core$String$toList = function (string) {
+	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
+};
+var $elm$core$Char$toLower = _Char_toLower;
+var $author$project$Generators$Decode$firstToLowerCase = function (a) {
+	var _v0 = $elm$core$String$toList(a);
+	if (_v0.b) {
+		var first = _v0.a;
+		var rest = _v0.b;
+		return $elm$core$String$fromList(
+			A2(
+				$elm$core$List$cons,
+				$elm$core$Char$toLower(first),
+				rest));
+	} else {
+		return a;
+	}
+};
+var $author$project$Generators$Decode$decoderName = function (a) {
+	return $author$project$Generators$Decode$firstToLowerCase(a) + 'Decoder';
+};
 var $elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -3265,7 +3288,9 @@ var $author$project$Generators$Decode$fromTyped = F3(
 						_Utils_ap(
 							name,
 							_List_fromArray(
-								['decode' + str])));
+								[
+									$author$project$Generators$Decode$decoderName(str)
+								])));
 			}
 		}();
 		var generics = function () {
@@ -3321,7 +3346,7 @@ var $author$project$Generators$Decode$fromType = function (a) {
 	var signature = function () {
 		var _v2 = a.U;
 		if (!_v2.b) {
-			return 'decode' + (name + (' : Decoder ' + (name + '\n')));
+			return $author$project$Generators$Decode$decoderName(name) + (' : Decoder ' + (name + '\n'));
 		} else {
 			return '';
 		}
@@ -3343,7 +3368,7 @@ var $author$project$Generators$Decode$fromType = function (a) {
 					a.U));
 		}
 	}();
-	var declaration = 'decode' + (name + (generics + ' ='));
+	var declaration = $author$project$Generators$Decode$decoderName(name) + (generics + ' =');
 	return _Utils_ap(signature, declaration);
 };
 var $author$project$Generators$Decode$fromCustomType = function (a) {
@@ -3401,7 +3426,7 @@ var $author$project$Generators$Decode$fromFileToDecoder = function (file) {
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module Interop.' + (name + 'Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'decodeSet a = map Set.fromList (list a)', '', 'decodeDict _ a = dict a', '', definitions, '']));
+			['module Interop.' + (name + 'Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'setDecoder a = map Set.fromList (list a)', '', 'dictDecoder _ a = dict a', '', definitions, '']));
 };
 var $author$project$Utils$Argument = F4(
 	function (prefix, _char, suffix, disabled) {
@@ -4492,10 +4517,6 @@ var $stil4m$elm_syntax$Combine$fromCore = function (p) {
 			p);
 	};
 };
-var $elm$core$String$foldr = _String_foldr;
-var $elm$core$String$toList = function (string) {
-	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
-};
 var $stil4m$elm_syntax$Combine$Char$satisfy = function (pred) {
 	return $stil4m$elm_syntax$Combine$fromCore(
 		A2(
@@ -4522,7 +4543,6 @@ var $stil4m$elm_syntax$Combine$Char$anyChar = A2(
 			$stil4m$elm_syntax$Combine$fail('expected any character'))),
 	$stil4m$elm_syntax$Combine$Char$satisfy(
 		$elm$core$Basics$always(true)));
-var $elm$core$String$fromList = _String_fromList;
 var $stil4m$elm_syntax$Combine$Char$char = function (c) {
 	return A2(
 		$stil4m$elm_syntax$Combine$andThen,

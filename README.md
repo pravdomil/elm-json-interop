@@ -95,26 +95,26 @@ import Main exposing (..)
 import Set
 
 
-decodeSet a =
+setDecoder a =
     map Set.fromList (list a)
 
 
-decodeDict _ a =
+dictDecoder _ a =
     dict a
 
 
-decodeMsg : Decoder Msg
-decodeMsg =
+msgDecoder : Decoder Msg
+msgDecoder =
     oneOf
         [ field "PressedEnter" (succeed PressedEnter)
         , field "ChangedDraft" (map ChangedDraft string)
-        , field "ReceivedMessage" (map ReceivedMessage (map2 (\a b -> { user = a, message = b }) (field "user" decodeUser) (field "message" string)))
+        , field "ReceivedMessage" (map ReceivedMessage (map2 (\a b -> { user = a, message = b }) (field "user" userDecoder) (field "message" string)))
         , field "ClickedExit" (succeed ClickedExit)
         ]
 
 
-decodeUser : Decoder User
-decodeUser =
+userDecoder : Decoder User
+userDecoder =
     oneOf
         [ field "Regular" (map2 Regular (index 0 string) (index 1 int))
         , field "Visitor" (map Visitor string)

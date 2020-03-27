@@ -28,9 +28,9 @@ fromFileToDecoder file =
         , "import Json.Decode exposing (..)"
         , "import Set"
         , ""
-        , "decodeSet a = map Set.fromList (list a)"
+        , "setDecoder a = map Set.fromList (list a)"
         , ""
-        , "decodeDict _ a = dict a"
+        , "dictDecoder _ a = dict a"
         , ""
         , definitions
         , ""
@@ -59,7 +59,7 @@ fromType a =
         signature =
             case a.generics of
                 [] ->
-                    "decode" ++ name ++ " : Decoder " ++ name ++ "\n"
+                    decoderName name ++ " : Decoder " ++ name ++ "\n"
 
                 _ ->
                     ""
@@ -73,7 +73,7 @@ fromType a =
                     (++) " " <| String.join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
         declaration =
-            "decode" ++ name ++ generics ++ " ="
+            decoderName name ++ generics ++ " ="
     in
     signature ++ declaration
 
@@ -185,7 +185,7 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     "value"
 
                 _ ->
-                    String.join "." (name ++ [ "decode" ++ str ])
+                    String.join "." (name ++ [ decoderName str ])
     in
     normalizedStr ++ generics
 
@@ -237,3 +237,18 @@ fromRecordField prefix (Node _ ( Node _ a, b )) =
                     ""
     in
     "(" ++ maybeField ++ "field " ++ toJsonString a ++ " " ++ fromTypeAnnotation prefix b ++ ")"
+
+
+decoderName : String -> String
+decoderName a =
+    firstToLowerCase a ++ "Decoder"
+
+
+firstToLowerCase : String -> String
+firstToLowerCase a =
+    case String.toList a of
+        first :: rest ->
+            Char.toLower first :: rest |> String.fromList
+
+        _ ->
+            a
