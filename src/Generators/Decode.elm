@@ -231,7 +231,7 @@ fromRecordField prefix (Node _ ( Node _ a, b )) =
         maybeField =
             case Node.value b of
                 Typed (Node _ ( _, "Maybe" )) _ ->
-                    "maybe <| "
+                    "(\\maybeField -> oneOf [ maybeField, succeed Nothing ]) <| "
 
                 _ ->
                     ""

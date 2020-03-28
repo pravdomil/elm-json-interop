@@ -3205,7 +3205,7 @@ var $author$project$Generators$Decode$fromRecordField = F2(
 			if ((_v10.$ === 1) && (_v10.a.b.b === 'Maybe')) {
 				var _v11 = _v10.a;
 				var _v12 = _v11.b;
-				return 'maybe <| ';
+				return '(\\maybeField -> oneOf [ maybeField, succeed Nothing ]) <| ';
 			} else {
 				return '';
 			}
