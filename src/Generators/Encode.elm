@@ -3,29 +3,25 @@ module Generators.Encode exposing (fromFileToEncoder)
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
-import Elm.Syntax.Module as Module
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Argument, argumentToString, stringFromAlphabet, toJsonString)
+import Utils exposing (Argument, argumentToString, moduleName, stringFromAlphabet, toJsonString)
 
 
 fromFileToEncoder : File -> String
 fromFileToEncoder f =
     let
-        name =
-            join "." <| Module.moduleName <| Node.value f.moduleDefinition
-
         definitions =
             join "\n\n" <| List.filterMap fromDeclaration f.declarations
     in
     join "\n"
-        [ "module Interop." ++ name ++ "Encode exposing (..)"
+        [ "module Interop." ++ moduleName f ++ "Encode exposing (..)"
         , ""
-        , "import " ++ name ++ " exposing (..)"
+        , "import " ++ moduleName f ++ " exposing (..)"
         , "import Json.Encode exposing (..)"
         , ""
         , "encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null"

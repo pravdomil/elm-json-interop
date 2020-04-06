@@ -1,6 +1,10 @@
 module Utils exposing (..)
 
+import Elm.Syntax.File exposing (File)
+import Elm.Syntax.Module as Module
+import Elm.Syntax.Node as Node exposing (Node(..))
 import Json.Encode
+import String exposing (join)
 
 
 type alias Argument =
@@ -71,3 +75,8 @@ mapFn a =
 
         b ->
             "map" ++ String.fromInt b
+
+
+moduleName : File -> String
+moduleName f =
+    Node.value f.moduleDefinition |> Module.moduleName |> join "."

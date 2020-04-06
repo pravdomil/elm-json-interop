@@ -3256,15 +3256,28 @@ var $author$project$Generators$Decode$fromTyped = F3(
 		var _v1 = _v0.b;
 		var name = _v1.a;
 		var str = _v1.b;
-		var normalizedStr = function () {
-			var _v3 = A2(
+		var generics = function () {
+			if (!nodes.b) {
+				return '';
+			} else {
+				return ' ' + A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						$author$project$Generators$Decode$fromTypeAnnotation(prefix),
+						nodes));
+			}
+		}();
+		var fn = function () {
+			var _v2 = A2(
 				$elm$core$String$join,
 				'.',
 				_Utils_ap(
 					name,
 					_List_fromArray(
 						[str])));
-			switch (_v3) {
+			switch (_v2) {
 				case 'Int':
 					return 'int';
 				case 'Float':
@@ -3293,20 +3306,7 @@ var $author$project$Generators$Decode$fromTyped = F3(
 								])));
 			}
 		}();
-		var generics = function () {
-			if (!nodes.b) {
-				return '';
-			} else {
-				return ' ' + A2(
-					$elm$core$String$join,
-					' ',
-					A2(
-						$elm$core$List$map,
-						$author$project$Generators$Decode$fromTypeAnnotation(prefix),
-						nodes));
-			}
-		}();
-		return _Utils_ap(normalizedStr, generics);
+		return _Utils_ap(fn, generics);
 	});
 var $author$project$Generators$Decode$tupleMap = F4(
 	function (prefix, offset, i, a) {
@@ -3412,21 +3412,36 @@ var $stil4m$elm_syntax$Elm$Syntax$Module$moduleName = function (m) {
 			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.r);
 	}
 };
-var $author$project$Generators$Decode$fromFileToDecoder = function (file) {
-	var name = A2(
+var $author$project$Utils$moduleName = function (f) {
+	return A2(
 		$elm$core$String$join,
 		'.',
 		$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(file.bx)));
+			$stil4m$elm_syntax$Elm$Syntax$Node$value(f.bx)));
+};
+var $author$project$Generators$Decode$fromFileToDecoder = function (f) {
 	var definitions = A2(
 		$elm$core$String$join,
 		'\n\n',
-		A2($elm$core$List$filterMap, $author$project$Generators$Decode$fromDeclaration, file.bi));
+		A2($elm$core$List$filterMap, $author$project$Generators$Decode$fromDeclaration, f.bi));
 	return A2(
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module Interop.' + (name + 'Decode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Decode exposing (..)', 'import Set', '', 'setDecoder a = map Set.fromList (list a)', '', 'dictDecoder _ a = dict a', '', definitions, '']));
+			[
+				'module Interop.' + ($author$project$Utils$moduleName(f) + 'Decode exposing (..)'),
+				'',
+				'import ' + ($author$project$Utils$moduleName(f) + ' exposing (..)'),
+				'import Json.Decode exposing (..)',
+				'import Set',
+				'',
+				'setDecoder a = map Set.fromList (list a)',
+				'',
+				'dictDecoder _ a = dict a',
+				'',
+				definitions,
+				''
+			]));
 };
 var $author$project$Utils$Argument = F4(
 	function (prefix, _char, suffix, disabled) {
@@ -3530,15 +3545,31 @@ var $author$project$Generators$Encode$fromTyped = F3(
 		var _v1 = _v0.b;
 		var name = _v1.a;
 		var str = _v1.b;
-		var normalizedStr = function () {
-			var _v3 = A2(
+		var generics = function () {
+			if (!nodes.b) {
+				return '';
+			} else {
+				return ' ' + A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						$author$project$Generators$Encode$fromTypeAnnotation(
+							_Utils_update(
+								argument,
+								{bk: true})),
+						nodes));
+			}
+		}();
+		var fn = function () {
+			var _v2 = A2(
 				$elm$core$String$join,
 				'.',
 				_Utils_ap(
 					name,
 					_List_fromArray(
 						[str])));
-			switch (_v3) {
+			switch (_v2) {
 				case 'Int':
 					return 'int';
 				case 'Float':
@@ -3565,24 +3596,8 @@ var $author$project$Generators$Encode$fromTyped = F3(
 								['encode' + str])));
 			}
 		}();
-		var generics = function () {
-			if (!nodes.b) {
-				return '';
-			} else {
-				return ' ' + A2(
-					$elm$core$String$join,
-					' ',
-					A2(
-						$elm$core$List$map,
-						$author$project$Generators$Encode$fromTypeAnnotation(
-							_Utils_update(
-								argument,
-								{bk: true})),
-						nodes));
-			}
-		}();
 		return _Utils_ap(
-			normalizedStr,
+			fn,
 			_Utils_ap(
 				generics,
 				$author$project$Utils$argumentToString(argument)));
@@ -3690,21 +3705,28 @@ var $author$project$Generators$Encode$fromDeclaration = function (_v0) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Generators$Encode$fromFileToEncoder = function (file) {
-	var name = A2(
-		$elm$core$String$join,
-		'.',
-		$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(file.bx)));
+var $author$project$Generators$Encode$fromFileToEncoder = function (f) {
 	var definitions = A2(
 		$elm$core$String$join,
 		'\n\n',
-		A2($elm$core$List$filterMap, $author$project$Generators$Encode$fromDeclaration, file.bi));
+		A2($elm$core$List$filterMap, $author$project$Generators$Encode$fromDeclaration, f.bi));
 	return A2(
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
-			['module Interop.' + (name + 'Encode exposing (..)'), '', 'import ' + (name + ' exposing (..)'), 'import Json.Encode exposing (..)', '', 'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null', '', 'encodeDict _ b c = dict identity b c', '', definitions, '']));
+			[
+				'module Interop.' + ($author$project$Utils$moduleName(f) + 'Encode exposing (..)'),
+				'',
+				'import ' + ($author$project$Utils$moduleName(f) + ' exposing (..)'),
+				'import Json.Encode exposing (..)',
+				'',
+				'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null',
+				'',
+				'encodeDict _ b c = dict identity b c',
+				'',
+				definitions,
+				''
+			]));
 };
 var $stil4m$elm_syntax$Elm$Syntax$Node$Node = F2(
 	function (a, b) {
@@ -3768,15 +3790,25 @@ var $author$project$Generators$TypeScript$fromTyped = F2(
 		var _v1 = _v0.b;
 		var name = _v1.a;
 		var str = _v1.b;
-		var normalizedStr = function () {
-			var _v3 = A2(
+		var generics = function () {
+			if (!nodes.b) {
+				return '';
+			} else {
+				return '<' + (A2(
+					$elm$core$String$join,
+					', ',
+					A2($elm$core$List$map, $author$project$Generators$TypeScript$fromTypeAnnotation, nodes)) + '>');
+			}
+		}();
+		var fn = function () {
+			var _v2 = A2(
 				$elm$core$String$join,
 				'.',
 				_Utils_ap(
 					name,
 					_List_fromArray(
 						[str])));
-			switch (_v3) {
+			switch (_v2) {
 				case 'Int':
 					return 'number';
 				case 'Float':
@@ -3794,21 +3826,11 @@ var $author$project$Generators$TypeScript$fromTyped = F2(
 				case 'Encode.Value':
 					return 'unknown';
 				default:
-					var a = _v3;
+					var a = _v2;
 					return a;
 			}
 		}();
-		var generics = function () {
-			if (!nodes.b) {
-				return '';
-			} else {
-				return '<' + (A2(
-					$elm$core$String$join,
-					', ',
-					A2($elm$core$List$map, $author$project$Generators$TypeScript$fromTypeAnnotation, nodes)) + '>');
-			}
-		}();
-		return _Utils_ap(normalizedStr, generics);
+		return _Utils_ap(fn, generics);
 	});
 var $author$project$Generators$TypeScript$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;

@@ -3,29 +3,25 @@ module Generators.Decode exposing (fromFileToDecoder)
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
-import Elm.Syntax.Module as Module
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Prefix, mapFn, prefixToString, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (Prefix, mapFn, moduleName, prefixToString, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
 fromFileToDecoder : File -> String
 fromFileToDecoder f =
     let
-        name =
-            join "." <| Module.moduleName <| Node.value f.moduleDefinition
-
         definitions =
             join "\n\n" <| List.filterMap fromDeclaration f.declarations
     in
     join "\n"
-        [ "module Interop." ++ name ++ "Decode exposing (..)"
+        [ "module Interop." ++ moduleName f ++ "Decode exposing (..)"
         , ""
-        , "import " ++ name ++ " exposing (..)"
+        , "import " ++ moduleName f ++ " exposing (..)"
         , "import Json.Decode exposing (..)"
         , "import Set"
         , ""
