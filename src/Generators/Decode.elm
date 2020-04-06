@@ -9,6 +9,7 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
+import String exposing (join)
 import Utils exposing (Prefix, mapFn, prefixToString, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
@@ -16,12 +17,12 @@ fromFileToDecoder : File -> String
 fromFileToDecoder file =
     let
         name =
-            String.join "." <| Module.moduleName <| Node.value file.moduleDefinition
+            join "." <| Module.moduleName <| Node.value file.moduleDefinition
 
         definitions =
-            String.join "\n\n" <| List.filterMap fromDeclaration file.declarations
+            join "\n\n" <| List.filterMap fromDeclaration file.declarations
     in
-    String.join "\n"
+    join "\n"
         [ "module Interop." ++ name ++ "Decode exposing (..)"
         , ""
         , "import " ++ name ++ " exposing (..)"
@@ -70,7 +71,7 @@ fromType a =
                     ""
 
                 _ ->
-                    (++) " " <| String.join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
+                    (++) " " <| join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
         declaration =
             decoderName name ++ generics ++ " ="
@@ -87,7 +88,7 @@ fromCustomType : Type -> String
 fromCustomType a =
     let
         cases =
-            String.join "\n    , " <| List.map fromCustomTypeConstructor a.constructors
+            join "\n    , " <| List.map fromCustomTypeConstructor a.constructors
     in
     fromType a ++ "\n  oneOf\n    [ " ++ cases ++ "\n    ]"
 
@@ -113,7 +114,7 @@ fromCustomTypeConstructor (Node _ a) =
                     "map " ++ name ++ " " ++ fromTypeAnnotation (Prefix "") b
 
                 _ ->
-                    mapFn len ++ " " ++ name ++ " " ++ String.join " " tup
+                    mapFn len ++ " " ++ name ++ " " ++ join " " tup
     in
     "field " ++ toJsonString name ++ " (" ++ val ++ ")"
 
@@ -156,10 +157,10 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    (++) " " <| String.join " " <| List.map (fromTypeAnnotation prefix) nodes
+                    (++) " " <| join " " <| List.map (fromTypeAnnotation prefix) nodes
 
         normalizedStr =
-            case String.join "." (name ++ [ str ]) of
+            case join "." (name ++ [ str ]) of
                 "Int" ->
                     "int"
 
@@ -185,7 +186,7 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     "value"
 
                 _ ->
-                    String.join "." (name ++ [ decoderName str ])
+                    join "." (name ++ [ decoderName str ])
     in
     normalizedStr ++ generics
 
@@ -199,7 +200,7 @@ fromTuple prefix a =
         tup =
             List.indexedMap (tupleMap prefix 0) a
     in
-    mapFn len ++ " " ++ tupleConstructor len ++ " " ++ String.join " " tup
+    mapFn len ++ " " ++ tupleConstructor len ++ " " ++ join " " tup
 
 
 tupleMap : Prefix -> Int -> Int -> Node TypeAnnotation -> String
@@ -220,9 +221,9 @@ fromRecord prefix a =
             List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ stringFromAlphabet i) a
 
         lambda =
-            "(\\" ++ String.join " " args ++ " -> { " ++ String.join ", " fields ++ " })"
+            "(\\" ++ join " " args ++ " -> { " ++ join ", " fields ++ " })"
     in
-    mapFn len ++ " " ++ lambda ++ " " ++ (String.join " " <| List.map (fromRecordField prefix) a)
+    mapFn len ++ " " ++ lambda ++ " " ++ (join " " <| List.map (fromRecordField prefix) a)
 
 
 fromRecordField : Prefix -> Node RecordField -> String

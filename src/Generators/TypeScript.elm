@@ -9,6 +9,7 @@ import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
+import String exposing (join)
 import Utils exposing (toJsonString)
 
 
@@ -19,7 +20,7 @@ fromFileToTs file =
             [ "export type Maybe<a> = a | null" ]
                 ++ List.filterMap fromDeclaration file.declarations
     in
-    String.join "\n\n" definitions ++ "\n"
+    join "\n\n" definitions ++ "\n"
 
 
 fromDeclaration : Node Declaration -> Maybe String
@@ -51,7 +52,7 @@ fromTypeGenerics a =
             ""
 
         _ ->
-            "<" ++ String.join ", " (List.map Node.value a.generics) ++ ">"
+            "<" ++ join ", " (List.map Node.value a.generics) ++ ">"
 
 
 fromTypeAlias : TypeAlias -> String
@@ -63,7 +64,7 @@ fromCustomType : Type -> String
 fromCustomType a =
     let
         constructors =
-            String.join "\n  | " <| List.map fromCustomTypeConstructor a.constructors
+            join "\n  | " <| List.map fromCustomTypeConstructor a.constructors
     in
     fromType a ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeGuards a
 
@@ -93,7 +94,7 @@ fromCustomTypeGuards a =
                 ++ toJsonString tag
                 ++ " in a"
     in
-    String.join "\n" <| List.map mapGuard a.constructors
+    join "\n" <| List.map mapGuard a.constructors
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
@@ -162,10 +163,10 @@ fromTyped (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    "<" ++ (String.join ", " <| List.map fromTypeAnnotation nodes) ++ ">"
+                    "<" ++ (join ", " <| List.map fromTypeAnnotation nodes) ++ ">"
 
         normalizedStr =
-            case String.join "." (name ++ [ str ]) of
+            case join "." (name ++ [ str ]) of
                 "Int" ->
                     "number"
 
@@ -198,12 +199,12 @@ fromTyped (Node _ ( name, str )) nodes =
 
 fromTuple : List (Node TypeAnnotation) -> String
 fromTuple a =
-    "[" ++ (String.join ", " <| List.map fromTypeAnnotation a) ++ "]"
+    "[" ++ (join ", " <| List.map fromTypeAnnotation a) ++ "]"
 
 
 fromRecord : List (Node RecordField) -> String
 fromRecord a =
-    "{ " ++ (String.join ", " <| List.map fromRecordField a) ++ " }"
+    "{ " ++ (join ", " <| List.map fromRecordField a) ++ " }"
 
 
 fromRecordField : Node RecordField -> String

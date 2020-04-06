@@ -9,6 +9,7 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
+import String exposing (join)
 import Utils exposing (Argument, argumentToString, stringFromAlphabet, toJsonString)
 
 
@@ -16,12 +17,12 @@ fromFileToEncoder : File -> String
 fromFileToEncoder file =
     let
         name =
-            String.join "." <| Module.moduleName <| Node.value file.moduleDefinition
+            join "." <| Module.moduleName <| Node.value file.moduleDefinition
 
         definitions =
-            String.join "\n\n" <| List.filterMap fromDeclaration file.declarations
+            join "\n\n" <| List.filterMap fromDeclaration file.declarations
     in
-    String.join "\n"
+    join "\n"
         [ "module Interop." ++ name ++ "Encode exposing (..)"
         , ""
         , "import " ++ name ++ " exposing (..)"
@@ -69,7 +70,7 @@ fromType a =
                     ""
 
                 _ ->
-                    (++) " " <| String.join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
+                    (++) " " <| join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
         declaration =
             "encode" ++ name ++ generics ++ " a ="
@@ -86,7 +87,7 @@ fromCustomType : Type -> String
 fromCustomType a =
     let
         cases =
-            String.join "\n    " <| List.map fromCustomTypeConstructor a.constructors
+            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
     in
     fromType a ++ "\n  case a of\n    " ++ cases
 
@@ -103,7 +104,7 @@ fromCustomTypeConstructor (Node _ a) =
                     ""
 
                 _ ->
-                    " " ++ (String.join " " <| List.indexedMap (\b _ -> stringFromAlphabet (b + 1)) a.arguments)
+                    " " ++ (join " " <| List.indexedMap (\b _ -> stringFromAlphabet (b + 1)) a.arguments)
 
         map i b =
             fromTypeAnnotation (Argument "" (1 + i) "" False) b
@@ -118,7 +119,7 @@ fromCustomTypeConstructor (Node _ a) =
                     map 0 b
 
                 _ ->
-                    "list identity [ " ++ (String.join ", " <| List.indexedMap map a.arguments) ++ " ]"
+                    "list identity [ " ++ (join ", " <| List.indexedMap map a.arguments) ++ " ]"
     in
     name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ encoder ++ " ) ]"
 
@@ -157,10 +158,10 @@ fromTyped argument (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    (++) " " <| String.join " " <| List.map (fromTypeAnnotation { argument | disabled = True }) nodes
+                    (++) " " <| join " " <| List.map (fromTypeAnnotation { argument | disabled = True }) nodes
 
         normalizedStr =
-            case String.join "." (name ++ [ str ]) of
+            case join "." (name ++ [ str ]) of
                 "Int" ->
                     "int"
 
@@ -186,7 +187,7 @@ fromTyped argument (Node _ ( name, str )) nodes =
                     "identity"
 
                 _ ->
-                    String.join "." (name ++ [ "encode" ++ str ])
+                    join "." (name ++ [ "encode" ++ str ])
     in
     normalizedStr ++ generics ++ argumentToString argument
 
@@ -195,17 +196,17 @@ fromTuple : Argument -> List (Node TypeAnnotation) -> String
 fromTuple argument a =
     let
         arguments =
-            String.join ", " <| List.indexedMap (\i _ -> stringFromAlphabet (i + argument.char + 1)) a
+            join ", " <| List.indexedMap (\i _ -> stringFromAlphabet (i + argument.char + 1)) a
 
         map i b =
             fromTypeAnnotation (Argument "" (i + argument.char + 1) "" False) b
     in
-    "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (String.join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
+    "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 
 
 fromRecord : Argument -> RecordDefinition -> String
 fromRecord argument a =
-    "object [ " ++ (String.join ", " <| List.map (fromRecordField argument) a) ++ " ]"
+    "object [ " ++ (join ", " <| List.map (fromRecordField argument) a) ++ " ]"
 
 
 fromRecordField : Argument -> Node RecordField -> String
