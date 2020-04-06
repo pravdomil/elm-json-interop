@@ -160,8 +160,8 @@ fromTyped argument (Node _ ( name, str )) nodes =
                 _ ->
                     (++) " " <| join " " <| List.map (fromTypeAnnotation { argument | disabled = True }) nodes
 
-        normalizedStr =
-            case join "." (name ++ [ str ]) of
+        fn =
+            case name ++ [ str ] |> join "." of
                 "Int" ->
                     "int"
 
@@ -187,9 +187,9 @@ fromTyped argument (Node _ ( name, str )) nodes =
                     "identity"
 
                 _ ->
-                    join "." (name ++ [ "encode" ++ str ])
+                    name ++ [ "encode" ++ str ] |> join "."
     in
-    normalizedStr ++ generics ++ argumentToString argument
+    fn ++ generics ++ argumentToString argument
 
 
 fromTuple : Argument -> List (Node TypeAnnotation) -> String

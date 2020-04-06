@@ -165,8 +165,8 @@ fromTyped (Node _ ( name, str )) nodes =
                 _ ->
                     "<" ++ (join ", " <| List.map fromTypeAnnotation nodes) ++ ">"
 
-        normalizedStr =
-            case join "." (name ++ [ str ]) of
+        fn =
+            case name ++ [ str ] |> join "." of
                 "Int" ->
                     "number"
 
@@ -194,7 +194,7 @@ fromTyped (Node _ ( name, str )) nodes =
                 a ->
                     a
     in
-    normalizedStr ++ generics
+    fn ++ generics
 
 
 fromTuple : List (Node TypeAnnotation) -> String

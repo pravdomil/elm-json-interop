@@ -159,8 +159,8 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                 _ ->
                     (++) " " <| join " " <| List.map (fromTypeAnnotation prefix) nodes
 
-        normalizedStr =
-            case join "." (name ++ [ str ]) of
+        fn =
+            case name ++ [ str ] |> join "." of
                 "Int" ->
                     "int"
 
@@ -186,9 +186,9 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     "value"
 
                 _ ->
-                    join "." (name ++ [ decoderName str ])
+                    name ++ [ decoderName str ] |> join "."
     in
-    normalizedStr ++ generics
+    fn ++ generics
 
 
 fromTuple : Prefix -> List (Node TypeAnnotation) -> String
