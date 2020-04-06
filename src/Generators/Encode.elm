@@ -14,13 +14,13 @@ import Utils exposing (Argument, argumentToString, stringFromAlphabet, toJsonStr
 
 
 fromFileToEncoder : File -> String
-fromFileToEncoder file =
+fromFileToEncoder f =
     let
         name =
-            join "." <| Module.moduleName <| Node.value file.moduleDefinition
+            join "." <| Module.moduleName <| Node.value f.moduleDefinition
 
         definitions =
-            join "\n\n" <| List.filterMap fromDeclaration file.declarations
+            join "\n\n" <| List.filterMap fromDeclaration f.declarations
     in
     join "\n"
         [ "module Interop." ++ name ++ "Encode exposing (..)"
