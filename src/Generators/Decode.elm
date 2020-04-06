@@ -21,7 +21,7 @@ fromFileToDecoder f =
     join "\n"
         [ "module Interop." ++ moduleName f ++ "Decode exposing (..)"
         , ""
-        , "import " ++ moduleName f ++ " exposing (..)"
+        , "import " ++ moduleName f ++ " as A"
         , "import Json.Decode exposing (..)"
         , "import Set"
         , ""
@@ -56,7 +56,7 @@ fromType a =
         signature =
             case a.generics of
                 [] ->
-                    decoderName name ++ " : Decoder " ++ name ++ "\n"
+                    decoderName name ++ " : Decoder A." ++ name ++ "\n"
 
                 _ ->
                     ""
@@ -93,7 +93,7 @@ fromCustomTypeConstructor : Node ValueConstructor -> String
 fromCustomTypeConstructor (Node _ a) =
     let
         name =
-            Node.value a.name
+            "A." ++ Node.value a.name
 
         len =
             List.length a.arguments
@@ -112,7 +112,7 @@ fromCustomTypeConstructor (Node _ a) =
                 _ ->
                     mapFn len ++ " " ++ name ++ " " ++ join " " tup
     in
-    "field " ++ toJsonString name ++ " (" ++ val ++ ")"
+    "field " ++ toJsonString (Node.value a.name) ++ " (" ++ val ++ ")"
 
 
 fromTypeAnnotation : Prefix -> Node TypeAnnotation -> String

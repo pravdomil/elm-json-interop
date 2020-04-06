@@ -21,7 +21,7 @@ fromFileToEncoder f =
     join "\n"
         [ "module Interop." ++ moduleName f ++ "Encode exposing (..)"
         , ""
-        , "import " ++ moduleName f ++ " exposing (..)"
+        , "import " ++ moduleName f ++ " as A"
         , "import Json.Encode exposing (..)"
         , ""
         , "encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null"
@@ -55,7 +55,7 @@ fromType a =
         signature =
             case a.generics of
                 [] ->
-                    "encode" ++ name ++ " : " ++ name ++ " -> Value\n"
+                    "encode" ++ name ++ " : A." ++ name ++ " -> Value\n"
 
                 _ ->
                     ""
@@ -117,7 +117,7 @@ fromCustomTypeConstructor (Node _ a) =
                 _ ->
                     "list identity [ " ++ (join ", " <| List.indexedMap map a.arguments) ++ " ]"
     in
-    name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ encoder ++ " ) ]"
+    "A." ++ name ++ params ++ " -> object [ ( " ++ toJsonString name ++ ", " ++ encoder ++ " ) ]"
 
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
