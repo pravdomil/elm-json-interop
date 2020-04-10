@@ -1,7 +1,10 @@
 module Utils exposing (..)
 
+import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.File exposing (File)
-import Elm.Syntax.Module as Module
+import Elm.Syntax.Import exposing (Import)
+import Elm.Syntax.Module as Module exposing (Module)
+import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Json.Encode
 import String exposing (join)
@@ -77,6 +80,43 @@ mapFn a =
             "map" ++ String.fromInt b
 
 
-moduleName : File -> String
-moduleName f =
+moduleNameFromFile : File -> String
+moduleNameFromFile f =
     Node.value f.moduleDefinition |> Module.moduleName |> join "."
+
+
+moduleNameToString : ModuleName -> String
+moduleNameToString n =
+    n |> join "."
+
+
+getImports : (ModuleName -> String -> String) -> (String -> String) -> List (Node Import) -> List String
+getImports toImport_ toName i =
+    let
+        toImport : Node Import -> Maybe String
+        toImport (Node _ ii) =
+            case ii.exposingList of
+                Just (Node _ (Explicit e)) ->
+                    let
+                        imports : String
+                        imports =
+                            e |> List.filterMap toExpose |> join ", "
+
+                        toExpose : Node TopLevelExpose -> Maybe String
+                        toExpose (Node _ ee) =
+                            case ee of
+                                TypeOrAliasExpose name ->
+                                    Just (toName name)
+
+                                TypeExpose { name } ->
+                                    Just (toName name)
+
+                                _ ->
+                                    Nothing
+                    in
+                    Just (toImport_ (Node.value ii.moduleName) imports)
+
+                _ ->
+                    Nothing
+    in
+    i |> List.filterMap toImport

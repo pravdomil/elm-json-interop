@@ -9,27 +9,26 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Prefix, mapFn, moduleName, prefixToString, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (Prefix, getImports, mapFn, moduleNameFromFile, moduleNameToString, prefixToString, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
 fromFileToDecoder : File -> String
 fromFileToDecoder f =
-    let
-        definitions =
-            join "\n\n" <| List.filterMap fromDeclaration f.declarations
-    in
     join "\n"
-        [ "module Interop." ++ moduleName f ++ "Decode exposing (..)"
+        [ "module Interop." ++ moduleNameFromFile f ++ "Decode exposing (..)"
         , ""
-        , "import " ++ moduleName f ++ " as A"
+        , "import " ++ moduleNameFromFile f ++ " as A"
         , "import Json.Decode exposing (..)"
         , "import Set"
+        , f.imports
+            |> getImports (\n i -> "import Interop." ++ moduleNameToString n ++ "Decode exposing (" ++ i ++ ")") decoderName
+            |> join "\n"
         , ""
         , "setDecoder a = map Set.fromList (list a)"
         , ""
         , "dictDecoder _ a = dict a"
         , ""
-        , definitions
+        , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
         , ""
         ]
 

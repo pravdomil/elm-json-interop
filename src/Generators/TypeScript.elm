@@ -10,17 +10,32 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (toJsonString)
+import Utils exposing (getImports, toJsonString)
 
 
 fromFileToTs : File -> String
-fromFileToTs file =
-    let
-        definitions =
-            [ "export type Maybe<a> = a | null" ]
-                ++ List.filterMap fromDeclaration file.declarations
-    in
-    join "\n\n" definitions ++ "\n"
+fromFileToTs f =
+    join "\n"
+        [ f.imports |> getImports (\n i -> "import { " ++ i ++ " } from \"./" ++ nameToString n ++ "\"") identity |> join "\n"
+        , ""
+        , "export type Maybe<a> = a | null"
+        , ""
+        , List.filterMap fromDeclaration f.declarations |> join "\n\n"
+        , ""
+        ]
+
+
+nameToString : ModuleName -> String
+nameToString n =
+    case n of
+        [] ->
+            ""
+
+        [ a ] ->
+            a
+
+        _ :: a ->
+            nameToString a
 
 
 fromDeclaration : Node Declaration -> Maybe String
