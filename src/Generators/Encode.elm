@@ -182,6 +182,9 @@ fromTyped argument (Node _ ( name, str )) nodes =
                 "Encode.Value" ->
                     "identity"
 
+                "Decode.Value" ->
+                    "identity"
+
                 _ ->
                     name ++ [ "encode" ++ str ] |> join "."
     in

@@ -3294,6 +3294,8 @@ var $author$project$Generators$Decode$fromTyped = F3(
 					return 'maybe';
 				case 'Encode.Value':
 					return 'value';
+				case 'Decode.Value':
+					return 'value';
 				default:
 					return A2(
 						$elm$core$String$join,
@@ -3587,6 +3589,8 @@ var $author$project$Generators$Encode$fromTyped = F3(
 					return 'set';
 				case 'Encode.Value':
 					return 'identity';
+				case 'Decode.Value':
+					return 'identity';
 				default:
 					return A2(
 						$elm$core$String$join,
@@ -3825,6 +3829,8 @@ var $author$project$Generators$TypeScript$fromTyped = F2(
 				case 'Dict':
 					return 'Record';
 				case 'Encode.Value':
+					return 'unknown';
+				case 'Decode.Value':
 					return 'unknown';
 				default:
 					var a = _v2;

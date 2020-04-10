@@ -191,6 +191,9 @@ fromTyped (Node _ ( name, str )) nodes =
                 "Encode.Value" ->
                     "unknown"
 
+                "Decode.Value" ->
+                    "unknown"
+
                 a ->
                     a
     in

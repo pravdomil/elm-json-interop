@@ -181,6 +181,9 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                 "Encode.Value" ->
                     "value"
 
+                "Decode.Value" ->
+                    "value"
+
                 _ ->
                     name ++ [ decoderName str ] |> join "."
     in
