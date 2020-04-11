@@ -121,27 +121,31 @@ fromCustomTypeConstructor (Node _ a) =
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
 fromTypeAnnotation argument (Node _ a) =
-    case a of
-        GenericType b ->
-            "t_" ++ b ++ argumentToString argument
+    let
+        result =
+            case a of
+                GenericType b ->
+                    "t_" ++ b ++ argumentToString argument
 
-        Typed b c ->
-            fromTyped argument b c
+                Typed b c ->
+                    fromTyped argument b c
 
-        Unit ->
-            "(\\_ -> list identity [])" ++ argumentToString argument
+                Unit ->
+                    "(\\_ -> list identity [])" ++ argumentToString argument
 
-        Tupled b ->
-            fromTuple argument b
+                Tupled b ->
+                    fromTuple argument b
 
-        Record b ->
-            fromRecord argument b
+                Record b ->
+                    fromRecord argument b
 
-        GenericRecord _ (Node _ b) ->
-            fromRecord argument b
+                GenericRecord _ (Node _ b) ->
+                    fromRecord argument b
 
-        FunctionTypeAnnotation _ _ ->
-            "Debug.todo \"I don't know how to encode function.\""
+                FunctionTypeAnnotation _ _ ->
+                    "Debug.todo \"I don't know how to encode function.\""
+    in
+    "(" ++ result ++ ")"
 
 
 fromTyped : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String

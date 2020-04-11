@@ -3579,29 +3579,32 @@ var $author$project$Generators$Encode$fromTuple = F2(
 var $author$project$Generators$Encode$fromTypeAnnotation = F2(
 	function (argument, _v4) {
 		var a = _v4.b;
-		switch (a.$) {
-			case 0:
-				var b = a.a;
-				return 't_' + (b + $author$project$Utils$argumentToString(argument));
-			case 1:
-				var b = a.a;
-				var c = a.b;
-				return A3($author$project$Generators$Encode$fromTyped, argument, b, c);
-			case 2:
-				return '(\\_ -> list identity [])' + $author$project$Utils$argumentToString(argument);
-			case 3:
-				var b = a.a;
-				return A2($author$project$Generators$Encode$fromTuple, argument, b);
-			case 4:
-				var b = a.a;
-				return A2($author$project$Generators$Encode$fromRecord, argument, b);
-			case 5:
-				var _v6 = a.b;
-				var b = _v6.b;
-				return A2($author$project$Generators$Encode$fromRecord, argument, b);
-			default:
-				return 'Debug.todo \"I don\'t know how to encode function.\"';
-		}
+		var result = function () {
+			switch (a.$) {
+				case 0:
+					var b = a.a;
+					return 't_' + (b + $author$project$Utils$argumentToString(argument));
+				case 1:
+					var b = a.a;
+					var c = a.b;
+					return A3($author$project$Generators$Encode$fromTyped, argument, b, c);
+				case 2:
+					return '(\\_ -> list identity [])' + $author$project$Utils$argumentToString(argument);
+				case 3:
+					var b = a.a;
+					return A2($author$project$Generators$Encode$fromTuple, argument, b);
+				case 4:
+					var b = a.a;
+					return A2($author$project$Generators$Encode$fromRecord, argument, b);
+				case 5:
+					var _v6 = a.b;
+					var b = _v6.b;
+					return A2($author$project$Generators$Encode$fromRecord, argument, b);
+				default:
+					return 'Debug.todo \"I don\'t know how to encode function.\"';
+			}
+		}();
+		return '(' + (result + ')');
 	});
 var $author$project$Generators$Encode$fromTyped = F3(
 	function (argument, _v0, nodes) {
