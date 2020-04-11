@@ -95,8 +95,11 @@ getImports toImport_ toName i =
     let
         toImport : Node Import -> Maybe String
         toImport (Node _ ii) =
-            case ii.exposingList of
-                Just (Node _ (Explicit e)) ->
+            case ( ii.moduleName, ii.exposingList ) of
+                ( Node _ [ "Dict" ], _ ) ->
+                    Nothing
+
+                ( _, Just (Node _ (Explicit e)) ) ->
                     let
                         imports : String
                         imports =
