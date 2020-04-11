@@ -3814,7 +3814,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
 var $author$project$Generators$TypeScript$fromRecord = function (a) {
 	return '{ ' + (A2(
 		$elm$core$String$join,
-		', ',
+		'; ',
 		A2($elm$core$List$map, $author$project$Generators$TypeScript$fromRecordField, a)) + ' }');
 };
 var $author$project$Generators$TypeScript$fromRecordField = function (_v7) {

@@ -222,7 +222,7 @@ fromTuple a =
 
 fromRecord : List (Node RecordField) -> String
 fromRecord a =
-    "{ " ++ (join ", " <| List.map fromRecordField a) ++ " }"
+    "{ " ++ (join "; " <| List.map fromRecordField a) ++ " }"
 
 
 fromRecordField : Node RecordField -> String
