@@ -3289,7 +3289,7 @@ var $author$project$Generators$Decode$fromTyped = F3(
 				case 'List':
 					return 'list';
 				case 'Array':
-					return 'list';
+					return 'array';
 				case 'Maybe':
 					return 'maybe';
 				case 'Encode.Value':
@@ -3404,45 +3404,70 @@ var $author$project$Generators$Decode$fromDeclaration = function (_v0) {
 };
 var $author$project$Utils$getImports = F3(
 	function (toImport_, toName, i) {
-		var toImport = function (_v6) {
-			var ii = _v6.b;
+		var toImport = function (_v10) {
+			var ii = _v10.b;
 			var _v0 = _Utils_Tuple2(ii.aL, ii.bo);
-			if ((_v0.a.b.b && (_v0.a.b.a === 'Dict')) && (!_v0.a.b.b.b)) {
-				var _v1 = _v0.a;
-				var _v2 = _v1.b;
-				return $elm$core$Maybe$Nothing;
-			} else {
-				if ((!_v0.b.$) && (_v0.b.a.b.$ === 1)) {
-					var _v3 = _v0.b.a;
-					var e = _v3.b.a;
-					var toExpose = function (_v5) {
-						var ee = _v5.b;
-						switch (ee.$) {
-							case 2:
-								var name = ee.a;
-								return $elm$core$Maybe$Just(
-									toName(name));
-							case 3:
-								var name = ee.a.U;
-								return $elm$core$Maybe$Just(
-									toName(name));
-							default:
+			_v0$3:
+			while (true) {
+				_v0$4:
+				while (true) {
+					if (_v0.a.b.b && (!_v0.a.b.b.b)) {
+						switch (_v0.a.b.a) {
+							case 'Array':
+								var _v1 = _v0.a;
+								var _v2 = _v1.b;
 								return $elm$core$Maybe$Nothing;
+							case 'Set':
+								var _v3 = _v0.a;
+								var _v4 = _v3.b;
+								return $elm$core$Maybe$Nothing;
+							case 'Dict':
+								var _v5 = _v0.a;
+								var _v6 = _v5.b;
+								return $elm$core$Maybe$Nothing;
+							default:
+								if ((!_v0.b.$) && (_v0.b.a.b.$ === 1)) {
+									break _v0$3;
+								} else {
+									break _v0$4;
+								}
 						}
-					};
-					var imports = A2(
-						$elm$core$String$join,
-						', ',
-						A2($elm$core$List$filterMap, toExpose, e));
-					return $elm$core$Maybe$Just(
-						A2(
-							toImport_,
-							$stil4m$elm_syntax$Elm$Syntax$Node$value(ii.aL),
-							imports));
-				} else {
-					return $elm$core$Maybe$Nothing;
+					} else {
+						if ((!_v0.b.$) && (_v0.b.a.b.$ === 1)) {
+							break _v0$3;
+						} else {
+							break _v0$4;
+						}
+					}
 				}
+				return $elm$core$Maybe$Nothing;
 			}
+			var _v7 = _v0.b.a;
+			var e = _v7.b.a;
+			var toExpose = function (_v9) {
+				var ee = _v9.b;
+				switch (ee.$) {
+					case 2:
+						var name = ee.a;
+						return $elm$core$Maybe$Just(
+							toName(name));
+					case 3:
+						var name = ee.a.U;
+						return $elm$core$Maybe$Just(
+							toName(name));
+					default:
+						return $elm$core$Maybe$Nothing;
+				}
+			};
+			var imports = A2(
+				$elm$core$String$join,
+				', ',
+				A2($elm$core$List$filterMap, toExpose, e));
+			return $elm$core$Maybe$Just(
+				A2(
+					toImport_,
+					$stil4m$elm_syntax$Elm$Syntax$Node$value(ii.aL),
+					imports));
 		};
 		return A2($elm$core$List$filterMap, toImport, i);
 	});
@@ -3478,8 +3503,8 @@ var $author$project$Generators$Decode$fromFileToDecoder = function (f) {
 				'module Interop.' + ($author$project$Utils$moduleNameFromFile(f) + 'Decode exposing (..)'),
 				'',
 				'import ' + ($author$project$Utils$moduleNameFromFile(f) + ' as A'),
+				'import Interop.Basics.BasicsDecode exposing (..)',
 				'import Json.Decode exposing (..)',
-				'import Set',
 				A2(
 				$elm$core$String$join,
 				'\n',
@@ -3491,10 +3516,6 @@ var $author$project$Generators$Decode$fromFileToDecoder = function (f) {
 						}),
 					$author$project$Generators$Decode$decoderName,
 					f.bs)),
-				'',
-				'setDecoder a = map Set.fromList (list a)',
-				'',
-				'dictDecoder _ a = dict a',
 				'',
 				A2(
 				$elm$core$String$join,
@@ -3647,7 +3668,7 @@ var $author$project$Generators$Encode$fromTyped = F3(
 				case 'List':
 					return 'list';
 				case 'Array':
-					return 'list';
+					return 'array';
 				case 'Set':
 					return 'set';
 				case 'Encode.Value':
@@ -3784,6 +3805,7 @@ var $author$project$Generators$Encode$fromFileToEncoder = function (f) {
 				'module Interop.' + ($author$project$Utils$moduleNameFromFile(f) + 'Encode exposing (..)'),
 				'',
 				'import ' + ($author$project$Utils$moduleNameFromFile(f) + ' as A'),
+				'import Interop.Basics.BasicsEncode exposing (..)',
 				'import Json.Encode exposing (..)',
 				A2(
 				$elm$core$String$join,
@@ -3796,10 +3818,6 @@ var $author$project$Generators$Encode$fromFileToEncoder = function (f) {
 						}),
 					$author$project$Generators$Encode$encoderName,
 					f.bs)),
-				'',
-				'encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null',
-				'',
-				'encodeDict _ b c = dict identity b c',
 				'',
 				A2(
 				$elm$core$String$join,

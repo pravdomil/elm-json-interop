@@ -18,15 +18,11 @@ fromFileToDecoder f =
         [ "module Interop." ++ moduleNameFromFile f ++ "Decode exposing (..)"
         , ""
         , "import " ++ moduleNameFromFile f ++ " as A"
+        , "import Interop.Basics.BasicsDecode exposing (..)"
         , "import Json.Decode exposing (..)"
-        , "import Set"
         , f.imports
             |> getImports (\n i -> "import Interop." ++ moduleNameToString n ++ "Decode exposing (" ++ i ++ ")") decoderName
             |> join "\n"
-        , ""
-        , "setDecoder a = map Set.fromList (list a)"
-        , ""
-        , "dictDecoder _ a = dict a"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
         , ""
@@ -172,7 +168,7 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     "list"
 
                 "Array" ->
-                    "list"
+                    "array"
 
                 "Maybe" ->
                     "maybe"

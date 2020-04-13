@@ -18,14 +18,11 @@ fromFileToEncoder f =
         [ "module Interop." ++ moduleNameFromFile f ++ "Encode exposing (..)"
         , ""
         , "import " ++ moduleNameFromFile f ++ " as A"
+        , "import Interop.Basics.BasicsEncode exposing (..)"
         , "import Json.Encode exposing (..)"
         , f.imports
             |> getImports (\n i -> "import Interop." ++ moduleNameToString n ++ "Encode exposing (" ++ i ++ ")") encoderName
             |> join "\n"
-        , ""
-        , "encodeMaybe a b = case b of\n   Just c -> a c\n   Nothing -> null"
-        , ""
-        , "encodeDict _ b c = dict identity b c"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
         , ""
@@ -177,7 +174,7 @@ fromTyped argument (Node _ ( name, str )) nodes =
                     "list"
 
                 "Array" ->
-                    "list"
+                    "array"
 
                 "Set" ->
                     "set"

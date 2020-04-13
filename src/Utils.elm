@@ -96,6 +96,12 @@ getImports toImport_ toName i =
         toImport : Node Import -> Maybe String
         toImport (Node _ ii) =
             case ( ii.moduleName, ii.exposingList ) of
+                ( Node _ [ "Array" ], _ ) ->
+                    Nothing
+
+                ( Node _ [ "Set" ], _ ) ->
+                    Nothing
+
                 ( Node _ [ "Dict" ], _ ) ->
                     Nothing
 
