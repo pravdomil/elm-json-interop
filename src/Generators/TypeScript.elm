@@ -227,4 +227,13 @@ fromRecord a =
 
 fromRecordField : Node RecordField -> String
 fromRecordField (Node _ ( Node _ a, b )) =
-    a ++ ": " ++ fromTypeAnnotation b
+    let
+        maybeField =
+            case Node.value b of
+                Typed (Node _ ( _, "Maybe" )) _ ->
+                    "?"
+
+                _ ->
+                    ""
+    in
+    a ++ maybeField ++ ": " ++ fromTypeAnnotation b

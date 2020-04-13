@@ -3831,7 +3831,17 @@ var $author$project$Generators$TypeScript$fromRecordField = function (_v7) {
 	var _v9 = _v8.a;
 	var a = _v9.b;
 	var b = _v8.b;
-	return a + (': ' + $author$project$Generators$TypeScript$fromTypeAnnotation(b));
+	var maybeField = function () {
+		var _v10 = $stil4m$elm_syntax$Elm$Syntax$Node$value(b);
+		if ((_v10.$ === 1) && (_v10.a.b.b === 'Maybe')) {
+			var _v11 = _v10.a;
+			var _v12 = _v11.b;
+			return '?';
+		} else {
+			return '';
+		}
+	}();
+	return a + (maybeField + (': ' + $author$project$Generators$TypeScript$fromTypeAnnotation(b)));
 };
 var $author$project$Generators$TypeScript$fromTuple = function (a) {
 	return '[' + (A2(
