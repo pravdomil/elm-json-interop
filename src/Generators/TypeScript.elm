@@ -3,6 +3,7 @@ module Generators.TypeScript exposing (fromFileToTs)
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
+import Elm.Syntax.Module as Module
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Range exposing (emptyRange)
@@ -15,27 +16,17 @@ import Utils exposing (getImports, toJsonString)
 
 fromFileToTs : File -> String
 fromFileToTs f =
+    let
+        root =
+            "../" |> String.repeat ((Node.value f.moduleDefinition |> Module.moduleName |> List.length) - 1)
+    in
     join "\n"
-        [ f.imports |> getImports (\n i -> "import { " ++ i ++ " } from \"./" ++ nameToString n ++ "\"") identity |> join "\n"
-        , ""
-        , "export type Maybe<a> = a | null"
+        [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
+        , f.imports |> getImports (\n i -> "import { " ++ i ++ " } from \"" ++ root ++ (n |> join "/") ++ "\"") identity |> join "\n"
         , ""
         , List.filterMap fromDeclaration f.declarations |> join "\n\n"
         , ""
         ]
-
-
-nameToString : ModuleName -> String
-nameToString n =
-    case n of
-        [] ->
-            ""
-
-        [ a ] ->
-            a
-
-        _ :: a ->
-            nameToString a
 
 
 fromDeclaration : Node Declaration -> Maybe String
@@ -192,6 +183,9 @@ fromTyped (Node _ ( name, str )) nodes =
                     "boolean"
 
                 "String" ->
+                    "string"
+
+                "Char" ->
                     "string"
 
                 "List" ->

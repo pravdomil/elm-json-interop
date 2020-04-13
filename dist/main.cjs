@@ -2359,6 +2359,43 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
 
 // STRINGS
 
@@ -3925,6 +3962,8 @@ var $author$project$Generators$TypeScript$fromTyped = F2(
 					return 'boolean';
 				case 'String':
 					return 'string';
+				case 'Char':
+					return 'string';
 				case 'List':
 					return 'Array';
 				case 'Set':
@@ -4034,30 +4073,33 @@ var $author$project$Generators$TypeScript$fromDeclaration = function (_v0) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Generators$TypeScript$nameToString = function (n) {
-	nameToString:
-	while (true) {
-		if (!n.b) {
-			return '';
-		} else {
-			if (!n.b.b) {
-				var a = n.a;
-				return a;
-			} else {
-				var a = n.b;
-				var $temp$n = a;
-				n = $temp$n;
-				continue nameToString;
-			}
-		}
-	}
-};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
 var $author$project$Generators$TypeScript$fromFileToTs = function (f) {
+	var root = A2(
+		$elm$core$String$repeat,
+		$elm$core$List$length(
+			$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
+				$stil4m$elm_syntax$Elm$Syntax$Node$value(f.bx))) - 1,
+		'../');
 	return A2(
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
 			[
+				'import { Maybe, Result } from \"' + (root + 'Basics/Basics\"'),
 				A2(
 				$elm$core$String$join,
 				'\n',
@@ -4065,12 +4107,10 @@ var $author$project$Generators$TypeScript$fromFileToTs = function (f) {
 					$author$project$Utils$getImports,
 					F2(
 						function (n, i) {
-							return 'import { ' + (i + (' } from \"./' + ($author$project$Generators$TypeScript$nameToString(n) + '\"')));
+							return 'import { ' + (i + (' } from \"' + (root + (A2($elm$core$String$join, '/', n) + '\"'))));
 						}),
 					$elm$core$Basics$identity,
 					f.bs)),
-				'',
-				'export type Maybe<a> = a | null',
 				'',
 				A2(
 				$elm$core$String$join,
