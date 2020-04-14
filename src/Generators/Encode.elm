@@ -194,11 +194,14 @@ fromTyped argument (Node _ ( name, str )) nodes =
 fromTuple : Argument -> List (Node TypeAnnotation) -> String
 fromTuple argument a =
     let
+        tupleArgument i =
+            Argument ("t" ++ argument.prefix) (i + argument.char + 1) "" False
+
         arguments =
-            join ", " <| List.indexedMap (\i _ -> stringFromAlphabet (i + argument.char + 1)) a
+            join ", " <| List.indexedMap (\i _ -> tupleArgument i |> argumentToString) a
 
         map i b =
-            fromTypeAnnotation (Argument "" (i + argument.char + 1) "" False) b
+            fromTypeAnnotation (tupleArgument i) b
     in
     "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 

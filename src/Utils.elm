@@ -21,16 +21,7 @@ argumentToString { prefix, char, suffix, disabled } =
             ""
 
         False ->
-            let
-                constant =
-                    stringFromAlphabet char ++ suffix
-            in
-            case prefix == "" of
-                True ->
-                    " " ++ constant
-
-                False ->
-                    " (" ++ prefix ++ " " ++ constant ++ ")"
+            " ( " ++ prefix ++ stringFromAlphabet char ++ suffix ++ " )"
 
 
 type alias Prefix =
