@@ -54,5 +54,5 @@ async function processFile(a) {
  */
 function getTargetFolder(a) {
   if (!a.includes("/src/")) throw new Error("Folder called 'src' must be within file path.")
-  return dirname(a.replace(/^(.*)\/src\/(.*)$/, "$1/src/Interop/$2"))
+  return dirname(a.replace(/^(.*)\/src\/(.*)$/, "$1/src/Generated/$2"))
 }

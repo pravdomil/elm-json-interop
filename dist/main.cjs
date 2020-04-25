@@ -3537,10 +3537,10 @@ var $author$project$Generators$Decode$fromFileToDecoder = function (f) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Interop.' + ($author$project$Utils$moduleNameFromFile(f) + 'Decode exposing (..)'),
+				'module Generated.' + ($author$project$Utils$moduleNameFromFile(f) + 'Decode exposing (..)'),
 				'',
 				'import ' + ($author$project$Utils$moduleNameFromFile(f) + ' as A'),
-				'import Interop.Basics.BasicsDecode exposing (..)',
+				'import Generated.Basics.BasicsDecode exposing (..)',
 				'import Json.Decode exposing (..)',
 				A2(
 				$elm$core$String$join,
@@ -3549,7 +3549,7 @@ var $author$project$Generators$Decode$fromFileToDecoder = function (f) {
 					$author$project$Utils$getImports,
 					F2(
 						function (n, i) {
-							return 'import Interop.' + ($author$project$Utils$moduleNameToString(n) + ('Decode exposing (' + (i + ')')));
+							return 'import Generated.' + ($author$project$Utils$moduleNameToString(n) + ('Decode exposing (' + (i + ')')));
 						}),
 					$author$project$Generators$Decode$decoderName,
 					f.br)),
@@ -3835,10 +3835,10 @@ var $author$project$Generators$Encode$fromFileToEncoder = function (f) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Interop.' + ($author$project$Utils$moduleNameFromFile(f) + 'Encode exposing (..)'),
+				'module Generated.' + ($author$project$Utils$moduleNameFromFile(f) + 'Encode exposing (..)'),
 				'',
 				'import ' + ($author$project$Utils$moduleNameFromFile(f) + ' as A'),
-				'import Interop.Basics.BasicsEncode exposing (..)',
+				'import Generated.Basics.BasicsEncode exposing (..)',
 				'import Json.Encode exposing (..)',
 				A2(
 				$elm$core$String$join,
@@ -3847,7 +3847,7 @@ var $author$project$Generators$Encode$fromFileToEncoder = function (f) {
 					$author$project$Utils$getImports,
 					F2(
 						function (n, i) {
-							return 'import Interop.' + ($author$project$Utils$moduleNameToString(n) + ('Encode exposing (' + (i + ')')));
+							return 'import Generated.' + ($author$project$Utils$moduleNameToString(n) + ('Encode exposing (' + (i + ')')));
 						}),
 					$author$project$Generators$Encode$encoderName,
 					f.br)),

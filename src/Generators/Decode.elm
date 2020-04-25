@@ -15,13 +15,13 @@ import Utils exposing (Prefix, getImports, mapFn, moduleNameFromFile, moduleName
 fromFileToDecoder : File -> String
 fromFileToDecoder f =
     join "\n"
-        [ "module Interop." ++ moduleNameFromFile f ++ "Decode exposing (..)"
+        [ "module Generated." ++ moduleNameFromFile f ++ "Decode exposing (..)"
         , ""
         , "import " ++ moduleNameFromFile f ++ " as A"
-        , "import Interop.Basics.BasicsDecode exposing (..)"
+        , "import Generated.Basics.BasicsDecode exposing (..)"
         , "import Json.Decode exposing (..)"
         , f.imports
-            |> getImports (\n i -> "import Interop." ++ moduleNameToString n ++ "Decode exposing (" ++ i ++ ")") decoderName
+            |> getImports (\n i -> "import Generated." ++ moduleNameToString n ++ "Decode exposing (" ++ i ++ ")") decoderName
             |> join "\n"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"

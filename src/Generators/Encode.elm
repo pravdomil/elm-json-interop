@@ -15,13 +15,13 @@ import Utils exposing (Argument, argumentToString, getImports, moduleNameFromFil
 fromFileToEncoder : File -> String
 fromFileToEncoder f =
     join "\n"
-        [ "module Interop." ++ moduleNameFromFile f ++ "Encode exposing (..)"
+        [ "module Generated." ++ moduleNameFromFile f ++ "Encode exposing (..)"
         , ""
         , "import " ++ moduleNameFromFile f ++ " as A"
-        , "import Interop.Basics.BasicsEncode exposing (..)"
+        , "import Generated.Basics.BasicsEncode exposing (..)"
         , "import Json.Encode exposing (..)"
         , f.imports
-            |> getImports (\n i -> "import Interop." ++ moduleNameToString n ++ "Encode exposing (" ++ i ++ ")") encoderName
+            |> getImports (\n i -> "import Generated." ++ moduleNameToString n ++ "Encode exposing (" ++ i ++ ")") encoderName
             |> join "\n"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"

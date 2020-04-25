@@ -7,9 +7,9 @@ npm i pravdomil/elm-json-interop -g
 elm-json-interop src/Main.elm
 
 # Generates:
-# src/Interop/MainEncode.elm
-# src/Interop/MainDecode.elm
-# src/Interop/Main.ts
+# src/Generated/MainEncode.elm
+# src/Generated/MainDecode.elm
+# src/Generated/Main.ts
 ```
 
 ## Example
