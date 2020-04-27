@@ -86,37 +86,39 @@ getImports toImport_ toName i =
     let
         toImport : Node Import -> Maybe String
         toImport (Node _ ii) =
-            case ( ii.moduleName, ii.exposingList ) of
-                ( Node _ [ "Array" ], _ ) ->
+            case ii.moduleName of
+                Node _ [ "Array" ] ->
                     Nothing
 
-                ( Node _ [ "Set" ], _ ) ->
+                Node _ [ "Set" ] ->
                     Nothing
 
-                ( Node _ [ "Dict" ], _ ) ->
+                Node _ [ "Dict" ] ->
                     Nothing
-
-                ( _, Just (Node _ (Explicit e)) ) ->
-                    let
-                        imports : String
-                        imports =
-                            e |> List.filterMap toExpose |> join ", "
-
-                        toExpose : Node TopLevelExpose -> Maybe String
-                        toExpose (Node _ ee) =
-                            case ee of
-                                TypeOrAliasExpose name ->
-                                    Just (toName name)
-
-                                TypeExpose { name } ->
-                                    Just (toName name)
-
-                                _ ->
-                                    Nothing
-                    in
-                    Just (toImport_ (Node.value ii.moduleName) imports)
 
                 _ ->
-                    Nothing
+                    case ii.exposingList of
+                        Just (Node _ (Explicit e)) ->
+                            let
+                                imports : String
+                                imports =
+                                    e |> List.filterMap toExpose |> join ", "
+
+                                toExpose : Node TopLevelExpose -> Maybe String
+                                toExpose (Node _ ee) =
+                                    case ee of
+                                        TypeOrAliasExpose name ->
+                                            Just (toName name)
+
+                                        TypeExpose { name } ->
+                                            Just (toName name)
+
+                                        _ ->
+                                            Nothing
+                            in
+                            Just (toImport_ (Node.value ii.moduleName) imports)
+
+                        _ ->
+                            Nothing
     in
     i |> List.filterMap toImport
