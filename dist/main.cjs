@@ -3381,48 +3381,95 @@ var $author$project$Generators$Decode$fromCustomTypeConstructor = function (_v0)
 	return 'field ' + ($author$project$Utils$toJsonString(
 		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)) + (' (' + (val + ')')));
 };
-var $author$project$Generators$Decode$fromType = function (a) {
-	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
-	var signature = function () {
-		var _v2 = a.R;
-		if (!_v2.b) {
-			return $author$project$Generators$Decode$decoderName(name) + (' : Decoder A.' + (name + '\n'));
+var $elm$core$String$contains = _String_contains;
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
 		} else {
-			return '';
+			return $elm$core$Maybe$Nothing;
 		}
-	}();
-	var generics = function () {
-		var _v0 = a.R;
-		if (!_v0.b) {
-			return '';
+	});
+var $elm$core$String$toLower = _String_toLower;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
 		} else {
-			return ' ' + A2(
-				$elm$core$String$join,
-				' ',
+			return _default;
+		}
+	});
+var $author$project$Generators$Decode$fromType = F2(
+	function (a, body) {
+		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
+		var signature = function () {
+			var _v3 = a.R;
+			if (!_v3.b) {
+				return $author$project$Generators$Decode$decoderName(name) + (' : Decoder A.' + (name + '\n'));
+			} else {
+				return '';
+			}
+		}();
+		var lazyDecoded = A2(
+			$elm$core$String$contains,
+			'lazy decoded',
+			$elm$core$String$toLower(
 				A2(
-					$elm$core$List$map,
-					function (_v1) {
-						var v = _v1.b;
-						return 't_' + v;
-					},
-					a.R));
-		}
-	}();
-	var declaration = $author$project$Generators$Decode$decoderName(name) + (generics + ' =');
-	return _Utils_ap(signature, declaration);
-};
+					$elm$core$Maybe$withDefault,
+					'',
+					A2($elm$core$Maybe$map, $stil4m$elm_syntax$Elm$Syntax$Node$value, a.bj))));
+		var generics = function () {
+			var _v1 = a.R;
+			if (!_v1.b) {
+				return '';
+			} else {
+				return ' ' + A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$map,
+						function (_v2) {
+							var v = _v2.b;
+							return 't_' + v;
+						},
+						a.R));
+			}
+		}();
+		var declaration = $author$project$Generators$Decode$decoderName(name) + (generics + ' =');
+		return A2(
+			$elm$core$String$join,
+			'',
+			_List_fromArray(
+				[
+					signature,
+					declaration,
+					function () {
+					if (lazyDecoded) {
+						return ' lazy (\\_ ->' + (body + '\n  )');
+					} else {
+						return body;
+					}
+				}()
+				]));
+	});
 var $author$project$Generators$Decode$fromCustomType = function (a) {
 	var cases = A2(
 		$elm$core$String$join,
 		'\n    , ',
 		A2($elm$core$List$map, $author$project$Generators$Decode$fromCustomTypeConstructor, a.bd));
-	return $author$project$Generators$Decode$fromType(a) + ('\n  oneOf\n    [ ' + (cases + '\n    ]'));
+	return A2($author$project$Generators$Decode$fromType, a, '\n  oneOf\n    [ ' + (cases + '\n    ]'));
 };
 var $author$project$Generators$Decode$fromTypeAlias = function (a) {
-	return $author$project$Generators$Decode$fromType(a) + (' ' + A2(
-		$author$project$Generators$Decode$fromTypeAnnotation,
-		$author$project$Utils$Prefix(''),
-		a.bJ));
+	return A2(
+		$author$project$Generators$Decode$fromType,
+		a,
+		'\n  ' + A2(
+			$author$project$Generators$Decode$fromTypeAnnotation,
+			$author$project$Utils$Prefix(''),
+			a.bJ));
 };
 var $author$project$Generators$Decode$fromDeclaration = function (_v0) {
 	var a = _v0.b;
@@ -4406,15 +4453,6 @@ var $stil4m$elm_syntax$Elm$Syntax$Range$compareLocations = F2(
 	});
 var $elm$core$List$sortWith = _List_sortWith;
 var $stil4m$elm_syntax$Elm$Syntax$Range$sortLocations = $elm$core$List$sortWith($stil4m$elm_syntax$Elm$Syntax$Range$compareLocations);
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $stil4m$elm_syntax$Elm$Syntax$Range$combine = function (ranges) {
 	var starts = $stil4m$elm_syntax$Elm$Syntax$Range$sortLocations(
 		A2(
@@ -4694,16 +4732,6 @@ var $stil4m$elm_syntax$Combine$fail = function (m) {
 			$elm$parser$Parser$problem(m));
 	};
 };
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $elm$parser$Parser$UnexpectedChar = {$: 11};
 var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
 var $elm$parser$Parser$Advanced$chompIf = F2(
@@ -5144,7 +5172,6 @@ var $elm$parser$Parser$symbol = function (str) {
 			str,
 			$elm$parser$Parser$ExpectingSymbol(str)));
 };
-var $elm$core$String$toLower = _String_toLower;
 var $elm$core$Result$withDefault = F2(
 	function (def, result) {
 		if (!result.$) {

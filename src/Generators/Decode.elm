@@ -42,9 +42,12 @@ fromDeclaration (Node _ a) =
             Nothing
 
 
-fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-fromType a =
+fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String -> String
+fromType a body =
     let
+        lazyDecoded =
+            a.documentation |> Maybe.map Node.value |> Maybe.withDefault "" |> String.toLower |> String.contains "lazy decoded"
+
         name =
             Node.value a.name
 
@@ -67,12 +70,21 @@ fromType a =
         declaration =
             decoderName name ++ generics ++ " ="
     in
-    signature ++ declaration
+    [ signature
+    , declaration
+    , case lazyDecoded of
+        True ->
+            " lazy (\\_ ->" ++ body ++ "\n  )"
+
+        False ->
+            body
+    ]
+        |> join ""
 
 
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
-    fromType a ++ " " ++ fromTypeAnnotation (Prefix "") a.typeAnnotation
+    fromType a ("\n  " ++ fromTypeAnnotation (Prefix "") a.typeAnnotation)
 
 
 fromCustomType : Type -> String
@@ -81,7 +93,7 @@ fromCustomType a =
         cases =
             join "\n    , " <| List.map fromCustomTypeConstructor a.constructors
     in
-    fromType a ++ "\n  oneOf\n    [ " ++ cases ++ "\n    ]"
+    fromType a ("\n  oneOf\n    [ " ++ cases ++ "\n    ]")
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
