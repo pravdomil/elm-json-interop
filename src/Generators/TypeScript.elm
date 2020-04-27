@@ -69,10 +69,26 @@ fromTypeAlias a =
 fromCustomType : Type -> String
 fromCustomType a =
     let
+        type_ =
+            case ( String.split "JsValue" (Node.value a.name), a.constructors ) of
+                ( _ :: t :: [], (Node _ { name }) :: [] ) ->
+                    { a
+                        | constructors =
+                            [ Node emptyRange
+                                (ValueConstructor name
+                                    [ Node emptyRange (Typed (Node emptyRange ( [], t )) [])
+                                    ]
+                                )
+                            ]
+                    }
+
+                _ ->
+                    a
+
         constructors =
-            join "\n  | " <| List.map fromCustomTypeConstructor a.constructors
+            join "\n  | " <| List.map fromCustomTypeConstructor type_.constructors
     in
-    fromType a ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeGuards a
+    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeGuards type_
 
 
 fromCustomTypeGuards : Type -> String

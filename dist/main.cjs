@@ -3863,14 +3863,22 @@ var $stil4m$elm_syntax$Elm$Syntax$Node$Node = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
 	});
-var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Tupled = function (a) {
-	return {$: 3, a: a};
-};
-var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Unit = {$: 2};
+var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var $stil4m$elm_syntax$Elm$Syntax$Type$ValueConstructor = F2(
+	function (name, _arguments) {
+		return {P: _arguments, T: name};
+	});
 var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
 	ax: {av: 0, aX: 0},
 	ao: {av: 0, aX: 0}
 };
+var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Tupled = function (a) {
+	return {$: 3, a: a};
+};
+var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Unit = {$: 2};
 var $author$project$Generators$TypeScript$fromRecord = function (a) {
 	return '{ ' + (A2(
 		$elm$core$String$join,
@@ -4045,11 +4053,55 @@ var $author$project$Generators$TypeScript$fromType = function (a) {
 		declaration);
 };
 var $author$project$Generators$TypeScript$fromCustomType = function (a) {
+	var type_ = function () {
+		var _v0 = _Utils_Tuple2(
+			A2(
+				$elm$core$String$split,
+				'JsValue',
+				$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)),
+			a.bd);
+		if ((((_v0.a.b && _v0.a.b.b) && (!_v0.a.b.b.b)) && _v0.b.b) && (!_v0.b.b.b)) {
+			var _v1 = _v0.a;
+			var _v2 = _v1.b;
+			var t = _v2.a;
+			var _v3 = _v0.b;
+			var _v4 = _v3.a;
+			var name = _v4.b.T;
+			return _Utils_update(
+				a,
+				{
+					bd: _List_fromArray(
+						[
+							A2(
+							$stil4m$elm_syntax$Elm$Syntax$Node$Node,
+							$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
+							A2(
+								$stil4m$elm_syntax$Elm$Syntax$Type$ValueConstructor,
+								name,
+								_List_fromArray(
+									[
+										A2(
+										$stil4m$elm_syntax$Elm$Syntax$Node$Node,
+										$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
+										A2(
+											$stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed,
+											A2(
+												$stil4m$elm_syntax$Elm$Syntax$Node$Node,
+												$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
+												_Utils_Tuple2(_List_Nil, t)),
+											_List_Nil))
+									])))
+						])
+				});
+		} else {
+			return a;
+		}
+	}();
 	var constructors = A2(
 		$elm$core$String$join,
 		'\n  | ',
-		A2($elm$core$List$map, $author$project$Generators$TypeScript$fromCustomTypeConstructor, a.bd));
-	return $author$project$Generators$TypeScript$fromType(a) + ('\n  | ' + (constructors + ('\n\n' + $author$project$Generators$TypeScript$fromCustomTypeGuards(a))));
+		A2($elm$core$List$map, $author$project$Generators$TypeScript$fromCustomTypeConstructor, type_.bd));
+	return $author$project$Generators$TypeScript$fromType(type_) + ('\n  | ' + (constructors + ('\n\n' + $author$project$Generators$TypeScript$fromCustomTypeGuards(type_))));
 };
 var $author$project$Generators$TypeScript$fromTypeAlias = function (a) {
 	return $author$project$Generators$TypeScript$fromType(a) + (' ' + $author$project$Generators$TypeScript$fromTypeAnnotation(a.bJ));
@@ -6606,10 +6658,6 @@ var $stil4m$elm_syntax$Elm$Parser$TypeAnnotation$Lazy = 1;
 var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Record = function (a) {
 	return {$: 4, a: a};
 };
-var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
 var $stil4m$elm_syntax$Elm$Parser$TypeAnnotation$asTypeAnnotation = F2(
 	function (x, xs) {
 		var value = x.b;
@@ -8490,10 +8538,6 @@ var $stil4m$elm_syntax$Elm$Parser$Typings$typePrefix = A2(
 	$stil4m$elm_syntax$Combine$continueWith,
 	$stil4m$elm_syntax$Elm$Parser$Layout$layout,
 	$stil4m$elm_syntax$Combine$string('type'));
-var $stil4m$elm_syntax$Elm$Syntax$Type$ValueConstructor = F2(
-	function (name, _arguments) {
-		return {P: _arguments, T: name};
-	});
 var $stil4m$elm_syntax$Elm$Parser$TypeAnnotation$typeAnnotationNonGreedy = $stil4m$elm_syntax$Combine$choice(
 	_List_fromArray(
 		[
