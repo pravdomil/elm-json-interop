@@ -3488,8 +3488,8 @@ var $author$project$Generators$Decode$fromDeclaration = function (_v0) {
 };
 var $author$project$Utils$getImports = F3(
 	function (toImport_, toName, i) {
-		var toImport = function (_v8) {
-			var ii = _v8.b;
+		var toImport = function (_v9) {
+			var ii = _v9.b;
 			var _v0 = ii.aJ;
 			_v0$3:
 			while (true) {
@@ -3515,8 +3515,8 @@ var $author$project$Utils$getImports = F3(
 			if ((!_v4.$) && (_v4.a.b.$ === 1)) {
 				var _v5 = _v4.a;
 				var e = _v5.b.a;
-				var toExpose = function (_v7) {
-					var ee = _v7.b;
+				var toExpose = function (_v8) {
+					var ee = _v8.b;
 					switch (ee.$) {
 						case 2:
 							var name = ee.a;
@@ -3534,11 +3534,15 @@ var $author$project$Utils$getImports = F3(
 					$elm$core$String$join,
 					', ',
 					A2($elm$core$List$filterMap, toExpose, e));
-				return $elm$core$Maybe$Just(
-					A2(
-						toImport_,
-						$stil4m$elm_syntax$Elm$Syntax$Node$value(ii.aJ),
-						imports));
+				if (imports === '') {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					return $elm$core$Maybe$Just(
+						A2(
+							toImport_,
+							$stil4m$elm_syntax$Elm$Syntax$Node$value(ii.aJ),
+							imports));
+				}
 			} else {
 				return $elm$core$Maybe$Nothing;
 			}

@@ -116,7 +116,12 @@ getImports toImport_ toName i =
                                         _ ->
                                             Nothing
                             in
-                            Just (toImport_ (Node.value ii.moduleName) imports)
+                            case imports of
+                                "" ->
+                                    Nothing
+
+                                _ ->
+                                    Just (toImport_ (Node.value ii.moduleName) imports)
 
                         _ ->
                             Nothing
