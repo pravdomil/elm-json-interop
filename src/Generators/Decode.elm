@@ -46,7 +46,7 @@ fromType : { a | documentation : Maybe (Node Documentation), name : Node String,
 fromType a body =
     let
         lazyDecoded =
-            a.documentation |> Maybe.map Node.value |> Maybe.withDefault "" |> String.toLower |> String.contains "lazy decoded"
+            a.documentation |> Maybe.map Node.value |> Maybe.withDefault "" |> String.toLower |> String.contains "lazy decode"
 
         name =
             Node.value a.name

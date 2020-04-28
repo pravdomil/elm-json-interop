@@ -3415,7 +3415,7 @@ var $author$project$Generators$Decode$fromType = F2(
 		}();
 		var lazyDecoded = A2(
 			$elm$core$String$contains,
-			'lazy decoded',
+			'lazy decode',
 			$elm$core$String$toLower(
 				A2(
 					$elm$core$Maybe$withDefault,
