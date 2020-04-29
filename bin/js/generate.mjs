@@ -1,5 +1,5 @@
 // @ts-ignore
-import main from "../../dist/main.cjs"
+import main from "../../dist/main.js"
 
 /**
  * @param {string} flags
