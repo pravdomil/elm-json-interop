@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+# To stop if something fails.
 set -e
-cd "${0%/*}"
-cd ..
 
+# To be always in project root.
+cd "${0%/*}/.."
+
+# To build the application.
 elm make src/Main.elm --output dist/main.js --optimize
-mv dist/main.js dist/main.cjs
