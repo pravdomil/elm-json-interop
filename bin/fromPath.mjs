@@ -2,7 +2,7 @@
 
 import { mkdirSync, readFileSync, realpathSync, writeFileSync } from "fs"
 import { basename, dirname } from "path"
-import { generate } from "./js/generate.js"
+import { generate } from "./js/generate.mjs"
 
 Promise.resolve(process.argv.slice(2))
   .then(main)

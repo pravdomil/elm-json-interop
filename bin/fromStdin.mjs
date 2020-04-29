@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { generate } from "./js/generate.js"
-import { readStdin } from "./js/readStdin.js"
+import { generate } from "./js/generate.mjs"
+import { readStdin } from "./js/readStdin.mjs"
 
 Promise.resolve()
   .then(readStdin)

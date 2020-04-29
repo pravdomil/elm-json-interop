@@ -1,10 +1,9 @@
 {
   "name": "elm-json-interop",
   "version": "1.0.0",
-  "type": "module",
   "bin": {
-    "elm-json-interop": "bin/fromPath.js",
-    "elm-json-interop-stdin": "bin/fromStdin.js"
+    "elm-json-interop": "bin/fromPath.mjs",
+    "elm-json-interop-stdin": "bin/fromStdin.mjs"
   },
   "devDependencies": {
     "@types/node": "^13.7.0"
