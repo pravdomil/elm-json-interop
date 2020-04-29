@@ -183,7 +183,7 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     "array"
 
                 "Maybe" ->
-                    "maybe"
+                    "nullable"
 
                 "Encode.Value" ->
                     "value"

@@ -3328,7 +3328,7 @@ var $author$project$Generators$Decode$fromTyped = F3(
 				case 'Array':
 					return 'array';
 				case 'Maybe':
-					return 'maybe';
+					return 'nullable';
 				case 'Encode.Value':
 					return 'value';
 				case 'Decode.Value':
