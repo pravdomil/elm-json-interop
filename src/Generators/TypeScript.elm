@@ -24,7 +24,7 @@ fromFileToTs f =
         [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
         , f.imports |> getImports (\n i -> "import { " ++ i ++ " } from \"" ++ root ++ (n |> join "/") ++ "\"") identity |> join "\n"
         , ""
-        , List.filterMap fromDeclaration f.declarations |> join "\n\n"
+        , List.filterMap fromDeclaration f.declarations |> join "\n\n\n"
         , ""
         ]
 
@@ -88,64 +88,33 @@ fromCustomType a =
         constructors =
             join "\n  | " <| List.map fromCustomTypeConstructor type_.constructors
     in
-    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeGuards type_
+    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeConstants type_
 
 
-fromCustomTypeGuards : Type -> String
-fromCustomTypeGuards a =
+fromCustomTypeConstants : Type -> String
+fromCustomTypeConstants a =
     let
-        generics =
-            fromTypeGenerics a
-
         mapGuard : Node ValueConstructor -> String
         mapGuard b =
             let
                 tag =
-                    Node.value <| .name <| Node.value b
+                    Node.value <| .name <| Node.value <| b
             in
-            "export const is"
-                ++ tag
-                ++ " = "
-                ++ generics
-                ++ "(a: "
-                ++ Node.value a.name
-                ++ generics
-                ++ "): a is "
-                ++ fromCustomTypeConstructor b
-                ++ " => "
-                ++ toJsonString tag
-                ++ " in a"
+            "export const " ++ tag ++ " = " ++ toJsonString tag
     in
     join "\n" <| List.map mapGuard a.constructors
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
 fromCustomTypeConstructor (Node _ a) =
-    let
-        record : RecordField
-        record =
-            ( a.name, Node emptyRange arguments )
-
-        arguments : TypeAnnotation
-        arguments =
-            case a.arguments of
-                [] ->
-                    Unit
-
-                (Node _ b) :: [] ->
-                    b
-
-                _ ->
-                    Tupled a.arguments
-    in
-    fromRecord [ Node emptyRange record ]
+    fromTuple (Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments)
 
 
 fromDocumentation : Maybe (Node Documentation) -> String
 fromDocumentation a =
     case a of
         Just (Node _ b) ->
-            "/**" ++ String.slice 3 -2 b ++ "*/\n"
+            "/**" ++ String.slice 3 -2 b ++ " */\n"
 
         Nothing ->
             ""
