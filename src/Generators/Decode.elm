@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Prefix, getImports, mapFn, moduleNameFromFile, moduleNameToString, prefixToString, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (getImports, mapFn, moduleNameFromFile, moduleNameToString, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
 fromFileToDecoder : File -> String
@@ -84,7 +84,7 @@ fromType a body =
 
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
-    fromType a ("\n  " ++ fromTypeAnnotation (Prefix "") a.typeAnnotation)
+    fromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
 
 
 fromCustomType : Type -> String
@@ -109,7 +109,7 @@ fromCustomTypeConstructor (Node _ a) =
             List.length a.arguments
 
         tup =
-            List.indexedMap (tupleMap (Prefix "") 1) a.arguments
+            List.indexedMap (tupleMap 1) a.arguments
 
         val =
             case a.arguments of
@@ -122,28 +122,28 @@ fromCustomTypeConstructor (Node _ a) =
     toJsonString (Node.value a.name) ++ " -> " ++ val
 
 
-fromTypeAnnotation : Prefix -> Node TypeAnnotation -> String
-fromTypeAnnotation prefix (Node _ a) =
+fromTypeAnnotation : Node TypeAnnotation -> String
+fromTypeAnnotation (Node _ a) =
     let
         result =
             case a of
                 GenericType b ->
-                    "t_" ++ b ++ prefixToString prefix
+                    "t_" ++ b
 
                 Typed b c ->
-                    fromTyped prefix b c
+                    fromTyped b c
 
                 Unit ->
                     "succeed ()"
 
                 Tupled nodes ->
-                    fromTuple prefix nodes
+                    fromTuple nodes
 
                 Record b ->
-                    fromRecord prefix b
+                    fromRecord b
 
                 GenericRecord _ (Node _ b) ->
-                    fromRecord prefix b
+                    fromRecord b
 
                 FunctionTypeAnnotation _ _ ->
                     "Debug.todo \"I don't know how to decode function.\""
@@ -151,8 +151,8 @@ fromTypeAnnotation prefix (Node _ a) =
     "(" ++ result ++ ")"
 
 
-fromTyped : Prefix -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-fromTyped prefix (Node _ ( name, str )) nodes =
+fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+fromTyped (Node _ ( name, str )) nodes =
     let
         generics =
             case nodes of
@@ -160,7 +160,7 @@ fromTyped prefix (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map (fromTypeAnnotation prefix) nodes
+                    (++) " " <| join " " <| List.map fromTypeAnnotation nodes
 
         fn =
             case name ++ [ str ] |> join "." of
@@ -197,25 +197,25 @@ fromTyped prefix (Node _ ( name, str )) nodes =
     fn ++ generics
 
 
-fromTuple : Prefix -> List (Node TypeAnnotation) -> String
-fromTuple prefix a =
+fromTuple : List (Node TypeAnnotation) -> String
+fromTuple a =
     let
         len =
             List.length a
 
         tup =
-            List.indexedMap (tupleMap prefix 0) a
+            List.indexedMap (tupleMap 0) a
     in
     mapFn len ++ " " ++ tupleConstructor len ++ " " ++ join " " tup
 
 
-tupleMap : Prefix -> Int -> Int -> Node TypeAnnotation -> String
-tupleMap prefix offset i a =
-    "(index " ++ String.fromInt (offset + i) ++ " " ++ fromTypeAnnotation prefix a ++ ")"
+tupleMap : Int -> Int -> Node TypeAnnotation -> String
+tupleMap offset i a =
+    "(index " ++ String.fromInt (offset + i) ++ " " ++ fromTypeAnnotation a ++ ")"
 
 
-fromRecord : Prefix -> RecordDefinition -> String
-fromRecord prefix a =
+fromRecord : RecordDefinition -> String
+fromRecord a =
     let
         len =
             List.length a
@@ -229,11 +229,11 @@ fromRecord prefix a =
         lambda =
             "(\\" ++ join " " args ++ " -> { " ++ join ", " fields ++ " })"
     in
-    mapFn len ++ " " ++ lambda ++ " " ++ (join " " <| List.map (fromRecordField prefix) a)
+    mapFn len ++ " " ++ lambda ++ " " ++ (join " " <| List.map fromRecordField a)
 
 
-fromRecordField : Prefix -> Node RecordField -> String
-fromRecordField prefix (Node _ ( Node _ a, b )) =
+fromRecordField : Node RecordField -> String
+fromRecordField (Node _ ( Node _ a, b )) =
     let
         maybeField =
             case Node.value b of
@@ -243,7 +243,7 @@ fromRecordField prefix (Node _ ( Node _ a, b )) =
                 _ ->
                     ""
     in
-    "(" ++ maybeField ++ "field " ++ toJsonString a ++ " " ++ fromTypeAnnotation prefix b ++ ")"
+    "(" ++ maybeField ++ "field " ++ toJsonString a ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
 decoderName : String -> String

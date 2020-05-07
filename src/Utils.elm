@@ -24,20 +24,6 @@ argumentToString { prefix, char, suffix, disabled } =
             " ( " ++ prefix ++ stringFromAlphabet char ++ suffix ++ " )"
 
 
-type alias Prefix =
-    { prefix : String }
-
-
-prefixToString : Prefix -> String
-prefixToString { prefix } =
-    case prefix == "" of
-        True ->
-            ""
-
-        False ->
-            " " ++ prefix
-
-
 toJsonString : String -> String
 toJsonString a =
     Json.Encode.encode 0 (Json.Encode.string a)
