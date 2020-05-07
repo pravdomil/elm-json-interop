@@ -70,7 +70,7 @@ fromCustomType : Type -> String
 fromCustomType a =
     let
         type_ =
-            case ( String.split "JsValue" (Node.value a.name), a.constructors ) of
+            case ( String.split "JsRef" (Node.value a.name), a.constructors ) of
                 ( _ :: t :: [], (Node _ { name }) :: [] ) ->
                     { a
                         | constructors =
