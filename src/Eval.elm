@@ -25,7 +25,7 @@ getArguments _ =
 -}
 getStdin : () -> Maybe String
 getStdin _ =
-    "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8');"
+    "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
         |> eval
         |> decodeValue (Decode.maybe Decode.string)
         |> Result.withDefault Nothing
