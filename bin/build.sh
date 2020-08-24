@@ -13,8 +13,7 @@ cd "${0%/*}/.."
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 (
   echo "#!/usr/bin/env node"
-  cat bin/elm-json-interop.js |
-    sed -E "s/(var \\\$author\\\$project\\\$Eval\\\$eval .*)/\1return eval(_v0);/g"
+  sed -E "s/(var \\\$author\\\$project\\\$Eval\\\$eval .*)/\1return eval(_v0);/g" bin/elm-json-interop.js
   echo ""
   echo "this.Elm.Main.init();"
 ) >bin/elm-json-interop
