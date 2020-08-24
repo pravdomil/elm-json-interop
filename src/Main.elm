@@ -17,8 +17,8 @@ import String exposing (contains, join, replace)
 main : Program () () ()
 main =
     Platform.worker
-        { init = \a -> ( run a, Cmd.none )
-        , update = \_ a -> ( a, Cmd.none )
+        { init = \_ -> ( run (), Cmd.none )
+        , update = \_ _ -> ( (), Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
 
