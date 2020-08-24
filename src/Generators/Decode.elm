@@ -235,15 +235,16 @@ fromRecord a =
 fromRecordField : Node RecordField -> String
 fromRecordField (Node _ ( Node _ a, b )) =
     let
-        maybeField =
+        decoder : String
+        decoder =
             case Node.value b of
                 Typed (Node _ ( _, "Maybe" )) _ ->
-                    "(\\maybeField -> oneOf [ maybeField, succeed Nothing ]) <| "
+                    "nullableOrMissingField"
 
                 _ ->
-                    ""
+                    "field"
     in
-    "(" ++ maybeField ++ "field " ++ toJsonString (normalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
+    "(" ++ decoder ++ " " ++ toJsonString (normalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
 decoderName : String -> String
