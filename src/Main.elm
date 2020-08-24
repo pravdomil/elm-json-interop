@@ -98,9 +98,10 @@ basename : String -> String -> String
 basename extension path =
     path
         |> (\v ->
-                Regex.fromString "^.*/"
-                    |> Maybe.map (\vv -> Regex.replace vv (always "") v)
-                    |> Maybe.withDefault v
+                v
+                    |> Regex.replace
+                        ("^.*/" |> Regex.fromString |> Maybe.withDefault Regex.never)
+                        (\_ -> "")
            )
         |> (\v ->
                 if v |> String.endsWith extension then
@@ -115,6 +116,7 @@ basename extension path =
 -}
 dirname : String -> String
 dirname a =
-    Regex.fromString "/[^/]+$"
-        |> Maybe.map (\v -> Regex.replace v (always "") a)
-        |> Maybe.withDefault a
+    a
+        |> Regex.replace
+            ("/[^/]+$" |> Regex.fromString |> Maybe.withDefault Regex.never)
+            (\_ -> "")
