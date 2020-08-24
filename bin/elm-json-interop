@@ -3254,10 +3254,6 @@ var $elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var $elm$core$Basics$always = F2(
-	function (a, _v0) {
-		return a;
-	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -3279,16 +3275,7 @@ var $elm$regex$Regex$fromString = function (string) {
 		string);
 };
 var $elm$core$String$length = _String_length;
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
+var $elm$regex$Regex$never = _Regex_never;
 var $elm$regex$Regex$replace = _Regex_replaceAtMost(_Regex_infinity);
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -3308,19 +3295,16 @@ var $author$project$Main$basename = F2(
 				v) : v;
 		}(
 			function (v) {
-				return A2(
-					$elm$core$Maybe$withDefault,
-					v,
+				return A3(
+					$elm$regex$Regex$replace,
 					A2(
-						$elm$core$Maybe$map,
-						function (vv) {
-							return A3(
-								$elm$regex$Regex$replace,
-								vv,
-								$elm$core$Basics$always(''),
-								v);
-						},
-						$elm$regex$Regex$fromString('^.*/')));
+						$elm$core$Maybe$withDefault,
+						$elm$regex$Regex$never,
+						$elm$regex$Regex$fromString('^.*/')),
+					function (_v0) {
+						return '';
+					},
+					v);
 			}(path));
 	});
 var $elm$core$String$contains = _String_contains;
@@ -3328,19 +3312,16 @@ var $elm$parser$Parser$deadEndsToString = function (deadEnds) {
 	return 'TODO deadEndsToString';
 };
 var $author$project$Main$dirname = function (a) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		a,
+	return A3(
+		$elm$regex$Regex$replace,
 		A2(
-			$elm$core$Maybe$map,
-			function (v) {
-				return A3(
-					$elm$regex$Regex$replace,
-					v,
-					$elm$core$Basics$always(''),
-					a);
-			},
-			$elm$regex$Regex$fromString('/[^/]+$')));
+			$elm$core$Maybe$withDefault,
+			$elm$regex$Regex$never,
+			$elm$regex$Regex$fromString('/[^/]+$')),
+		function (_v0) {
+			return '';
+		},
+		a);
 };
 var $elm$core$Basics$identity = function (x) {
 	return x;
@@ -3714,6 +3695,10 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$TupledExpression = function (a) {
 	return {$: 13, a: a};
 };
 var $stil4m$elm_syntax$Elm$Syntax$Expression$UnitExpr = {$: 0};
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
 var $stil4m$elm_syntax$Combine$andThen = F2(
 	function (f, _v0) {
 		var p = _v0;
@@ -3878,6 +3863,16 @@ var $stil4m$elm_syntax$Combine$fail = function (m) {
 			$elm$parser$Parser$problem(m));
 	};
 };
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$parser$Parser$UnexpectedChar = {$: 11};
 var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
 var $elm$parser$Parser$Advanced$chompIf = F2(
@@ -10882,17 +10877,17 @@ var $author$project$Main$run = function (_v0) {
 var $elm$core$Platform$worker = _Platform_worker;
 var $author$project$Main$main = $elm$core$Platform$worker(
 	{
-		bu: function (a) {
+		bu: function (_v0) {
 			return _Utils_Tuple2(
-				$author$project$Main$run(a),
+				$author$project$Main$run(0),
 				$elm$core$Platform$Cmd$none);
 		},
-		bM: function (_v0) {
+		bM: function (_v1) {
 			return $elm$core$Platform$Sub$none;
 		},
 		bQ: F2(
-			function (_v1, a) {
-				return _Utils_Tuple2(a, $elm$core$Platform$Cmd$none);
+			function (_v2, _v3) {
+				return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
 			})
 	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
