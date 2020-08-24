@@ -1,38 +1,120 @@
-port module Main exposing (..)
+module Main exposing (..)
 
-import Json.Decode as Decode exposing (decodeValue, errorToString)
-import Json.Encode exposing (Value, list, object, string)
-import Program exposing (parse)
+import Elm.Parser
+import Elm.Processing as Processing
+import Elm.Syntax.File exposing (File)
+import Eval exposing (consoleErrorAndExit, consoleLog, getArguments, mkDir, readFile, realPath, writeFile)
+import Generators.Decode exposing (toElmDecoder)
+import Generators.Encode exposing (toElmEncoder)
+import Generators.TypeScript exposing (toTypeScript)
+import Parser exposing (deadEndsToString)
+import Regex
+import String exposing (contains, join, replace)
 
 
-main : Program Decode.Value () ()
+{-| To define main entry point.
+-}
+main : Program () () ()
 main =
     Platform.worker
-        { init = \flags -> ( (), done (run flags) )
-        , update = \_ _ -> ( (), Cmd.none )
+        { init = \a -> ( run a, Cmd.none )
+        , update = \_ a -> ( a, Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
 
 
-port done : Value -> Cmd msg
+{-| To show usage or process input files.
+-}
+run : () -> ()
+run _ =
+    let
+        elmFiles : List String
+        elmFiles =
+            getArguments () |> List.drop 2
+    in
+    if elmFiles |> List.isEmpty then
+        usage |> consoleErrorAndExit
+
+    else
+        elmFiles |> List.map processElmFile |> join "\n" |> consoleLog
 
 
-run : Decode.Value -> Value
-run value =
-    encodeResult <|
-        case decodeValue Decode.string value of
-            Ok a ->
-                parse a
-
-            Err a ->
-                Err <| errorToString a
+{-| To get program usage.
+-}
+usage : String
+usage =
+    "Usage: elm-json-interop [File.elm ...]"
 
 
-encodeResult : Result String Value -> Value
-encodeResult a =
-    case a of
-        Ok b ->
-            object [ ( "Ok", b ) ]
+{-| To process Elm file.
+-}
+processElmFile : String -> String
+processElmFile a =
+    let
+        path : String
+        path =
+            a |> realPath
+
+        _ =
+            if path |> contains "/src/" then
+                ()
+
+            else
+                "Elm file must be inside \"src\" folder." |> consoleErrorAndExit
+    in
+    case path |> readFile |> Elm.Parser.parse of
+        Ok rawFile ->
+            let
+                fileName : String
+                fileName =
+                    path |> basename ".elm"
+
+                folderPath : String
+                folderPath =
+                    path |> replace "/src/" "/src/Generated/" |> dirname
+
+                file : File
+                file =
+                    rawFile |> Processing.process Processing.init
+
+                _ =
+                    [ folderPath |> mkDir |> (\_ -> ())
+                    , file |> toElmEncoder |> writeFile (folderPath ++ "/" ++ fileName ++ "Encode.elm")
+                    , file |> toElmDecoder |> writeFile (folderPath ++ "/" ++ fileName ++ "Decode.elm")
+                    , file |> toTypeScript |> writeFile (folderPath ++ "/" ++ fileName ++ ".ts")
+                    ]
+            in
+            "I have generated Elm encoder, Elm decoder, TypeScript definitions in folder:\n" ++ folderPath
 
         Err b ->
-            object [ ( "Err", string b ) ]
+            ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString b ++ ".")
+                |> consoleErrorAndExit
+                |> (\_ -> "")
+
+
+{-| To get basename.
+-}
+basename : String -> String -> String
+basename extension path =
+    path
+        |> (\v ->
+                Regex.fromString "^.*/"
+                    |> Maybe.map (\vv -> Regex.replace vv (always "") v)
+                    |> Maybe.withDefault v
+           )
+        |> (\v ->
+                if v |> String.endsWith extension then
+                    v |> String.dropRight (extension |> String.length)
+
+                else
+                    v
+           )
+
+
+{-| To get dirname.
+-}
+dirname : String -> String
+dirname a =
+    Regex.fromString "/[^/]+$"
+        |> Maybe.map (\v -> Regex.replace v (always "") a)
+        |> Maybe.withDefault a

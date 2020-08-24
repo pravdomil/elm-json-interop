@@ -1,4 +1,4 @@
-module Generators.Encode exposing (fromFileToEncoder)
+module Generators.Encode exposing (toElmEncoder)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
@@ -12,8 +12,8 @@ import String exposing (join)
 import Utils exposing (Argument, argumentToString, getImports, moduleNameFromFile, moduleNameToString, stringFromAlphabet, toJsonString)
 
 
-fromFileToEncoder : File -> String
-fromFileToEncoder f =
+toElmEncoder : File -> String
+toElmEncoder f =
     join "\n"
         [ "module Generated." ++ moduleNameFromFile f ++ "Encode exposing (..)"
         , ""
