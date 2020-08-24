@@ -7,6 +7,7 @@ import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Json.Encode
+import List
 import String exposing (join)
 
 
@@ -113,3 +114,42 @@ getImports toImport_ toName i =
                             Nothing
     in
     i |> List.filterMap toImport
+
+
+elmKeywords : List String
+elmKeywords =
+    [ "module"
+    , "where"
+    , "import"
+    , "as"
+    , "exposing"
+    , "if"
+    , "then"
+    , "else"
+    , "case"
+    , "of"
+    , "let"
+    , "in"
+    , "type"
+    , "port"
+    , "infix"
+    ]
+
+
+normalizeRecordFieldName : String -> String
+normalizeRecordFieldName a =
+    a
+        |> (\name ->
+                if List.member (name ++ "_") elmKeywords then
+                    String.dropRight 1 name
+
+                else
+                    name
+           )
+        |> (\v ->
+                if String.endsWith "_" v then
+                    "_" ++ String.dropRight 1 v
+
+                else
+                    v
+           )

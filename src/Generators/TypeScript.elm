@@ -11,7 +11,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (getImports, toJsonString)
+import Utils exposing (getImports, normalizeRecordFieldName, toJsonString)
 
 
 toTypeScript : File -> String
@@ -215,4 +215,4 @@ fromRecordField (Node _ ( Node _ a, b )) =
                 _ ->
                     ""
     in
-    a ++ maybeField ++ ": " ++ fromTypeAnnotation b
+    normalizeRecordFieldName a ++ maybeField ++ ": " ++ fromTypeAnnotation b

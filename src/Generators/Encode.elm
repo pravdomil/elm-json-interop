@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Argument, argumentToString, getImports, moduleNameFromFile, moduleNameToString, stringFromAlphabet, toJsonString)
+import Utils exposing (Argument, argumentToString, getImports, moduleNameFromFile, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString)
 
 
 toElmEncoder : File -> String
@@ -205,7 +205,7 @@ fromRecord argument a =
 
 fromRecordField : Argument -> Node RecordField -> String
 fromRecordField argument (Node _ ( Node _ a, b )) =
-    "( " ++ toJsonString a ++ ", " ++ fromTypeAnnotation { argument | suffix = "." ++ a } b ++ " )"
+    "( " ++ toJsonString (normalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation { argument | suffix = "." ++ a } b ++ " )"
 
 
 encoderName : String -> String

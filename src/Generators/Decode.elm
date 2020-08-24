@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (getImports, mapFn, moduleNameFromFile, moduleNameToString, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (getImports, mapFn, moduleNameFromFile, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
 toElmDecoder : File -> String
@@ -243,7 +243,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
                 _ ->
                     ""
     in
-    "(" ++ maybeField ++ "field " ++ toJsonString a ++ " " ++ fromTypeAnnotation b ++ ")"
+    "(" ++ maybeField ++ "field " ++ toJsonString (normalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
 decoderName : String -> String
