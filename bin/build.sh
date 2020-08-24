@@ -6,10 +6,16 @@ set -e
 # To stop on unset variables.
 set -u
 
-# To be always in project root.
+# To be in project root.
 cd "${0%/*}/.."
 
-# To build the application.
+# To show what we are doing.
+set -x
+
+# To have dependencies from npm ready.
+npm i
+
+# To compile our app.
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 (
   echo "#!/usr/bin/env node"
