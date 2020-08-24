@@ -2,7 +2,7 @@ module Program exposing (..)
 
 import Elm.Parser
 import Elm.Processing as Processing
-import Elm.Syntax.File as Syntax exposing (File)
+import Elm.Syntax.File exposing (File)
 import Generators.Decode exposing (fromFileToDecoder)
 import Generators.Encode exposing (fromFileToEncoder)
 import Generators.TypeScript exposing (fromFileToTs)
@@ -18,7 +18,7 @@ parse input =
 
         Ok a ->
             let
-                file : Syntax.File
+                file : File
                 file =
                     Processing.process Processing.init a
             in
