@@ -139,12 +139,12 @@ elmKeywords =
 normalizeRecordFieldName : String -> String
 normalizeRecordFieldName a =
     a
-        |> (\name ->
-                if List.member (name ++ "_") elmKeywords then
-                    String.dropRight 1 name
+        |> (\v ->
+                if List.member (v ++ "_") elmKeywords then
+                    String.dropRight 1 v
 
                 else
-                    name
+                    v
            )
         |> (\v ->
                 if String.endsWith "_" v then
