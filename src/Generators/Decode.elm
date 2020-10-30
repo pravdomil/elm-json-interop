@@ -12,6 +12,8 @@ import String exposing (join)
 import Utils exposing (fileToModuleName, getImports, mapFn, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
+{-| To get Elm module for decoding types in file.
+-}
 toElmDecoder : File -> String
 toElmDecoder f =
     join "\n"
