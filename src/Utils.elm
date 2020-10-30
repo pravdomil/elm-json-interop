@@ -142,18 +142,21 @@ elmKeywords =
 -}
 normalizeRecordFieldName : String -> String
 normalizeRecordFieldName a =
-    a
-        |> (\v ->
-                if List.member (v ++ "_") elmKeywords then
-                    String.dropRight 1 v
+    let
+        dropUnderscoreIfKeyword : String -> String
+        dropUnderscoreIfKeyword v =
+            if List.member (String.dropRight 1 v) elmKeywords then
+                String.dropRight 1 v
 
-                else
-                    v
-           )
-        |> (\v ->
-                if String.endsWith "_" v then
-                    "_" ++ String.dropRight 1 v
+            else
+                v
 
-                else
-                    v
-           )
+        putUnderScoreToFront : String -> String
+        putUnderScoreToFront v =
+            if String.endsWith "_" v then
+                "_" ++ String.dropRight 1 v
+
+            else
+                v
+    in
+    a |> dropUnderscoreIfKeyword |> putUnderScoreToFront
