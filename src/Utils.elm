@@ -65,6 +65,8 @@ fileToModuleName a =
     Node.value a.moduleDefinition |> Module.moduleName |> moduleNameToString
 
 
+{-| To get string from module name.
+-}
 moduleNameToString : ModuleName -> String
 moduleNameToString n =
     n |> join "."
