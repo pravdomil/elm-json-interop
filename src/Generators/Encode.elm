@@ -21,7 +21,7 @@ toElmEncoder f =
         , "import Generated.Basics.BasicsEncode exposing (..)"
         , "import Json.Encode exposing (..)"
         , f.imports
-            |> getImports (\n i -> "import Generated." ++ moduleNameToString n ++ "Encode exposing (" ++ i ++ ")") encoderName
+            |> getImports (\v vv -> "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")")
             |> join "\n"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
