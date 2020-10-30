@@ -58,9 +58,11 @@ mapFn a =
             "map" ++ String.fromInt b
 
 
-moduleNameFromFile : File -> String
-moduleNameFromFile f =
-    Node.value f.moduleDefinition |> Module.moduleName |> join "."
+{-| To get module name from file.
+-}
+fileToModuleName : File -> String
+fileToModuleName a =
+    Node.value a.moduleDefinition |> Module.moduleName |> join "."
 
 
 moduleNameToString : ModuleName -> String

@@ -9,15 +9,15 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (getImports, mapFn, moduleNameFromFile, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (fileToModuleName, getImports, mapFn, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
 toElmDecoder : File -> String
 toElmDecoder f =
     join "\n"
-        [ "module Generated." ++ moduleNameFromFile f ++ "Decode exposing (..)"
+        [ "module Generated." ++ fileToModuleName f ++ "Decode exposing (..)"
         , ""
-        , "import " ++ moduleNameFromFile f ++ " as A"
+        , "import " ++ fileToModuleName f ++ " as A"
         , "import Generated.Basics.BasicsDecode exposing (..)"
         , "import Json.Decode exposing (..)"
         , f.imports
