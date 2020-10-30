@@ -116,28 +116,6 @@ getImports toImport_ toName i =
     i |> List.filterMap toImport
 
 
-{-| To define what are reserved Elm keywords.
--}
-elmKeywords : List String
-elmKeywords =
-    [ "module"
-    , "where"
-    , "import"
-    , "as"
-    , "exposing"
-    , "if"
-    , "then"
-    , "else"
-    , "case"
-    , "of"
-    , "let"
-    , "in"
-    , "type"
-    , "port"
-    , "infix"
-    ]
-
-
 {-| To normalize record field name.
 -}
 normalizeRecordFieldName : String -> String
@@ -160,3 +138,10 @@ normalizeRecordFieldName a =
                 v
     in
     a |> dropUnderscoreIfKeyword |> putUnderScoreToFront
+
+
+{-| To define what are reserved Elm keywords.
+-}
+elmKeywords : List String
+elmKeywords =
+    [ "module", "where", "import", "as", "exposing", "if", "then", "else", "case", "of", "let", "in", "type", "port", "infix" ]
