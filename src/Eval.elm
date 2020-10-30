@@ -8,7 +8,7 @@ import Json.Encode as Encode exposing (Value, encode)
 -}
 eval : String -> Decode.Value
 eval _ =
-    Encode.null
+    Encode.string "EVAL()"
 
 
 {-| To get program arguments.
