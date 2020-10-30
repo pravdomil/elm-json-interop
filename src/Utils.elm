@@ -72,8 +72,10 @@ moduleNameToString a =
     a |> join "."
 
 
+{-| To get list modules that needs to be imported.
+-}
 getImports : (ModuleName -> String -> String) -> (String -> String) -> List (Node Import) -> List String
-getImports toImport_ toName i =
+getImports toImport_ toName a =
     let
         toImport : Node Import -> Maybe String
         toImport (Node _ ii) =
@@ -117,7 +119,7 @@ getImports toImport_ toName i =
                         _ ->
                             Nothing
     in
-    i |> List.filterMap toImport
+    a |> List.filterMap toImport
 
 
 {-| To normalize record field name.
