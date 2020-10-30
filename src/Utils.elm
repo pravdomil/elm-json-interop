@@ -7,7 +7,6 @@ import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Json.Encode
-import List
 import String exposing (join)
 
 
@@ -74,52 +73,62 @@ moduleNameToString a =
 
 {-| To get list modules that needs to be imported.
 -}
-getImports : (ModuleName -> String -> String) -> (String -> String) -> List (Node Import) -> List String
-getImports toImport_ toName a =
+getImports : (ModuleName -> List String -> String) -> List (Node Import) -> List String
+getImports toImport_ a =
     let
-        toImport : Node Import -> Maybe String
-        toImport (Node _ ii) =
-            case ii.moduleName of
-                Node _ [ "Array" ] ->
+        filterModules : Node Import -> Maybe (Node Import)
+        filterModules b =
+            case b |> Node.value |> .moduleName |> Node.value of
+                [ "Array" ] ->
                     Nothing
 
-                Node _ [ "Set" ] ->
+                [ "Set" ] ->
                     Nothing
 
-                Node _ [ "Dict" ] ->
+                [ "Dict" ] ->
                     Nothing
 
                 _ ->
-                    case ii.exposingList of
-                        Just (Node _ (Explicit e)) ->
-                            let
-                                imports : String
-                                imports =
-                                    e |> List.filterMap toExpose |> join ", "
+                    Just b
 
-                                toExpose : Node TopLevelExpose -> Maybe String
-                                toExpose (Node _ ee) =
-                                    case ee of
-                                        TypeOrAliasExpose name ->
-                                            Just (toName name)
+        onlyExplicitImports : Node Import -> Maybe ( Node Import, List (Node TopLevelExpose) )
+        onlyExplicitImports b =
+            case b |> Node.value |> .exposingList of
+                Just (Node _ (Explicit c)) ->
+                    Just ( b, c )
 
-                                        TypeExpose { name } ->
-                                            Just (toName name)
+                _ ->
+                    Nothing
 
-                                        _ ->
-                                            Nothing
-                            in
-                            case imports of
-                                "" ->
-                                    Nothing
+        toImport : ( Node Import, List (Node TopLevelExpose) ) -> Maybe String
+        toImport ( Node _ b, c ) =
+            case c |> List.filterMap filterExpose of
+                [] ->
+                    Nothing
 
-                                _ ->
-                                    Just (toImport_ (Node.value ii.moduleName) imports)
+                d ->
+                    Just (toImport_ (Node.value b.moduleName) d)
 
-                        _ ->
-                            Nothing
+        filterExpose : Node TopLevelExpose -> Maybe String
+        filterExpose b =
+            case b of
+                TypeOrAliasExpose name ->
+                    Just name
+
+                TypeExpose { name } ->
+                    Just name
+
+                _ ->
+                    Nothing
     in
-    a |> List.filterMap toImport
+    a
+        |> List.filterMap
+            (\v ->
+                v
+                    |> filterModules
+                    |> Maybe.andThen onlyExplicitImports
+                    |> Maybe.andThen toImport
+            )
 
 
 {-| To normalize record field name.
