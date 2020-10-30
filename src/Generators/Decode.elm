@@ -1,4 +1,4 @@
-module Generators.Decode exposing (toElmDecoder)
+module Generators.Decode exposing (fileToElmDecoderModule)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
@@ -14,8 +14,8 @@ import Utils exposing (fileToModuleName, getImports, mapFn, moduleNameToString, 
 
 {-| To get Elm module for decoding types in file.
 -}
-toElmDecoder : File -> String
-toElmDecoder f =
+fileToElmDecoderModule : File -> String
+fileToElmDecoderModule f =
     join "\n"
         [ "module Generated." ++ fileToModuleName f ++ "Decode exposing (..)"
         , ""
