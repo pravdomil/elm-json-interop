@@ -116,6 +116,8 @@ getImports toImport_ toName i =
     i |> List.filterMap toImport
 
 
+{-| To define what are reserved Elm keywords.
+-}
 elmKeywords : List String
 elmKeywords =
     [ "module"
@@ -136,6 +138,8 @@ elmKeywords =
     ]
 
 
+{-| To normalize record field name.
+-}
 normalizeRecordFieldName : String -> String
 normalizeRecordFieldName a =
     a
