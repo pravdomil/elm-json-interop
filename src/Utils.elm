@@ -68,8 +68,8 @@ fileToModuleName a =
 {-| To get string from module name.
 -}
 moduleNameToString : ModuleName -> String
-moduleNameToString n =
-    n |> join "."
+moduleNameToString a =
+    a |> join "."
 
 
 getImports : (ModuleName -> String -> String) -> (String -> String) -> List (Node Import) -> List String
