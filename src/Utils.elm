@@ -62,7 +62,7 @@ mapFn a =
 -}
 fileToModuleName : File -> String
 fileToModuleName a =
-    Node.value a.moduleDefinition |> Module.moduleName |> join "."
+    Node.value a.moduleDefinition |> Module.moduleName |> moduleNameToString
 
 
 moduleNameToString : ModuleName -> String
