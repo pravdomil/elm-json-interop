@@ -9,9 +9,6 @@ set -u
 # To be in project root.
 cd "${0%/*}/.."
 
-# To show what we are doing.
-set -x
-
 # To have dependencies from npm ready.
 npm i
 
