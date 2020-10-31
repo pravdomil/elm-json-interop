@@ -102,6 +102,10 @@ decoderFromCustomTypeConstructor (Node _ a) =
 decoderFromType : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 decoderFromType body a =
     let
+        name : String
+        name =
+            Node.value a.name
+
         lazyDecoded : Bool
         lazyDecoded =
             a.documentation
@@ -116,10 +120,6 @@ decoderFromType body a =
 
                 False ->
                     b
-
-        name : String
-        name =
-            Node.value a.name
 
         signature : String
         signature =
