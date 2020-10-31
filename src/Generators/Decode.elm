@@ -265,6 +265,10 @@ fromRecordField (Node _ ( Node _ a, b )) =
     "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
+
+--
+
+
 decoderName : String -> String
 decoderName a =
     firstToLowerCase a ++ "Decoder"
@@ -278,10 +282,6 @@ firstToLowerCase a =
 
         _ ->
             a
-
-
-
---
 
 
 {-| To get function for constructing tuples by number.
