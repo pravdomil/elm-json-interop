@@ -265,7 +265,7 @@ recordToDecoder a =
         constructorFn =
             "(\\" ++ parameters ++ " -> { " ++ fields ++ " })"
     in
-    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (join " " <| List.map fromRecordField a)
+    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map fromRecordField |> join " ")
 
 
 fromRecordField : Node RecordField -> String
