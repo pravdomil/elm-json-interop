@@ -150,31 +150,29 @@ decoderFromType body a =
 -}
 decoderFromTypeAnnotation : Node TypeAnnotation -> String
 decoderFromTypeAnnotation (Node _ a) =
-    let
-        result =
-            case a of
-                GenericType b ->
-                    "t_" ++ b
+    (case a of
+        GenericType b ->
+            "t_" ++ b
 
-                Typed b c ->
-                    fromTyped b c
+        Typed b c ->
+            fromTyped b c
 
-                Unit ->
-                    "succeed ()"
+        Unit ->
+            "succeed ()"
 
-                Tupled nodes ->
-                    fromTuple nodes
+        Tupled nodes ->
+            fromTuple nodes
 
-                Record b ->
-                    fromRecord b
+        Record b ->
+            fromRecord b
 
-                GenericRecord _ (Node _ b) ->
-                    fromRecord b
+        GenericRecord _ (Node _ b) ->
+            fromRecord b
 
-                FunctionTypeAnnotation _ _ ->
-                    "Debug.todo \"I don't know how to decode function.\""
-    in
-    "(" ++ result ++ ")"
+        FunctionTypeAnnotation _ _ ->
+            "Debug.todo \"I don't know how to decode function.\""
+    )
+        |> wrapInParentheses
 
 
 fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
@@ -275,6 +273,13 @@ fromRecordField (Node _ ( Node _ a, b )) =
 
 
 --
+
+
+{-| To wrap string in parentheses.
+-}
+wrapInParentheses : String -> String
+wrapInParentheses a =
+    "(" ++ a ++ ")"
 
 
 {-| To get decoder name.
