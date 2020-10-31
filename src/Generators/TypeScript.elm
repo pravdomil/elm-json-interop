@@ -192,6 +192,7 @@ typeAnnotationToTs a =
 typedToTs : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 typedToTs (Node _ ( moduleName, name )) arguments =
     let
+        fn : String
         fn =
             case moduleName ++ [ name ] |> join "." of
                 "Int" ->
@@ -227,6 +228,7 @@ typedToTs (Node _ ( moduleName, name )) arguments =
                 a ->
                     a
 
+        generics : String
         generics =
             case arguments of
                 [] ->
