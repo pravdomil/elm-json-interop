@@ -84,7 +84,7 @@ processElmFile a =
                     , file |> toTypeScript |> writeFile (folderPath ++ "/" ++ fileName ++ ".ts")
                     ]
             in
-            "I have generated Elm encoder, Elm decoder, TypeScript definitions in folder:\n" ++ folderPath
+            "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder:\n" ++ folderPath
 
         Err b ->
             ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString b ++ ".")
