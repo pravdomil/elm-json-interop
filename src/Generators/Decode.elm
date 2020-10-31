@@ -53,7 +53,7 @@ decoderFromDeclaration a =
 -}
 decoderFromTypeAlias : TypeAlias -> String
 decoderFromTypeAlias a =
-    decoderFromType ("\n  " ++ fromTypeAnnotation a.typeAnnotation) a
+    decoderFromType ("\n  " ++ decoderFromTypeAnnotation a.typeAnnotation) a
 
 
 {-| To get decoder from custom type.
@@ -148,8 +148,8 @@ decoderFromType body a =
 
 {-| To get decoder from type annotation.
 -}
-fromTypeAnnotation : Node TypeAnnotation -> String
-fromTypeAnnotation (Node _ a) =
+decoderFromTypeAnnotation : Node TypeAnnotation -> String
+decoderFromTypeAnnotation (Node _ a) =
     let
         result =
             case a of
@@ -186,7 +186,7 @@ fromTyped (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map fromTypeAnnotation nodes
+                    (++) " " <| join " " <| List.map decoderFromTypeAnnotation nodes
 
         fn =
             case name ++ [ str ] |> join "." of
@@ -237,7 +237,7 @@ fromTuple a =
 
 tupleMap : Int -> Int -> Node TypeAnnotation -> String
 tupleMap offset i a =
-    "(index " ++ String.fromInt (offset + i) ++ " " ++ fromTypeAnnotation a ++ ")"
+    "(index " ++ String.fromInt (offset + i) ++ " " ++ decoderFromTypeAnnotation a ++ ")"
 
 
 fromRecord : RecordDefinition -> String
@@ -270,7 +270,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
                 _ ->
                     "field"
     in
-    "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
+    "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ decoderFromTypeAnnotation b ++ ")"
 
 
 
