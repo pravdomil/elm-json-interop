@@ -73,10 +73,19 @@ customTypeToTs a =
                 _ ->
                     Nothing
 
+        oneConstructor : Maybe (Node String)
+        oneConstructor =
+            case a.constructors of
+                (Node _ { name }) :: [] ->
+                    Just name
+
+                _ ->
+                    Nothing
+
         type_ : Type
         type_ =
-            case ( jsRef, a.constructors ) of
-                ( Just t, (Node _ { name }) :: [] ) ->
+            case ( jsRef, oneConstructor ) of
+                ( Just t, Just name ) ->
                     { a
                         | constructors =
                             [ node
