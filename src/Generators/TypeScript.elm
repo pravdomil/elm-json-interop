@@ -144,6 +144,7 @@ typeToTs a =
                 Nothing ->
                     ""
 
+        declaration : String
         declaration =
             "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
 
