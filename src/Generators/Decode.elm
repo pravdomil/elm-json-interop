@@ -249,8 +249,8 @@ arrayAtDecoder i a =
 recordToDecoder : RecordDefinition -> String
 recordToDecoder a =
     let
-        args : String
-        args =
+        parameters : String
+        parameters =
             a
                 |> List.indexedMap (\i _ -> letterByInt i)
                 |> join " "
@@ -263,7 +263,7 @@ recordToDecoder a =
 
         constructorFn : String
         constructorFn =
-            "(\\" ++ args ++ " -> { " ++ fields ++ " })"
+            "(\\" ++ parameters ++ " -> { " ++ fields ++ " })"
     in
     mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (join " " <| List.map fromRecordField a)
 
