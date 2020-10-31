@@ -192,14 +192,6 @@ typeAnnotationToTs a =
 typedToTs : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 typedToTs (Node _ ( moduleName, name )) arguments =
     let
-        generics =
-            case arguments of
-                [] ->
-                    ""
-
-                _ ->
-                    "<" ++ (join ", " <| List.map typeAnnotationToTs arguments) ++ ">"
-
         fn =
             case moduleName ++ [ name ] |> join "." of
                 "Int" ->
@@ -234,6 +226,14 @@ typedToTs (Node _ ( moduleName, name )) arguments =
 
                 a ->
                     a
+
+        generics =
+            case arguments of
+                [] ->
+                    ""
+
+                _ ->
+                    "<" ++ (join ", " <| List.map typeAnnotationToTs arguments) ++ ">"
     in
     fn ++ generics
 
