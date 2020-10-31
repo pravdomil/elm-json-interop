@@ -161,7 +161,7 @@ typeAnnotationToDecoder a =
             "succeed ()"
 
         Tupled nodes ->
-            fromTuple nodes
+            tupleToDecoder nodes
 
         Record b ->
             fromRecord b
@@ -225,8 +225,10 @@ typedToDecoder (Node _ ( name, str )) nodes =
     fn ++ generics
 
 
-fromTuple : List (Node TypeAnnotation) -> String
-fromTuple a =
+{-| To get decoder from tuple.
+-}
+tupleToDecoder : List (Node TypeAnnotation) -> String
+tupleToDecoder a =
     let
         len =
             List.length a
