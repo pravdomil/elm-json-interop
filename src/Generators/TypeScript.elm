@@ -133,30 +133,28 @@ customTypeConstructorToTs (Node _ a) =
 fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 fromType a =
     let
+        fromDocumentation : Maybe (Node Documentation) -> String
+        fromDocumentation b =
+            case b of
+                Just (Node _ b) ->
+                    "/**" ++ String.slice 3 -2 b ++ " */\n"
+
+                Nothing ->
+                    ""
+
+        fromTypeGenerics : { a | generics : List (Node String) } -> String
+        fromTypeGenerics b =
+            case b.generics of
+                [] ->
+                    ""
+
+                _ ->
+                    "<" ++ join ", " (List.map Node.value b.generics) ++ ">"
+
         declaration =
             "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
     in
     fromDocumentation a.documentation ++ declaration
-
-
-fromTypeGenerics : { a | generics : List (Node String) } -> String
-fromTypeGenerics a =
-    case a.generics of
-        [] ->
-            ""
-
-        _ ->
-            "<" ++ join ", " (List.map Node.value a.generics) ++ ">"
-
-
-fromDocumentation : Maybe (Node Documentation) -> String
-fromDocumentation a =
-    case a of
-        Just (Node _ b) ->
-            "/**" ++ String.slice 3 -2 b ++ " */\n"
-
-        Nothing ->
-            ""
 
 
 fromTypeAnnotation : Node TypeAnnotation -> String
