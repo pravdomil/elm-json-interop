@@ -34,19 +34,6 @@ stringFromAlphabet a =
     String.fromChar <| Char.fromCode <| (+) 97 a
 
 
-tupleConstructor : Int -> String
-tupleConstructor len =
-    case len of
-        2 ->
-            "Tuple.pair"
-
-        3 ->
-            "(\\a b c -> (a, b, c))"
-
-        _ ->
-            ""
-
-
 {-| To get module name from file.
 -}
 fileToModuleName : File -> String

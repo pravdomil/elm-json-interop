@@ -264,6 +264,23 @@ firstToLowerCase a =
             a
 
 
+
+--
+
+
+tupleConstructor : Int -> String
+tupleConstructor len =
+    case len of
+        2 ->
+            "Tuple.pair"
+
+        3 ->
+            "(\\a b c -> (a, b, c))"
+
+        _ ->
+            ""
+
+
 {-| To get map function name by argument count.
 -}
 mapFn : Int -> String
