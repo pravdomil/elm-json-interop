@@ -269,6 +269,8 @@ fromRecordField (Node _ ( Node _ a, b )) =
 --
 
 
+{-| To get decoder name.
+-}
 decoderName : String -> String
 decoderName a =
     firstToLowerCase a ++ "Decoder"
