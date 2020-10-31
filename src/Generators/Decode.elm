@@ -149,8 +149,8 @@ decoderFromType body a =
 {-| To get decoder from type annotation.
 -}
 decoderFromTypeAnnotation : Node TypeAnnotation -> String
-decoderFromTypeAnnotation (Node _ a) =
-    (case a of
+decoderFromTypeAnnotation a =
+    (case a |> Node.value of
         GenericType b ->
             "t_" ++ b
 
