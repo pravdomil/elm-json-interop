@@ -219,15 +219,15 @@ tupleToEncoder argument a =
         tupleArgument i =
             Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
 
-        arguments : String
-        arguments =
+        parameters : String
+        parameters =
             a |> List.indexedMap (\i _ -> tupleArgument i |> argumentToString) |> join ", "
 
         map : Int -> Node TypeAnnotation -> String
         map i b =
             typeAnnotationToEncoder (tupleArgument i) b
     in
-    "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
+    "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 
 
 fromRecord : Argument -> RecordDefinition -> String
