@@ -165,14 +165,6 @@ typeAnnotationToEncoder argument a =
 typedToEncoder : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 typedToEncoder argument (Node _ ( name, str )) nodes =
     let
-        generics =
-            case nodes of
-                [] ->
-                    ""
-
-                _ ->
-                    (++) " " <| join " " <| List.map (typeAnnotationToEncoder { argument | disabled = True }) nodes
-
         fn =
             case name ++ [ str ] |> join "." of
                 "Int" ->
@@ -204,6 +196,14 @@ typedToEncoder argument (Node _ ( name, str )) nodes =
 
                 _ ->
                     name ++ [ encoderName str ] |> join "."
+
+        generics =
+            case nodes of
+                [] ->
+                    ""
+
+                _ ->
+                    (++) " " <| join " " <| List.map (typeAnnotationToEncoder { argument | disabled = True }) nodes
     in
     fn ++ generics ++ argumentToString argument
 
