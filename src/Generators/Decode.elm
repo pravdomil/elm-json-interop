@@ -276,6 +276,8 @@ decoderName a =
     firstToLowerCase a ++ "Decoder"
 
 
+{-| To convert first letter of string to lower case.
+-}
 firstToLowerCase : String -> String
 firstToLowerCase a =
     case String.toList a of
