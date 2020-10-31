@@ -85,8 +85,8 @@ decoderFromCustomTypeConstructor (Node _ a) =
         tup =
             List.indexedMap (tupleMap 1) a.arguments
 
-        val : String
-        val =
+        decoder : String
+        decoder =
             case a.arguments of
                 [] ->
                     "succeed A." ++ name
@@ -94,7 +94,7 @@ decoderFromCustomTypeConstructor (Node _ a) =
                 _ ->
                     mapFn (List.length a.arguments) ++ " A." ++ name ++ " " ++ join " " tup
     in
-    encodeJsonString name ++ " -> " ++ val
+    encodeJsonString name ++ " -> " ++ decoder
 
 
 {-| To get decoder from type.
