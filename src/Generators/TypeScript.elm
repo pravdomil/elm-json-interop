@@ -144,6 +144,9 @@ typeToTs a =
                 Nothing ->
                     ""
 
+        declaration =
+            "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
+
         fromTypeGenerics : { a | generics : List (Node String) } -> String
         fromTypeGenerics b =
             case b.generics of
@@ -152,9 +155,6 @@ typeToTs a =
 
                 _ ->
                     "<" ++ join ", " (List.map Node.value b.generics) ++ ">"
-
-        declaration =
-            "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
     in
     documentation ++ declaration
 
