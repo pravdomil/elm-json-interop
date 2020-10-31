@@ -230,13 +230,11 @@ typedToDecoder (Node _ ( name, str )) nodes =
 tupleToDecoder : List (Node TypeAnnotation) -> String
 tupleToDecoder a =
     let
-        len =
-            List.length a
-
-        tup =
-            List.indexedMap (tupleMap 0) a
+        arguments : String
+        arguments =
+            a |> List.indexedMap (tupleMap 0) |> join " "
     in
-    mapFn len ++ " " ++ tupleFn len ++ " " ++ join " " tup
+    mapFn (List.length a) ++ " " ++ tupleFn (List.length a) ++ " " ++ arguments
 
 
 tupleMap : Int -> Int -> Node TypeAnnotation -> String
