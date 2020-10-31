@@ -114,8 +114,9 @@ customTypeTagNameToTs a =
         mapGuard : Node ValueConstructor -> String
         mapGuard b =
             let
+                tag : String
                 tag =
-                    Node.value <| .name <| Node.value <| b
+                    b |> Node.value |> .name |> Node.value
             in
             "export const " ++ tag ++ " = " ++ encodeJsonString tag
     in
