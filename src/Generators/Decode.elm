@@ -83,9 +83,11 @@ decoderFromType a body =
                 |> Maybe.map (\v -> v |> Node.value |> String.toLower |> String.contains "lazy decode")
                 |> Maybe.withDefault False
 
+        name : String
         name =
             Node.value a.name
 
+        signature : String
         signature =
             case a.generics of
                 [] ->
@@ -94,6 +96,7 @@ decoderFromType a body =
                 _ ->
                     ""
 
+        generics : String
         generics =
             case a.generics of
                 [] ->
@@ -102,6 +105,7 @@ decoderFromType a body =
                 _ ->
                     (++) " " <| join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
 
+        declaration : String
         declaration =
             decoderName name ++ generics ++ " ="
     in
