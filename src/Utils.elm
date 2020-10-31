@@ -10,9 +10,9 @@ import Json.Encode as Encode
 import String exposing (join)
 
 
-{-| To define argument.
+{-| To define parameter.
 -}
-type alias Argument =
+type alias Parameter =
     { prefix : String
     , letter : Int
     , suffix : String
@@ -20,10 +20,10 @@ type alias Argument =
     }
 
 
-{-| To convert argument to string.
+{-| To convert parameter to string.
 -}
-argumentToString : Argument -> String
-argumentToString { prefix, letter, suffix, disabled } =
+parameterToString : Parameter -> String
+parameterToString { prefix, letter, suffix, disabled } =
     case disabled of
         True ->
             ""
