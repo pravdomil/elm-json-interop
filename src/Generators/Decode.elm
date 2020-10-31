@@ -265,11 +265,13 @@ recordToDecoder a =
         constructorFn =
             "(\\" ++ parameters ++ " -> { " ++ fields ++ " })"
     in
-    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map fromRecordField |> join " ")
+    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map recordFieldToDecoder |> join " ")
 
 
-fromRecordField : Node RecordField -> String
-fromRecordField (Node _ ( Node _ a, b )) =
+{-| To get decoder from record field.
+-}
+recordFieldToDecoder : Node RecordField -> String
+recordFieldToDecoder (Node _ ( Node _ a, b )) =
     let
         decoder : String
         decoder =
