@@ -235,7 +235,7 @@ typedToTs (Node _ ( moduleName, name )) arguments =
                     ""
 
                 _ ->
-                    "<" ++ (join ", " <| List.map typeAnnotationToTs arguments) ++ ">"
+                    "<" ++ (arguments |> List.map typeAnnotationToTs |> join ", ") ++ ">"
     in
     fn ++ generics
 
