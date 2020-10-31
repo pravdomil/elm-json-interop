@@ -127,7 +127,7 @@ normalizeRecordFieldName a =
     let
         dropUnderscoreIfKeyword : String -> String
         dropUnderscoreIfKeyword v =
-            if List.member (String.dropRight 1 v) elmKeywords then
+            if elmKeywords |> List.member (String.dropRight 1 v) then
                 String.dropRight 1 v
 
             else
