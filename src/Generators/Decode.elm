@@ -249,9 +249,6 @@ arrayAtDecoder i a =
 recordToDecoder : RecordDefinition -> String
 recordToDecoder a =
     let
-        len =
-            List.length a
-
         args =
             List.indexedMap (\i _ -> letterByInt i) a
 
@@ -261,7 +258,7 @@ recordToDecoder a =
         lambda =
             "(\\" ++ join " " args ++ " -> { " ++ join ", " fields ++ " })"
     in
-    mapFn len ++ " " ++ lambda ++ " " ++ (join " " <| List.map fromRecordField a)
+    mapFn (List.length a) ++ " " ++ lambda ++ " " ++ (join " " <| List.map fromRecordField a)
 
 
 fromRecordField : Node RecordField -> String
