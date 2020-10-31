@@ -215,10 +215,6 @@ typedToEncoder argument (Node _ ( moduleName, name )) arguments =
 tupleToEncoder : Argument -> List (Node TypeAnnotation) -> String
 tupleToEncoder argument a =
     let
-        tupleArgument : Int -> Argument
-        tupleArgument i =
-            Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
-
         parameters : String
         parameters =
             a |> List.indexedMap (\i _ -> tupleArgument i |> argumentToString) |> join ", "
@@ -226,6 +222,10 @@ tupleToEncoder argument a =
         map : Int -> Node TypeAnnotation -> String
         map i b =
             typeAnnotationToEncoder (tupleArgument i) b
+
+        tupleArgument : Int -> Argument
+        tupleArgument i =
+            Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
     in
     "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 
