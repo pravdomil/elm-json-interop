@@ -5,6 +5,8 @@ import Json.Decode exposing (..)
 import Set exposing (Set)
 
 
+{-| To decode char.
+-}
 charDecoder : Decoder Char
 charDecoder =
     string
@@ -19,16 +21,22 @@ charDecoder =
             )
 
 
+{-| To decode set.
+-}
 setDecoder : Decoder comparable -> Decoder (Set comparable)
 setDecoder a =
     map Set.fromList (list a)
 
 
+{-| To decode dict.
+-}
 dictDecoder : Decoder k -> Decoder v -> Decoder (Dict String v)
 dictDecoder _ a =
     dict a
 
 
+{-| To maybe decode field.
+-}
 nullableOrMissingField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
 nullableOrMissingField name a =
     oneOf
@@ -46,6 +54,8 @@ nullableOrMissingField name a =
             )
 
 
+{-| To decode result.
+-}
 resultDecoder : Decoder e -> Decoder v -> Decoder (Result e v)
 resultDecoder t_error t_value =
     index 0 string
