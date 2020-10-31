@@ -83,7 +83,7 @@ customTypeConstructorToDecoder (Node _ a) =
 
         arguments : String
         arguments =
-            a.arguments |> List.indexedMap (arrayAtDecoder 1) |> join " "
+            a.arguments |> List.indexedMap (\i v -> arrayAtDecoder (1 + i) v) |> join " "
 
         decoder : String
         decoder =
