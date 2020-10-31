@@ -31,7 +31,7 @@ fileToTypeScriptDeclaration a =
             )
         |> join "\n"
     , ""
-    , List.filterMap declarationToTs a.declarations |> join "\n\n\n"
+    , a.declarations |> List.filterMap declarationToTs |> join "\n\n\n"
     , ""
     ]
         |> join "\n"
