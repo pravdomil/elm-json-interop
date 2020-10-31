@@ -77,8 +77,11 @@ decoderFromCustomType a =
 decoderFromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String -> String
 decoderFromType a body =
     let
+        lazyDecoded : Bool
         lazyDecoded =
-            a.documentation |> Maybe.map Node.value |> Maybe.withDefault "" |> String.toLower |> String.contains "lazy decode"
+            a.documentation
+                |> Maybe.map (\v -> v |> Node.value |> String.toLower |> String.contains "lazy decode")
+                |> Maybe.withDefault False
 
         name =
             Node.value a.name
