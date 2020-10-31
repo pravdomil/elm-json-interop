@@ -83,7 +83,7 @@ customTypeConstructorToDecoder (Node _ a) =
 
         arguments : String
         arguments =
-            a.arguments |> List.indexedMap (tupleMap 1) |> join " "
+            a.arguments |> List.indexedMap (arrayAtDecoder 1) |> join " "
 
         decoder : String
         decoder =
@@ -232,14 +232,16 @@ tupleToDecoder a =
     let
         arguments : String
         arguments =
-            a |> List.indexedMap (tupleMap 0) |> join " "
+            a |> List.indexedMap arrayAtDecoder |> join " "
     in
     mapFn (List.length a) ++ " " ++ tupleFn (List.length a) ++ " " ++ arguments
 
 
-tupleMap : Int -> Int -> Node TypeAnnotation -> String
-tupleMap offset i a =
-    "(index " ++ String.fromInt (offset + i) ++ " " ++ typeAnnotationToDecoder a ++ ")"
+{-| To get decoder for decoding element at index.
+-}
+arrayAtDecoder : Int -> Node TypeAnnotation -> String
+arrayAtDecoder i a =
+    "(index " ++ String.fromInt i ++ " " ++ typeAnnotationToDecoder a ++ ")"
 
 
 fromRecord : RecordDefinition -> String
