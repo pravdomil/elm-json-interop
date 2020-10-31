@@ -84,7 +84,7 @@ customTypeConstructorToEncoder (Node _ a) =
                     ""
 
                 _ ->
-                    " " ++ (join " " <| List.indexedMap (\b _ -> letterByInt (b + 1)) a.arguments)
+                    " " ++ (a.arguments |> List.indexedMap (\i _ -> letterByInt (i + 1)) |> join " ")
 
         map : Int -> Node TypeAnnotation -> String
         map i b =
