@@ -101,7 +101,7 @@ customTypeToTs a =
 
         constructors : String
         constructors =
-            type_.constructors |> List.map fromCustomTypeConstructor |> join "\n  | "
+            type_.constructors |> List.map customTypeConstructorToTs |> join "\n  | "
     in
     fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ customTypeTagToTs type_
 
@@ -123,9 +123,11 @@ customTypeTagToTs a =
     a.constructors |> List.map toTagNameConstant |> join "\n"
 
 
-fromCustomTypeConstructor : Node ValueConstructor -> String
-fromCustomTypeConstructor (Node _ a) =
-    fromTuple (Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments)
+{-| To get TypeScript from custom type constructor.
+-}
+customTypeConstructorToTs : Node ValueConstructor -> String
+customTypeConstructorToTs (Node _ a) =
+    Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments |> fromTuple
 
 
 fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
