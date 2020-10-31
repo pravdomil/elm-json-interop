@@ -146,16 +146,16 @@ typeToTs a =
 
         declaration : String
         declaration =
-            "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
+            "export type " ++ Node.value a.name ++ generics ++ " ="
 
-        fromTypeGenerics : { a | generics : List (Node String) } -> String
-        fromTypeGenerics b =
-            case b.generics of
+        generics : String
+        generics =
+            case a.generics of
                 [] ->
                     ""
 
                 _ ->
-                    "<" ++ join ", " (List.map Node.value b.generics) ++ ">"
+                    "<" ++ join ", " (List.map Node.value a.generics) ++ ">"
     in
     documentation ++ declaration
 
