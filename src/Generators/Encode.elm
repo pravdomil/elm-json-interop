@@ -49,6 +49,20 @@ declarationToEncoder a =
             Nothing
 
 
+fromTypeAlias : TypeAlias -> String
+fromTypeAlias a =
+    fromType a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
+
+
+fromCustomType : Type -> String
+fromCustomType a =
+    let
+        cases =
+            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
+    in
+    fromType a ++ "\n  case a of\n    " ++ cases
+
+
 fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 fromType a =
     let
@@ -75,20 +89,6 @@ fromType a =
             encoderName name ++ generics ++ " a ="
     in
     signature ++ declaration
-
-
-fromTypeAlias : TypeAlias -> String
-fromTypeAlias a =
-    fromType a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
-
-
-fromCustomType : Type -> String
-fromCustomType a =
-    let
-        cases =
-            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
-    in
-    fromType a ++ "\n  case a of\n    " ++ cases
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
