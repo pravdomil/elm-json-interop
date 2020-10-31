@@ -234,11 +234,13 @@ tupleToEncoder parameter a =
 -}
 recordToEncoder : Parameter -> RecordDefinition -> String
 recordToEncoder parameter a =
-    "object [ " ++ (a |> List.map (fromRecordField parameter) |> join ", ") ++ " ]"
+    "object [ " ++ (a |> List.map (recordFieldToEncoder parameter) |> join ", ") ++ " ]"
 
 
-fromRecordField : Parameter -> Node RecordField -> String
-fromRecordField parameter (Node _ ( Node _ a, b )) =
+{-| To get encoder from record field.
+-}
+recordFieldToEncoder : Parameter -> Node RecordField -> String
+recordFieldToEncoder parameter (Node _ ( Node _ a, b )) =
     "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ typeAnnotationToEncoder { parameter | suffix = "." ++ a } b ++ " )"
 
 
