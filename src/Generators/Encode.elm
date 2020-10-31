@@ -215,12 +215,15 @@ typedToEncoder argument (Node _ ( moduleName, name )) arguments =
 tupleToEncoder : Argument -> List (Node TypeAnnotation) -> String
 tupleToEncoder argument a =
     let
+        tupleArgument : Int -> Argument
         tupleArgument i =
             Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
 
+        arguments : String
         arguments =
             join ", " <| List.indexedMap (\i _ -> tupleArgument i |> argumentToString) a
 
+        map : Int -> Node TypeAnnotation -> String
         map i b =
             typeAnnotationToEncoder (tupleArgument i) b
     in
