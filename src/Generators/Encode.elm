@@ -217,14 +217,14 @@ tupleToEncoder parameter a =
     let
         parameters : String
         parameters =
-            a |> List.indexedMap (\i _ -> tupleArgument i |> parameterToString) |> join ", "
+            a |> List.indexedMap (\i _ -> parameterFromInt i |> parameterToString) |> join ", "
 
         map : Int -> Node TypeAnnotation -> String
         map i b =
-            typeAnnotationToEncoder (tupleArgument i) b
+            typeAnnotationToEncoder (parameterFromInt i) b
 
-        tupleArgument : Int -> Parameter
-        tupleArgument i =
+        parameterFromInt : Int -> Parameter
+        parameterFromInt i =
             Parameter ("t" ++ parameter.prefix) (i + parameter.letter + 1) "" False
     in
     "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap map |> join ", ") ++ " ])" ++ parameterToString parameter
