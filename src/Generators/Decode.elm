@@ -251,11 +251,15 @@ recordToDecoder a =
     let
         args : String
         args =
-            a |> List.indexedMap (\i _ -> letterByInt i) |> join " "
+            a
+                |> List.indexedMap (\i _ -> letterByInt i)
+                |> join " "
 
         fields : String
         fields =
-            a |> List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i) |> join ", "
+            a
+                |> List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i)
+                |> join ", "
 
         constructorFn : String
         constructorFn =
