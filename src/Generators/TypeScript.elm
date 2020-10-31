@@ -70,9 +70,9 @@ customTypeToTs a =
                 ( _ :: t :: [], (Node _ { name }) :: [] ) ->
                     { a
                         | constructors =
-                            [ Node emptyRange
+                            [ node
                                 (ValueConstructor name
-                                    [ Node emptyRange (Typed (Node emptyRange ( [], t )) [])
+                                    [ node (Typed (node ( [], t )) [])
                                     ]
                                 )
                             ]
@@ -80,6 +80,10 @@ customTypeToTs a =
 
                 _ ->
                     a
+
+        node : a -> Node a
+        node b =
+            Node emptyRange b
 
         constructors : String
         constructors =
