@@ -165,6 +165,7 @@ typeAnnotationToEncoder argument a =
 typedToEncoder : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 typedToEncoder argument (Node _ ( name, str )) nodes =
     let
+        fn : String
         fn =
             case name ++ [ str ] |> join "." of
                 "Int" ->
@@ -197,6 +198,7 @@ typedToEncoder argument (Node _ ( name, str )) nodes =
                 _ ->
                     name ++ [ encoderName str ] |> join "."
 
+        generics : String
         generics =
             case nodes of
                 [] ->
