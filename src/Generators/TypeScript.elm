@@ -64,6 +64,7 @@ typeAliasToTs a =
 customTypeToTs : Type -> String
 customTypeToTs a =
     let
+        type_ : Type
         type_ =
             case ( String.split "JsRef" (Node.value a.name), a.constructors ) of
                 ( _ :: t :: [], (Node _ { name }) :: [] ) ->
@@ -80,6 +81,7 @@ customTypeToTs a =
                 _ ->
                     a
 
+        constructors : String
         constructors =
             join "\n  | " <| List.map fromCustomTypeConstructor type_.constructors
     in
