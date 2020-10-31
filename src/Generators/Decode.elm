@@ -253,12 +253,13 @@ recordToDecoder a =
         args =
             a |> List.indexedMap (\i _ -> letterByInt i) |> join " "
 
+        fields : String
         fields =
-            a |> List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i)
+            a |> List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i) |> join ", "
 
         constructorFn : String
         constructorFn =
-            "(\\" ++ args ++ " -> { " ++ join ", " fields ++ " })"
+            "(\\" ++ args ++ " -> { " ++ fields ++ " })"
     in
     mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (join " " <| List.map fromRecordField a)
 
