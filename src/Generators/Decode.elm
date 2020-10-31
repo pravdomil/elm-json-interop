@@ -43,7 +43,7 @@ decoderFromDeclaration a =
             Just (decoderFromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just (fromCustomType b)
+            Just (decoderFromCustomType b)
 
         _ ->
             Nothing
@@ -56,8 +56,10 @@ decoderFromTypeAlias a =
     fromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
 
 
-fromCustomType : Type -> String
-fromCustomType a =
+{-| To get decoder from custom type.
+-}
+decoderFromCustomType : Type -> String
+decoderFromCustomType a =
     let
         cases =
             join "\n    " <| List.map fromCustomTypeConstructor a.constructors
