@@ -33,10 +33,10 @@ encodeDict _ b c =
 {-| To encode result.
 -}
 encodeResult : (e -> Value) -> (v -> Value) -> Result e v -> Value
-encodeResult t_error t_value a =
+encodeResult errorDecoder valueDecoder a =
     case a of
         Ok b ->
-            list identity [ string "Ok", t_value b ]
+            list identity [ string "Ok", valueDecoder b ]
 
         Err b ->
-            list identity [ string "Err", t_error b ]
+            list identity [ string "Err", errorDecoder b ]

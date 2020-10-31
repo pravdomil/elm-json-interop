@@ -57,16 +57,16 @@ nullableOrMissingField name a =
 {-| To decode result.
 -}
 resultDecoder : Decoder e -> Decoder v -> Decoder (Result e v)
-resultDecoder t_error t_value =
+resultDecoder errorDecoder valueDecoder =
     index 0 string
         |> andThen
             (\tag ->
                 case tag of
                     "Ok" ->
-                        map Ok t_value
+                        map Ok valueDecoder
 
                     "Err" ->
-                        map Err t_error
+                        map Err errorDecoder
 
                     _ ->
                         fail ("I can't decode Result, what " ++ tag ++ " means?")
