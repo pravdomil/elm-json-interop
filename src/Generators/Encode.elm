@@ -28,15 +28,17 @@ fileToElmEncodeModule a =
             )
         |> join "\n"
     , ""
-    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
+    , a.declarations |> List.filterMap declarationToEncoder |> join "\n\n"
     , ""
     ]
         |> join "\n"
 
 
-fromDeclaration : Node Declaration -> Maybe String
-fromDeclaration (Node _ a) =
-    case a of
+{-| To maybe get encoder from declaration.
+-}
+declarationToEncoder : Node Declaration -> Maybe String
+declarationToEncoder a =
+    case a |> Node.value of
         AliasDeclaration b ->
             Just <| fromTypeAlias b
 
