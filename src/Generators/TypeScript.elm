@@ -11,7 +11,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (getImports, normalizeRecordFieldName, toJsonString)
+import Utils exposing (moduleImports, normalizeRecordFieldName, toJsonString)
 
 
 toTypeScript : File -> String
@@ -22,7 +22,7 @@ toTypeScript f =
     in
     join "\n"
         [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
-        , f.imports |> getImports (\v vv -> "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "\"") |> join "\n"
+        , f.imports |> moduleImports (\v vv -> "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "\"") |> join "\n"
         , ""
         , List.filterMap fromDeclaration f.declarations |> join "\n\n\n"
         , ""

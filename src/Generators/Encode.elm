@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Argument, argumentToString, fileToModuleName, getImports, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString)
+import Utils exposing (Argument, argumentToString, fileToModuleName, moduleImports, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString)
 
 
 toElmEncoder : File -> String
@@ -21,7 +21,7 @@ toElmEncoder f =
         , "import Generated.Basics.BasicsEncode exposing (..)"
         , "import Json.Encode exposing (..)"
         , f.imports
-            |> getImports (\v vv -> "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")")
+            |> moduleImports (\v vv -> "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")")
             |> join "\n"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"

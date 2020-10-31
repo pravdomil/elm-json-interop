@@ -50,8 +50,8 @@ moduleNameToString a =
 
 {-| To get list modules that needs to be imported.
 -}
-getImports : (ModuleName -> List String -> String) -> List (Node Import) -> List String
-getImports toImport_ a =
+moduleImports : (ModuleName -> List String -> String) -> List (Node Import) -> List String
+moduleImports toImport_ a =
     let
         filterModules : Node Import -> Maybe (Node Import)
         filterModules b =

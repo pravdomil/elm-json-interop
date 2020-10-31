@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (fileToModuleName, getImports, mapFn, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (fileToModuleName, mapFn, moduleImports, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
 
 
 {-| To get Elm module for decoding types in file.
@@ -23,7 +23,7 @@ fileToElmDecoderModule f =
         , "import Generated.Basics.BasicsDecode exposing (..)"
         , "import Json.Decode exposing (..)"
         , f.imports
-            |> getImports (\v vv -> "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")")
+            |> moduleImports (\v vv -> "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")")
             |> join "\n"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
