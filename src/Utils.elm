@@ -10,6 +10,8 @@ import Json.Encode as Encode
 import String exposing (join)
 
 
+{-| To define argument.
+-}
 type alias Argument =
     { prefix : String
     , letter : Int
