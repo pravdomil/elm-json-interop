@@ -76,7 +76,8 @@ customTypeConstructorToEncoder (Node _ a) =
         name =
             Node.value a.name
 
-        params =
+        arguments : String
+        arguments =
             case a.arguments of
                 [] ->
                     ""
@@ -91,7 +92,7 @@ customTypeConstructorToEncoder (Node _ a) =
         encoder =
             String.join ", " <| (::) ("string " ++ encodeJsonString name) <| List.indexedMap map a.arguments
     in
-    "A." ++ name ++ params ++ " -> list identity [ " ++ encoder ++ " ]"
+    "A." ++ name ++ arguments ++ " -> list identity [ " ++ encoder ++ " ]"
 
 
 {-| To get encoder from type.
