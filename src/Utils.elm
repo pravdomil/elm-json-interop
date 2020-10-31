@@ -10,28 +10,6 @@ import Json.Encode as Encode
 import String exposing (join)
 
 
-{-| To define parameter.
--}
-type alias Parameter =
-    { prefix : String
-    , letter : Int
-    , suffix : String
-    , disabled : Bool
-    }
-
-
-{-| To convert parameter to string.
--}
-parameterToString : Parameter -> String
-parameterToString { prefix, letter, suffix, disabled } =
-    case disabled of
-        True ->
-            ""
-
-        False ->
-            " ( " ++ prefix ++ letterByInt letter ++ suffix ++ " )"
-
-
 {-| To encode string into JSON string.
 -}
 encodeJsonString : String -> String
