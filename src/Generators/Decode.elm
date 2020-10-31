@@ -220,7 +220,7 @@ decoderFromTyped (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map decoderFromTypeAnnotation nodes
+                    nodes |> List.map decoderFromTypeAnnotation |> join " " |> (++) " "
     in
     fn ++ generics
 
