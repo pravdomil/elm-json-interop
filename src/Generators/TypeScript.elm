@@ -86,22 +86,18 @@ customTypeToTs a =
         type_ =
             case ( jsRef, oneConstructor ) of
                 ( Just t, Just name ) ->
-                    { a
-                        | constructors =
-                            [ node
-                                (ValueConstructor name
-                                    [ node (Typed (node ( [], t )) [])
-                                    ]
-                                )
-                            ]
-                    }
+                    { a | constructors = [ newConstructor name t ] }
 
                 _ ->
                     a
 
-        node : a -> Node a
-        node b =
-            Node emptyRange b
+        newConstructor : Node String -> String -> Node ValueConstructor
+        newConstructor name t =
+            Node emptyRange
+                (ValueConstructor name
+                    [ Node emptyRange (Typed (Node emptyRange ( [], t )) [])
+                    ]
+                )
 
         constructors : String
         constructors =
