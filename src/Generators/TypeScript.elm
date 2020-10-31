@@ -103,11 +103,13 @@ customTypeToTs a =
         constructors =
             type_.constructors |> List.map fromCustomTypeConstructor |> join "\n  | "
     in
-    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeConstants type_
+    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ customTypeTagNameToTs type_
 
 
-fromCustomTypeConstants : Type -> String
-fromCustomTypeConstants a =
+{-| To get TypeScript from custom type tag name.
+-}
+customTypeTagNameToTs : Type -> String
+customTypeTagNameToTs a =
     let
         mapGuard : Node ValueConstructor -> String
         mapGuard b =
