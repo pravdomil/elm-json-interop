@@ -178,10 +178,10 @@ typeAnnotationToTs a =
             tupleToTs nodes
 
         Record b ->
-            fromRecord b
+            recordToTs b
 
         GenericRecord _ (Node _ b) ->
-            fromRecord b
+            recordToTs b
 
         FunctionTypeAnnotation _ _ ->
             "Function"
@@ -247,9 +247,11 @@ tupleToTs a =
     "[" ++ (a |> List.map typeAnnotationToTs |> join ", ") ++ "]"
 
 
-fromRecord : List (Node RecordField) -> String
-fromRecord a =
-    "{ " ++ (join "; " <| List.map fromRecordField a) ++ " }"
+{-| To get TypeScript from record.
+-}
+recordToTs : List (Node RecordField) -> String
+recordToTs a =
+    "{ " ++ (a |> List.map fromRecordField |> join "; ") ++ " }"
 
 
 fromRecordField : Node RecordField -> String
