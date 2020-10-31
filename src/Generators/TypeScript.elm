@@ -46,7 +46,7 @@ declarationToTs a =
             Just (typeAliasToTs b)
 
         CustomTypeDeclaration b ->
-            Just (fromCustomType b)
+            Just (customTypeToTs b)
 
         _ ->
             Nothing
@@ -59,8 +59,10 @@ typeAliasToTs a =
     fromType a ++ " " ++ fromTypeAnnotation a.typeAnnotation
 
 
-fromCustomType : Type -> String
-fromCustomType a =
+{-| To get TypeScript from custom type.
+-}
+customTypeToTs : Type -> String
+customTypeToTs a =
     let
         type_ =
             case ( String.split "JsRef" (Node.value a.name), a.constructors ) of
