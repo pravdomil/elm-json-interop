@@ -40,8 +40,8 @@ fileToTypeScriptDeclaration a =
 {-| To get TypeScript from declaration.
 -}
 declarationToTs : Node Declaration -> Maybe String
-declarationToTs (Node _ a) =
-    case a of
+declarationToTs a =
+    case a |> Node.value of
         AliasDeclaration b ->
             Just (fromTypeAlias b)
 
