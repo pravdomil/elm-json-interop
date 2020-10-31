@@ -34,7 +34,7 @@ fileToElmDecoderModule f =
         ]
 
 
-{-| To maybe get decoder for declaration.
+{-| To maybe get decoder from declaration.
 -}
 decoderFromDeclaration : Node Declaration -> Maybe String
 decoderFromDeclaration a =
