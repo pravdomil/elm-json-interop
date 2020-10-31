@@ -225,7 +225,7 @@ tupleToEncoder parameter a =
 
         parameterFromInt : Int -> Parameter
         parameterFromInt i =
-            Parameter ("t" ++ parameter.prefix) (i + parameter.letter + 1) "" False
+            Parameter (letterByInt parameter.letter ++ "_") i "" False
     in
     "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap map |> join ", ") ++ " ])" ++ parameterToString parameter
 
