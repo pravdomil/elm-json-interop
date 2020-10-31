@@ -73,9 +73,11 @@ customTypeToEncoder a =
 typeToEncoder : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 typeToEncoder a =
     let
+        name : String
         name =
             Node.value a.name
 
+        signature : String
         signature =
             case a.generics of
                 [] ->
@@ -84,9 +86,11 @@ typeToEncoder a =
                 _ ->
                     ""
 
+        declaration : String
         declaration =
             encoderName name ++ generics ++ " a ="
 
+        generics : String
         generics =
             case a.generics of
                 [] ->
