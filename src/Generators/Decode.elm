@@ -40,7 +40,7 @@ decoderFromDeclaration : Node Declaration -> Maybe String
 decoderFromDeclaration a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just (fromTypeAlias b)
+            Just (decoderFromTypeAlias b)
 
         CustomTypeDeclaration b ->
             Just (fromCustomType b)
@@ -49,8 +49,10 @@ decoderFromDeclaration a =
             Nothing
 
 
-fromTypeAlias : TypeAlias -> String
-fromTypeAlias a =
+{-| To get decoder from type alias.
+-}
+decoderFromTypeAlias : TypeAlias -> String
+decoderFromTypeAlias a =
     fromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
 
 
