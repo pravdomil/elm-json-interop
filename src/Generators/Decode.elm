@@ -250,14 +250,14 @@ recordToDecoder : RecordDefinition -> String
 recordToDecoder a =
     let
         args =
-            List.indexedMap (\i _ -> letterByInt i) a
+            a |> List.indexedMap (\i _ -> letterByInt i) |> join " "
 
         fields =
             List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i) a
 
         constructorFn : String
         constructorFn =
-            "(\\" ++ join " " args ++ " -> { " ++ join ", " fields ++ " })"
+            "(\\" ++ args ++ " -> { " ++ join ", " fields ++ " })"
     in
     mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (join " " <| List.map fromRecordField a)
 
