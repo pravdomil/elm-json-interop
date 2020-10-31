@@ -83,7 +83,7 @@ customTypeToTs a =
 
         constructors : String
         constructors =
-            join "\n  | " <| List.map fromCustomTypeConstructor type_.constructors
+            type_.constructors |> List.map fromCustomTypeConstructor |> join "\n  | "
     in
     fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeConstants type_
 
