@@ -111,8 +111,8 @@ customTypeToTs a =
 customTypeTagToTs : Type -> String
 customTypeTagToTs a =
     let
-        mapGuard : Node ValueConstructor -> String
-        mapGuard b =
+        toTagNameConstant : Node ValueConstructor -> String
+        toTagNameConstant b =
             let
                 tag : String
                 tag =
@@ -120,7 +120,7 @@ customTypeTagToTs a =
             in
             "export const " ++ tag ++ " = " ++ encodeJsonString tag
     in
-    a.constructors |> List.map mapGuard |> join "\n"
+    a.constructors |> List.map toTagNameConstant |> join "\n"
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
