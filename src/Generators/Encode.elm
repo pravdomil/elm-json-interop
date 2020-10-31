@@ -163,11 +163,11 @@ typeAnnotationToEncoder argument a =
 {-| To get encoder from typed.
 -}
 typedToEncoder : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-typedToEncoder argument (Node _ ( name, str )) nodes =
+typedToEncoder argument (Node _ ( moduleName, name )) arguments =
     let
         fn : String
         fn =
-            case name ++ [ str ] |> join "." of
+            case moduleName ++ [ name ] |> join "." of
                 "Int" ->
                     "int"
 
@@ -196,18 +196,18 @@ typedToEncoder argument (Node _ ( name, str )) nodes =
                     "identity"
 
                 _ ->
-                    name ++ [ encoderName str ] |> join "."
+                    moduleName ++ [ encoderName name ] |> join "."
 
-        generics : String
-        generics =
-            case nodes of
+        arguments_ : String
+        arguments_ =
+            case arguments of
                 [] ->
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map (typeAnnotationToEncoder { argument | disabled = True }) nodes
+                    (++) " " <| join " " <| List.map (typeAnnotationToEncoder { argument | disabled = True }) arguments
     in
-    fn ++ generics ++ argumentToString argument
+    fn ++ arguments_ ++ argumentToString argument
 
 
 fromTuple : Argument -> List (Node TypeAnnotation) -> String
