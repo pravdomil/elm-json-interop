@@ -56,7 +56,7 @@ declarationToTs a =
 -}
 typeAliasToTs : TypeAlias -> String
 typeAliasToTs a =
-    typeToTs a ++ " " ++ fromTypeAnnotation a.typeAnnotation
+    typeToTs a ++ " " ++ typeAnnotationToTs a.typeAnnotation
 
 
 {-| To get TypeScript from custom type.
@@ -160,9 +160,11 @@ typeToTs a =
     documentation ++ declaration
 
 
-fromTypeAnnotation : Node TypeAnnotation -> String
-fromTypeAnnotation (Node _ a) =
-    case a of
+{-| To get TypeScript from type annotation.
+-}
+typeAnnotationToTs : Node TypeAnnotation -> String
+typeAnnotationToTs a =
+    case a |> Node.value of
         GenericType b ->
             b
 
@@ -194,7 +196,7 @@ fromTyped (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    "<" ++ (join ", " <| List.map fromTypeAnnotation nodes) ++ ">"
+                    "<" ++ (join ", " <| List.map typeAnnotationToTs nodes) ++ ">"
 
         fn =
             case name ++ [ str ] |> join "." of
@@ -236,7 +238,7 @@ fromTyped (Node _ ( name, str )) nodes =
 
 fromTuple : List (Node TypeAnnotation) -> String
 fromTuple a =
-    "[" ++ (join ", " <| List.map fromTypeAnnotation a) ++ "]"
+    "[" ++ (join ", " <| List.map typeAnnotationToTs a) ++ "]"
 
 
 fromRecord : List (Node RecordField) -> String
@@ -255,4 +257,4 @@ fromRecordField (Node _ ( Node _ a, b )) =
                 _ ->
                     ""
     in
-    normalizeRecordFieldName a ++ maybeField ++ ": " ++ fromTypeAnnotation b
+    normalizeRecordFieldName a ++ maybeField ++ ": " ++ typeAnnotationToTs b
