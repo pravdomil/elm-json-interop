@@ -155,7 +155,7 @@ decoderFromTypeAnnotation a =
             "t_" ++ b
 
         Typed b c ->
-            fromTyped b c
+            decoderFromTyped b c
 
         Unit ->
             "succeed ()"
@@ -175,8 +175,10 @@ decoderFromTypeAnnotation a =
         |> wrapInParentheses
 
 
-fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-fromTyped (Node _ ( name, str )) nodes =
+{-| To get decoder from typed.
+-}
+decoderFromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+decoderFromTyped (Node _ ( name, str )) nodes =
     let
         generics =
             case nodes of
