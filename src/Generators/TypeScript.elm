@@ -52,25 +52,6 @@ declarationToTs a =
             Nothing
 
 
-fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-fromType a =
-    let
-        declaration =
-            "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
-    in
-    fromDocumentation a.documentation ++ declaration
-
-
-fromTypeGenerics : { a | generics : List (Node String) } -> String
-fromTypeGenerics a =
-    case a.generics of
-        [] ->
-            ""
-
-        _ ->
-            "<" ++ join ", " (List.map Node.value a.generics) ++ ">"
-
-
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
     fromType a ++ " " ++ fromTypeAnnotation a.typeAnnotation
@@ -118,6 +99,25 @@ fromCustomTypeConstants a =
 fromCustomTypeConstructor : Node ValueConstructor -> String
 fromCustomTypeConstructor (Node _ a) =
     fromTuple (Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments)
+
+
+fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+fromType a =
+    let
+        declaration =
+            "export type " ++ Node.value a.name ++ fromTypeGenerics a ++ " ="
+    in
+    fromDocumentation a.documentation ++ declaration
+
+
+fromTypeGenerics : { a | generics : List (Node String) } -> String
+fromTypeGenerics a =
+    case a.generics of
+        [] ->
+            ""
+
+        _ ->
+            "<" ++ join ", " (List.map Node.value a.generics) ++ ">"
 
 
 fromDocumentation : Maybe (Node Documentation) -> String
