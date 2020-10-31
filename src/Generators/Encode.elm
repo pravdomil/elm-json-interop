@@ -205,7 +205,7 @@ typedToEncoder argument (Node _ ( moduleName, name )) arguments =
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map (typeAnnotationToEncoder { argument | disabled = True }) arguments
+                    " " ++ (arguments |> List.map (typeAnnotationToEncoder { argument | disabled = True }) |> join " ")
     in
     fn ++ arguments_ ++ argumentToString argument
 
