@@ -221,7 +221,7 @@ tupleToEncoder argument a =
 
         arguments : String
         arguments =
-            join ", " <| List.indexedMap (\i _ -> tupleArgument i |> argumentToString) a
+            a |> List.indexedMap (\i _ -> tupleArgument i |> argumentToString) |> join ", "
 
         map : Int -> Node TypeAnnotation -> String
         map i b =
