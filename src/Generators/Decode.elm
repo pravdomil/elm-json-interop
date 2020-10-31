@@ -116,7 +116,7 @@ decoderFromType a body =
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
+                    " " ++ (a.generics |> List.map (\v -> "t_" ++ Node.value v) |> join " ")
     in
     signature ++ declaration
 
