@@ -16,22 +16,22 @@ import Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleIm
 -}
 fileToElmDecodeModule : File -> String
 fileToElmDecodeModule f =
-    join "\n"
-        [ "module Generated." ++ fileToModuleName f ++ "Decode exposing (..)"
-        , ""
-        , "import " ++ fileToModuleName f ++ " as A"
-        , "import Generated.Basics.BasicsDecode exposing (..)"
-        , "import Json.Decode exposing (..)"
-        , f.imports
-            |> moduleImports
-                (\v vv ->
-                    "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")"
-                )
-            |> join "\n"
-        , ""
-        , f.declarations |> List.filterMap declarationToDecoder |> join "\n\n"
-        , ""
-        ]
+    [ "module Generated." ++ fileToModuleName f ++ "Decode exposing (..)"
+    , ""
+    , "import " ++ fileToModuleName f ++ " as A"
+    , "import Generated.Basics.BasicsDecode exposing (..)"
+    , "import Json.Decode exposing (..)"
+    , f.imports
+        |> moduleImports
+            (\v vv ->
+                "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")"
+            )
+        |> join "\n"
+    , ""
+    , f.declarations |> List.filterMap declarationToDecoder |> join "\n\n"
+    , ""
+    ]
+        |> join "\n"
 
 
 {-| To maybe get decoder from declaration.

@@ -20,18 +20,18 @@ toTypeScript f =
         root =
             "../" |> String.repeat ((Node.value f.moduleDefinition |> Module.moduleName |> List.length) - 1)
     in
-    join "\n"
-        [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
-        , f.imports
-            |> moduleImports
-                (\v vv ->
-                    "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "\""
-                )
-            |> join "\n"
-        , ""
-        , List.filterMap fromDeclaration f.declarations |> join "\n\n\n"
-        , ""
-        ]
+    [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
+    , f.imports
+        |> moduleImports
+            (\v vv ->
+                "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "\""
+            )
+        |> join "\n"
+    , ""
+    , List.filterMap fromDeclaration f.declarations |> join "\n\n\n"
+    , ""
+    ]
+        |> join "\n"
 
 
 fromDeclaration : Node Declaration -> Maybe String

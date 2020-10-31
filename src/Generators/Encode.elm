@@ -14,22 +14,22 @@ import Utils exposing (Argument, argumentToString, encodeJsonString, fileToModul
 
 fileToElmEncodeModule : File -> String
 fileToElmEncodeModule f =
-    join "\n"
-        [ "module Generated." ++ fileToModuleName f ++ "Encode exposing (..)"
-        , ""
-        , "import " ++ fileToModuleName f ++ " as A"
-        , "import Generated.Basics.BasicsEncode exposing (..)"
-        , "import Json.Encode exposing (..)"
-        , f.imports
-            |> moduleImports
-                (\v vv ->
-                    "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")"
-                )
-            |> join "\n"
-        , ""
-        , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
-        , ""
-        ]
+    [ "module Generated." ++ fileToModuleName f ++ "Encode exposing (..)"
+    , ""
+    , "import " ++ fileToModuleName f ++ " as A"
+    , "import Generated.Basics.BasicsEncode exposing (..)"
+    , "import Json.Encode exposing (..)"
+    , f.imports
+        |> moduleImports
+            (\v vv ->
+                "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")"
+            )
+        |> join "\n"
+    , ""
+    , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
+    , ""
+    ]
+        |> join "\n"
 
 
 fromDeclaration : Node Declaration -> Maybe String
