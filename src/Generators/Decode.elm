@@ -282,7 +282,7 @@ firstToLowerCase : String -> String
 firstToLowerCase a =
     case String.toList a of
         first :: rest ->
-            Char.toLower first :: rest |> String.fromList
+            String.fromList (Char.toLower first :: rest)
 
         _ ->
             a
