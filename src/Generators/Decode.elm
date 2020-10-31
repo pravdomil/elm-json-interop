@@ -268,6 +268,8 @@ firstToLowerCase a =
 --
 
 
+{-| To get function for constructing tuples by number.
+-}
 tupleConstructor : Int -> String
 tupleConstructor len =
     case len of
