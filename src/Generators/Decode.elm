@@ -29,15 +29,15 @@ fileToElmDecoderModule f =
                 )
             |> join "\n"
         , ""
-        , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
+        , f.declarations |> List.filterMap decoderFromDeclaration |> join "\n\n"
         , ""
         ]
 
 
 {-| To maybe get decoder from declaration.
 -}
-fromDeclaration : Node Declaration -> Maybe String
-fromDeclaration a =
+decoderFromDeclaration : Node Declaration -> Maybe String
+decoderFromDeclaration a =
     case a |> Node.value of
         AliasDeclaration b ->
             Just (fromTypeAlias b)
