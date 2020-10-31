@@ -29,21 +29,21 @@ fileToElmDecoderModule f =
                 )
             |> join "\n"
         , ""
-        , f.declarations |> List.filterMap decoderFromDeclaration |> join "\n\n"
+        , f.declarations |> List.filterMap declarationToDecoder |> join "\n\n"
         , ""
         ]
 
 
 {-| To maybe get decoder from declaration.
 -}
-decoderFromDeclaration : Node Declaration -> Maybe String
-decoderFromDeclaration a =
+declarationToDecoder : Node Declaration -> Maybe String
+declarationToDecoder a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just (decoderFromTypeAlias b)
+            Just (typeAliasToDecoder b)
 
         CustomTypeDeclaration b ->
-            Just (decoderFromCustomType b)
+            Just (customTypeToDecoder b)
 
         _ ->
             Nothing
@@ -51,31 +51,31 @@ decoderFromDeclaration a =
 
 {-| To get decoder from type alias.
 -}
-decoderFromTypeAlias : TypeAlias -> String
-decoderFromTypeAlias a =
-    a |> decoderFromType ("\n  " ++ decoderFromTypeAnnotation a.typeAnnotation)
+typeAliasToDecoder : TypeAlias -> String
+typeAliasToDecoder a =
+    a |> typeToDecoder ("\n  " ++ typeAnnotationToDecoder a.typeAnnotation)
 
 
 {-| To get decoder from custom type.
 -}
-decoderFromCustomType : Type -> String
-decoderFromCustomType a =
+customTypeToDecoder : Type -> String
+customTypeToDecoder a =
     let
         cases : String
         cases =
-            a.constructors |> List.map decoderFromCustomTypeConstructor |> join "\n    "
+            a.constructors |> List.map customTypeConstructorToDecoder |> join "\n    "
 
         fail : String
         fail =
             "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
     in
-    a |> decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> typeToDecoder ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
 -}
-decoderFromCustomTypeConstructor : Node ValueConstructor -> String
-decoderFromCustomTypeConstructor (Node _ a) =
+customTypeConstructorToDecoder : Node ValueConstructor -> String
+customTypeConstructorToDecoder (Node _ a) =
     let
         name : String
         name =
@@ -99,8 +99,8 @@ decoderFromCustomTypeConstructor (Node _ a) =
 
 {-| To get decoder from type.
 -}
-decoderFromType : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-decoderFromType body a =
+typeToDecoder : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+typeToDecoder body a =
     let
         name : String
         name =
@@ -148,14 +148,14 @@ decoderFromType body a =
 
 {-| To get decoder from type annotation.
 -}
-decoderFromTypeAnnotation : Node TypeAnnotation -> String
-decoderFromTypeAnnotation a =
+typeAnnotationToDecoder : Node TypeAnnotation -> String
+typeAnnotationToDecoder a =
     (case a |> Node.value of
         GenericType b ->
             "t_" ++ b
 
         Typed b c ->
-            decoderFromTyped b c
+            typedToDecoder b c
 
         Unit ->
             "succeed ()"
@@ -177,8 +177,8 @@ decoderFromTypeAnnotation a =
 
 {-| To get decoder from typed.
 -}
-decoderFromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-decoderFromTyped (Node _ ( name, str )) nodes =
+typedToDecoder : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+typedToDecoder (Node _ ( name, str )) nodes =
     let
         fn : String
         fn =
@@ -220,7 +220,7 @@ decoderFromTyped (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    nodes |> List.map decoderFromTypeAnnotation |> join " " |> (++) " "
+                    nodes |> List.map typeAnnotationToDecoder |> join " " |> (++) " "
     in
     fn ++ generics
 
@@ -239,7 +239,7 @@ fromTuple a =
 
 tupleMap : Int -> Int -> Node TypeAnnotation -> String
 tupleMap offset i a =
-    "(index " ++ String.fromInt (offset + i) ++ " " ++ decoderFromTypeAnnotation a ++ ")"
+    "(index " ++ String.fromInt (offset + i) ++ " " ++ typeAnnotationToDecoder a ++ ")"
 
 
 fromRecord : RecordDefinition -> String
@@ -272,7 +272,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
                 _ ->
                     "field"
     in
-    "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ decoderFromTypeAnnotation b ++ ")"
+    "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ typeAnnotationToDecoder b ++ ")"
 
 
 
