@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Argument, argumentToString, encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName)
+import Utils exposing (Argument, argumentToString, encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -135,31 +135,29 @@ typeToEncoder a =
 -}
 typeAnnotationToEncoder : Argument -> Node TypeAnnotation -> String
 typeAnnotationToEncoder argument (Node _ a) =
-    let
-        result =
-            case a of
-                GenericType b ->
-                    "t_" ++ b ++ argumentToString argument
+    (case a of
+        GenericType b ->
+            "t_" ++ b ++ argumentToString argument
 
-                Typed b c ->
-                    fromTyped argument b c
+        Typed b c ->
+            fromTyped argument b c
 
-                Unit ->
-                    "(\\_ -> list identity [])" ++ argumentToString argument
+        Unit ->
+            "(\\_ -> list identity [])" ++ argumentToString argument
 
-                Tupled b ->
-                    fromTuple argument b
+        Tupled b ->
+            fromTuple argument b
 
-                Record b ->
-                    fromRecord argument b
+        Record b ->
+            fromRecord argument b
 
-                GenericRecord _ (Node _ b) ->
-                    fromRecord argument b
+        GenericRecord _ (Node _ b) ->
+            fromRecord argument b
 
-                FunctionTypeAnnotation _ _ ->
-                    "Debug.todo \"I don't know how to encode function.\""
-    in
-    "(" ++ result ++ ")"
+        FunctionTypeAnnotation _ _ ->
+            "Debug.todo \"I don't know how to encode function.\""
+    )
+        |> wrapInParentheses
 
 
 fromTyped : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
