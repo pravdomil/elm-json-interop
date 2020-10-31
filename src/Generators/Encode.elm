@@ -149,10 +149,10 @@ typeAnnotationToEncoder parameter a =
             tupleToEncoder parameter b
 
         Record b ->
-            fromRecord parameter b
+            recordToEncoder parameter b
 
         GenericRecord _ (Node _ b) ->
-            fromRecord parameter b
+            recordToEncoder parameter b
 
         FunctionTypeAnnotation _ _ ->
             "Debug.todo \"I don't know how to encode function.\""
@@ -230,9 +230,11 @@ tupleToEncoder parameter a =
     "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
 
 
-fromRecord : Parameter -> RecordDefinition -> String
-fromRecord parameter a =
-    "object [ " ++ (join ", " <| List.map (fromRecordField parameter) a) ++ " ]"
+{-| To get encoder from record.
+-}
+recordToEncoder : Parameter -> RecordDefinition -> String
+recordToEncoder parameter a =
+    "object [ " ++ (a |> List.map (fromRecordField parameter) |> join ", ") ++ " ]"
 
 
 fromRecordField : Parameter -> Node RecordField -> String
