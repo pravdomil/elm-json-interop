@@ -255,10 +255,10 @@ recordToDecoder a =
         fields =
             List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i) a
 
-        lambda =
+        constructorFn =
             "(\\" ++ join " " args ++ " -> { " ++ join ", " fields ++ " })"
     in
-    mapFn (List.length a) ++ " " ++ lambda ++ " " ++ (join " " <| List.map fromRecordField a)
+    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (join " " <| List.map fromRecordField a)
 
 
 fromRecordField : Node RecordField -> String
