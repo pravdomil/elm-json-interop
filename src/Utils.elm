@@ -47,18 +47,6 @@ tupleConstructor len =
             ""
 
 
-{-| To get map function name by argument count.
--}
-mapFn : Int -> String
-mapFn a =
-    case a of
-        1 ->
-            "map"
-
-        b ->
-            "map" ++ String.fromInt b
-
-
 {-| To get module name from file.
 -}
 fileToModuleName : File -> String
