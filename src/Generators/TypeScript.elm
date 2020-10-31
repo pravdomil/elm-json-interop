@@ -251,14 +251,17 @@ tupleToTs a =
 -}
 recordToTs : List (Node RecordField) -> String
 recordToTs a =
-    "{ " ++ (a |> List.map fromRecordField |> join "; ") ++ " }"
+    "{ " ++ (a |> List.map recordFieldToTs |> join "; ") ++ " }"
 
 
-fromRecordField : Node RecordField -> String
-fromRecordField (Node _ ( Node _ a, b )) =
+{-| To get TypeScript from record field.
+-}
+recordFieldToTs : Node RecordField -> String
+recordFieldToTs (Node _ ( Node _ a, b )) =
     let
+        maybeField : String
         maybeField =
-            case Node.value b of
+            case b |> Node.value of
                 Typed (Node _ ( _, "Maybe" )) _ ->
                     "?"
 
