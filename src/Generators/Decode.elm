@@ -49,6 +49,23 @@ decoderFromDeclaration a =
             Nothing
 
 
+fromTypeAlias : TypeAlias -> String
+fromTypeAlias a =
+    fromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
+
+
+fromCustomType : Type -> String
+fromCustomType a =
+    let
+        cases =
+            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
+
+        fail =
+            "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
+    in
+    fromType a ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+
+
 fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String -> String
 fromType a body =
     let
@@ -87,23 +104,6 @@ fromType a body =
             body
     ]
         |> join ""
-
-
-fromTypeAlias : TypeAlias -> String
-fromTypeAlias a =
-    fromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
-
-
-fromCustomType : Type -> String
-fromCustomType a =
-    let
-        cases =
-            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
-
-        fail =
-            "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
-    in
-    fromType a ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 fromCustomTypeConstructor : Node ValueConstructor -> String
