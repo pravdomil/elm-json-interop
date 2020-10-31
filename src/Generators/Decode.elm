@@ -146,6 +146,8 @@ decoderFromType body a =
     signature ++ declaration
 
 
+{-| To get decoder from type annotation.
+-}
 fromTypeAnnotation : Node TypeAnnotation -> String
 fromTypeAnnotation (Node _ a) =
     let
