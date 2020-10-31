@@ -53,7 +53,7 @@ declarationToEncoder a =
 -}
 typeAliasToEncoder : TypeAlias -> String
 typeAliasToEncoder a =
-    fromType a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
+    typeToEncoder a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
 
 
 {-| To get encoder from custom type.
@@ -65,11 +65,13 @@ customTypeToEncoder a =
         cases =
             a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
     in
-    fromType a ++ "\n  case a of\n    " ++ cases
+    typeToEncoder a ++ "\n  case a of\n    " ++ cases
 
 
-fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-fromType a =
+{-| To get encoder from type.
+-}
+typeToEncoder : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+typeToEncoder a =
     let
         name =
             Node.value a.name
