@@ -12,6 +12,8 @@ import String exposing (join)
 import Utils exposing (Argument, argumentToString, encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName)
 
 
+{-| To get Elm module for encoding types in file.
+-}
 fileToElmEncodeModule : File -> String
 fileToElmEncodeModule a =
     [ "module Generated." ++ fileToModuleName a ++ "Encode exposing (..)"
