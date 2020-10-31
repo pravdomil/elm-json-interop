@@ -47,6 +47,8 @@ tupleConstructor len =
             ""
 
 
+{-| To get map function name by argument count.
+-}
 mapFn : Int -> String
 mapFn a =
     case a of
