@@ -149,3 +149,10 @@ normalizeRecordFieldName a =
 elmKeywords : List String
 elmKeywords =
     [ "module", "where", "import", "as", "exposing", "if", "then", "else", "case", "of", "let", "in", "type", "port", "infix" ]
+
+
+{-| To wrap string in parentheses.
+-}
+wrapInParentheses : String -> String
+wrapInParentheses a =
+    "(" ++ a ++ ")"

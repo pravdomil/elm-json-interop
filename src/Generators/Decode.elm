@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName)
+import Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -287,13 +287,6 @@ recordFieldToDecoder (Node _ ( Node _ a, b )) =
 
 
 --
-
-
-{-| To wrap string in parentheses.
--}
-wrapInParentheses : String -> String
-wrapInParentheses a =
-    "(" ++ a ++ ")"
 
 
 {-| To get decoder name.
