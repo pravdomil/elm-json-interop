@@ -11,7 +11,11 @@ import String exposing (join)
 
 
 type alias Argument =
-    { prefix : String, letter : Int, suffix : String, disabled : Bool }
+    { prefix : String
+    , letter : Int
+    , suffix : String
+    , disabled : Bool
+    }
 
 
 {-| To convert argument to string.
