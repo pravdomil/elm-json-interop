@@ -180,6 +180,7 @@ decoderFromTypeAnnotation a =
 decoderFromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 decoderFromTyped (Node _ ( name, str )) nodes =
     let
+        fn : String
         fn =
             case name ++ [ str ] |> join "." of
                 "Int" ->
@@ -212,6 +213,7 @@ decoderFromTyped (Node _ ( name, str )) nodes =
                 _ ->
                     name ++ [ decoderName str ] |> join "."
 
+        generics : String
         generics =
             case nodes of
                 [] ->
