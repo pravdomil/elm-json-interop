@@ -180,14 +180,6 @@ decoderFromTypeAnnotation a =
 decoderFromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 decoderFromTyped (Node _ ( name, str )) nodes =
     let
-        generics =
-            case nodes of
-                [] ->
-                    ""
-
-                _ ->
-                    (++) " " <| join " " <| List.map decoderFromTypeAnnotation nodes
-
         fn =
             case name ++ [ str ] |> join "." of
                 "Int" ->
@@ -219,6 +211,14 @@ decoderFromTyped (Node _ ( name, str )) nodes =
 
                 _ ->
                     name ++ [ decoderName str ] |> join "."
+
+        generics =
+            case nodes of
+                [] ->
+                    ""
+
+                _ ->
+                    (++) " " <| join " " <| List.map decoderFromTypeAnnotation nodes
     in
     fn ++ generics
 
