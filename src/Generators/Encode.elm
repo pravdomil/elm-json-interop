@@ -73,6 +73,7 @@ customTypeToEncoder a =
 customTypeConstructorToEncoder : Node ValueConstructor -> String
 customTypeConstructorToEncoder (Node _ a) =
     let
+        name : String
         name =
             Node.value a.name
 
@@ -85,6 +86,7 @@ customTypeConstructorToEncoder (Node _ a) =
                 _ ->
                     " " ++ (join " " <| List.indexedMap (\b _ -> letterByInt (b + 1)) a.arguments)
 
+        map : Int -> Node TypeAnnotation -> String
         map i b =
             fromTypeAnnotation (Argument "" (1 + i) "" False) b
 
