@@ -18,6 +18,7 @@ import Utils exposing (encodeJsonString, moduleImports, normalizeRecordFieldName
 fileToTypeScriptDeclaration : File -> String
 fileToTypeScriptDeclaration a =
     let
+        root : String
         root =
             "../" |> String.repeat ((Node.value a.moduleDefinition |> Module.moduleName |> List.length) - 1)
     in
