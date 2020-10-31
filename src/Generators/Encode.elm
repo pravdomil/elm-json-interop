@@ -43,7 +43,7 @@ declarationToEncoder a =
             Just <| typeAliasToEncoder b
 
         CustomTypeDeclaration b ->
-            Just <| fromCustomType b
+            Just <| customTypeToEncoder b
 
         _ ->
             Nothing
@@ -56,11 +56,14 @@ typeAliasToEncoder a =
     fromType a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
 
 
-fromCustomType : Type -> String
-fromCustomType a =
+{-| To get encoder from custom type.
+-}
+customTypeToEncoder : Type -> String
+customTypeToEncoder a =
     let
+        cases : String
         cases =
-            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
+            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
     in
     fromType a ++ "\n  case a of\n    " ++ cases
 
