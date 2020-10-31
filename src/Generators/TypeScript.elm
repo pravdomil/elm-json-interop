@@ -169,7 +169,7 @@ typeAnnotationToTs a =
             b
 
         Typed b c ->
-            fromTyped b c
+            typedToTs b c
 
         Unit ->
             "[]"
@@ -187,8 +187,10 @@ typeAnnotationToTs a =
             "Function"
 
 
-fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-fromTyped (Node _ ( name, str )) nodes =
+{-| To get TypeScript from typed.
+-}
+typedToTs : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+typedToTs (Node _ ( name, str )) nodes =
     let
         generics =
             case nodes of
