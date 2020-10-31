@@ -146,7 +146,7 @@ typeAnnotationToEncoder argument a =
             "(\\_ -> list identity [])" ++ argumentToString argument
 
         Tupled b ->
-            fromTuple argument b
+            tupleToEncoder argument b
 
         Record b ->
             fromRecord argument b
@@ -210,8 +210,10 @@ typedToEncoder argument (Node _ ( moduleName, name )) arguments =
     fn ++ arguments_ ++ argumentToString argument
 
 
-fromTuple : Argument -> List (Node TypeAnnotation) -> String
-fromTuple argument a =
+{-| To get encoder for tuple.
+-}
+tupleToEncoder : Argument -> List (Node TypeAnnotation) -> String
+tupleToEncoder argument a =
     let
         tupleArgument i =
             Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
