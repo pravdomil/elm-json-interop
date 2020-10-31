@@ -21,7 +21,7 @@ argumentToString { prefix, char, suffix, disabled } =
             ""
 
         False ->
-            " ( " ++ prefix ++ stringFromAlphabet char ++ suffix ++ " )"
+            " ( " ++ prefix ++ letterByInt char ++ suffix ++ " )"
 
 
 toJsonString : String -> String
@@ -29,8 +29,10 @@ toJsonString a =
     Json.Encode.encode 0 (Json.Encode.string a)
 
 
-stringFromAlphabet : Int -> String
-stringFromAlphabet a =
+{-| To get letter from alphabet by number.
+-}
+letterByInt : Int -> String
+letterByInt a =
     a + 97 |> Char.fromCode |> String.fromChar
 
 

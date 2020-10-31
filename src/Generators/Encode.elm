@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Argument, argumentToString, fileToModuleName, moduleImports, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString)
+import Utils exposing (Argument, argumentToString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName, toJsonString)
 
 
 toElmEncoder : File -> String
@@ -96,7 +96,7 @@ fromCustomTypeConstructor (Node _ a) =
                     ""
 
                 _ ->
-                    " " ++ (join " " <| List.indexedMap (\b _ -> stringFromAlphabet (b + 1)) a.arguments)
+                    " " ++ (join " " <| List.indexedMap (\b _ -> letterByInt (b + 1)) a.arguments)
 
         map i b =
             fromTypeAnnotation (Argument "" (1 + i) "" False) b

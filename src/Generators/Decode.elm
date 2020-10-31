@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (fileToModuleName, mapFn, moduleImports, moduleNameToString, normalizeRecordFieldName, stringFromAlphabet, toJsonString, tupleConstructor)
+import Utils exposing (fileToModuleName, letterByInt, mapFn, moduleImports, moduleNameToString, normalizeRecordFieldName, toJsonString, tupleConstructor)
 
 
 {-| To get Elm module for decoding types in file.
@@ -223,10 +223,10 @@ fromRecord a =
             List.length a
 
         args =
-            List.indexedMap (\i _ -> stringFromAlphabet i) a
+            List.indexedMap (\i _ -> letterByInt i) a
 
         fields =
-            List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ stringFromAlphabet i) a
+            List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i) a
 
         lambda =
             "(\\" ++ join " " args ++ " -> { " ++ join ", " fields ++ " })"
