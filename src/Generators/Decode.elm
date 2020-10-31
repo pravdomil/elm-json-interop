@@ -53,7 +53,7 @@ decoderFromDeclaration a =
 -}
 decoderFromTypeAlias : TypeAlias -> String
 decoderFromTypeAlias a =
-    decoderFromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
+    decoderFromType ("\n  " ++ fromTypeAnnotation a.typeAnnotation) a
 
 
 {-| To get decoder from custom type.
@@ -69,13 +69,13 @@ decoderFromCustomType a =
         fail =
             "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
     in
-    decoderFromType a ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )") a
 
 
 {-| To get decoder from type.
 -}
-decoderFromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String -> String
-decoderFromType a body =
+decoderFromType : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+decoderFromType body a =
     let
         lazyDecoded : Bool
         lazyDecoded =
