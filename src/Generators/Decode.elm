@@ -53,7 +53,7 @@ decoderFromDeclaration a =
 -}
 decoderFromTypeAlias : TypeAlias -> String
 decoderFromTypeAlias a =
-    decoderFromType ("\n  " ++ decoderFromTypeAnnotation a.typeAnnotation) a
+    a |> decoderFromType ("\n  " ++ decoderFromTypeAnnotation a.typeAnnotation)
 
 
 {-| To get decoder from custom type.
@@ -69,7 +69,7 @@ decoderFromCustomType a =
         fail =
             "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
     in
-    decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )") a
+    a |> decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
