@@ -63,7 +63,7 @@ decoderFromCustomType a =
     let
         cases : String
         cases =
-            join "\n    " <| List.map fromCustomTypeConstructor a.constructors
+            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
 
         fail : String
         fail =
