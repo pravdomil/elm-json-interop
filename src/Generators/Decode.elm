@@ -249,6 +249,7 @@ arrayAtDecoder i a =
 recordToDecoder : RecordDefinition -> String
 recordToDecoder a =
     let
+        args : String
         args =
             a |> List.indexedMap (\i _ -> letterByInt i) |> join " "
 
