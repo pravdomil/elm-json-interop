@@ -208,7 +208,7 @@ fromTuple a =
         tup =
             List.indexedMap (tupleMap 0) a
     in
-    mapFn len ++ " " ++ tupleConstructor len ++ " " ++ join " " tup
+    mapFn len ++ " " ++ tupleFn len ++ " " ++ join " " tup
 
 
 tupleMap : Int -> Int -> Node TypeAnnotation -> String
@@ -270,8 +270,8 @@ firstToLowerCase a =
 
 {-| To get function for constructing tuples by number.
 -}
-tupleConstructor : Int -> String
-tupleConstructor len =
+tupleFn : Int -> String
+tupleFn len =
     case len of
         2 ->
             "Tuple.pair"
