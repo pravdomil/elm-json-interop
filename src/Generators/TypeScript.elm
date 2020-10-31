@@ -56,7 +56,7 @@ declarationToTs a =
 -}
 typeAliasToTs : TypeAlias -> String
 typeAliasToTs a =
-    fromType a ++ " " ++ fromTypeAnnotation a.typeAnnotation
+    typeToTs a ++ " " ++ fromTypeAnnotation a.typeAnnotation
 
 
 {-| To get TypeScript from custom type.
@@ -103,7 +103,7 @@ customTypeToTs a =
         constructors =
             type_.constructors |> List.map customTypeConstructorToTs |> join "\n  | "
     in
-    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ customTypeTagToTs type_
+    typeToTs type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ customTypeTagToTs type_
 
 
 {-| To get TypeScript from custom type tag.
@@ -130,8 +130,10 @@ customTypeConstructorToTs (Node _ a) =
     Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments |> fromTuple
 
 
-fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-fromType a =
+{-| To get TypeScript from type.
+-}
+typeToTs : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+typeToTs a =
     let
         fromDocumentation : Maybe (Node Documentation) -> String
         fromDocumentation b =
