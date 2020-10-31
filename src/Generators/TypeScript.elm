@@ -190,18 +190,18 @@ typeAnnotationToTs a =
 {-| To get TypeScript from typed.
 -}
 typedToTs : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-typedToTs (Node _ ( name, str )) nodes =
+typedToTs (Node _ ( moduleName, name )) arguments =
     let
         generics =
-            case nodes of
+            case arguments of
                 [] ->
                     ""
 
                 _ ->
-                    "<" ++ (join ", " <| List.map typeAnnotationToTs nodes) ++ ">"
+                    "<" ++ (join ", " <| List.map typeAnnotationToTs arguments) ++ ">"
 
         fn =
-            case name ++ [ str ] |> join "." of
+            case moduleName ++ [ name ] |> join "." of
                 "Int" ->
                     "number"
 
