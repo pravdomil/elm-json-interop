@@ -23,7 +23,10 @@ fileToElmDecoderModule f =
         , "import Generated.Basics.BasicsDecode exposing (..)"
         , "import Json.Decode exposing (..)"
         , f.imports
-            |> moduleImports (\v vv -> "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")")
+            |> moduleImports
+                (\v vv ->
+                    "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")"
+                )
             |> join "\n"
         , ""
         , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
