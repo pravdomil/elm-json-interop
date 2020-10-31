@@ -187,7 +187,7 @@ fromTuple : Argument -> List (Node TypeAnnotation) -> String
 fromTuple argument a =
     let
         tupleArgument i =
-            Argument ("t" ++ argument.prefix) (i + argument.char + 1) "" False
+            Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
 
         arguments =
             join ", " <| List.indexedMap (\i _ -> tupleArgument i |> argumentToString) a

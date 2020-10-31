@@ -11,17 +11,19 @@ import String exposing (join)
 
 
 type alias Argument =
-    { prefix : String, char : Int, suffix : String, disabled : Bool }
+    { prefix : String, letter : Int, suffix : String, disabled : Bool }
 
 
+{-| To convert argument to string.
+-}
 argumentToString : Argument -> String
-argumentToString { prefix, char, suffix, disabled } =
+argumentToString { prefix, letter, suffix, disabled } =
     case disabled of
         True ->
             ""
 
         False ->
-            " ( " ++ prefix ++ letterByInt char ++ suffix ++ " )"
+            " ( " ++ prefix ++ letterByInt letter ++ suffix ++ " )"
 
 
 {-| To encode string into JSON string.
