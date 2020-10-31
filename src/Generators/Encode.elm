@@ -227,7 +227,7 @@ tupleToEncoder argument a =
         tupleArgument i =
             Argument ("t" ++ argument.prefix) (i + argument.letter + 1) "" False
     in
-    "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
+    "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap map |> join ", ") ++ " ])" ++ argumentToString argument
 
 
 fromRecord : Argument -> RecordDefinition -> String
