@@ -72,6 +72,29 @@ decoderFromCustomType a =
     decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )") a
 
 
+fromCustomTypeConstructor : Node ValueConstructor -> String
+fromCustomTypeConstructor (Node _ a) =
+    let
+        name =
+            "A." ++ Node.value a.name
+
+        len =
+            List.length a.arguments
+
+        tup =
+            List.indexedMap (tupleMap 1) a.arguments
+
+        val =
+            case a.arguments of
+                [] ->
+                    "succeed " ++ name
+
+                _ ->
+                    mapFn len ++ " " ++ name ++ " " ++ join " " tup
+    in
+    encodeJsonString (Node.value a.name) ++ " -> " ++ val
+
+
 {-| To get decoder from type.
 -}
 decoderFromType : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
@@ -119,29 +142,6 @@ decoderFromType body a =
                     " " ++ (a.generics |> List.map (\v -> "t_" ++ Node.value v) |> join " ")
     in
     signature ++ declaration
-
-
-fromCustomTypeConstructor : Node ValueConstructor -> String
-fromCustomTypeConstructor (Node _ a) =
-    let
-        name =
-            "A." ++ Node.value a.name
-
-        len =
-            List.length a.arguments
-
-        tup =
-            List.indexedMap (tupleMap 1) a.arguments
-
-        val =
-            case a.arguments of
-                [] ->
-                    "succeed " ++ name
-
-                _ ->
-                    mapFn len ++ " " ++ name ++ " " ++ join " " tup
-    in
-    encodeJsonString (Node.value a.name) ++ " -> " ++ val
 
 
 fromTypeAnnotation : Node TypeAnnotation -> String
