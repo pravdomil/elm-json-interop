@@ -16,20 +16,20 @@ import Utils exposing (encodeJsonString, moduleImports, normalizeRecordFieldName
 
 {-| -}
 fileToTypeScriptDeclaration : File -> String
-fileToTypeScriptDeclaration f =
+fileToTypeScriptDeclaration a =
     let
         root =
-            "../" |> String.repeat ((Node.value f.moduleDefinition |> Module.moduleName |> List.length) - 1)
+            "../" |> String.repeat ((Node.value a.moduleDefinition |> Module.moduleName |> List.length) - 1)
     in
     [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
-    , f.imports
+    , a.imports
         |> moduleImports
             (\v vv ->
                 "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "\""
             )
         |> join "\n"
     , ""
-    , List.filterMap fromDeclaration f.declarations |> join "\n\n\n"
+    , List.filterMap fromDeclaration a.declarations |> join "\n\n\n"
     , ""
     ]
         |> join "\n"
