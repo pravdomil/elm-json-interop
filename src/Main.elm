@@ -4,7 +4,7 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.Syntax.File exposing (File)
 import Eval exposing (consoleErrorAndExit, consoleLog, getArguments, mkDir, readFile, realPath, writeFile)
-import Generators.Decode exposing (fileToElmDecoderModule)
+import Generators.Decode exposing (fileToElmDecodeModule)
 import Generators.Encode exposing (fileToElmEncodeModule)
 import Generators.TypeScript exposing (toTypeScript)
 import Parser exposing (deadEndsToString)
@@ -80,7 +80,7 @@ processElmFile a =
                 _ =
                     [ folderPath |> mkDir |> (\_ -> ())
                     , file |> fileToElmEncodeModule |> writeFile (folderPath ++ "/" ++ fileName ++ "Encode.elm")
-                    , file |> fileToElmDecoderModule |> writeFile (folderPath ++ "/" ++ fileName ++ "Decode.elm")
+                    , file |> fileToElmDecodeModule |> writeFile (folderPath ++ "/" ++ fileName ++ "Decode.elm")
                     , file |> toTypeScript |> writeFile (folderPath ++ "/" ++ fileName ++ ".ts")
                     ]
             in
