@@ -219,15 +219,15 @@ tupleToEncoder parameter a =
         parameters =
             a |> List.indexedMap (\i _ -> parameterFromInt i |> parameterToString) |> join ", "
 
-        map : Int -> Node TypeAnnotation -> String
-        map i b =
-            typeAnnotationToEncoder (parameterFromInt i) b
+        toEncoder : Int -> Node TypeAnnotation -> String
+        toEncoder i b =
+            b |> typeAnnotationToEncoder (parameterFromInt i)
 
         parameterFromInt : Int -> Parameter
         parameterFromInt i =
             Parameter (letterByInt parameter.letter ++ "_") i "" False
     in
-    "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap map |> join ", ") ++ " ])" ++ parameterToString parameter
+    "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
 
 
 fromRecord : Parameter -> RecordDefinition -> String
