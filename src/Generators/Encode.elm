@@ -84,6 +84,9 @@ typeToEncoder a =
                 _ ->
                     ""
 
+        declaration =
+            encoderName name ++ generics ++ " a ="
+
         generics =
             case a.generics of
                 [] ->
@@ -91,9 +94,6 @@ typeToEncoder a =
 
                 _ ->
                     (++) " " <| join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
-
-        declaration =
-            encoderName name ++ generics ++ " a ="
     in
     signature ++ declaration
 
