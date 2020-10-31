@@ -31,7 +31,7 @@ toJsonString a =
 
 stringFromAlphabet : Int -> String
 stringFromAlphabet a =
-    97 + a |> Char.fromCode |> String.fromChar
+    a + 97 |> Char.fromCode |> String.fromChar
 
 
 {-| To get module name from file.
