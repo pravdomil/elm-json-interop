@@ -6,7 +6,7 @@ import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import Json.Encode
+import Json.Encode as Encode
 import String exposing (join)
 
 
@@ -24,9 +24,11 @@ argumentToString { prefix, char, suffix, disabled } =
             " ( " ++ prefix ++ letterByInt char ++ suffix ++ " )"
 
 
-toJsonString : String -> String
-toJsonString a =
-    Json.Encode.encode 0 (Json.Encode.string a)
+{-| To encode string into JSON string.
+-}
+encodeJsonString : String -> String
+encodeJsonString a =
+    Encode.string a |> Encode.encode 0
 
 
 {-| To get letter from alphabet by number.

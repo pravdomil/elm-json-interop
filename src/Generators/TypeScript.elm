@@ -11,7 +11,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (moduleImports, normalizeRecordFieldName, toJsonString)
+import Utils exposing (encodeJsonString, moduleImports, normalizeRecordFieldName)
 
 
 toTypeScript : File -> String
@@ -100,7 +100,7 @@ fromCustomTypeConstants a =
                 tag =
                     Node.value <| .name <| Node.value <| b
             in
-            "export const " ++ tag ++ " = " ++ toJsonString tag
+            "export const " ++ tag ++ " = " ++ encodeJsonString tag
     in
     join "\n" <| List.map mapGuard a.constructors
 

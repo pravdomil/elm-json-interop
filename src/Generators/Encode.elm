@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils exposing (Argument, argumentToString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName, toJsonString)
+import Utils exposing (Argument, argumentToString, encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName)
 
 
 toElmEncoder : File -> String
@@ -103,7 +103,7 @@ fromCustomTypeConstructor (Node _ a) =
 
         encoder : String
         encoder =
-            String.join ", " <| (::) ("string " ++ toJsonString name) <| List.indexedMap map a.arguments
+            String.join ", " <| (::) ("string " ++ encodeJsonString name) <| List.indexedMap map a.arguments
     in
     "A." ++ name ++ params ++ " -> list identity [ " ++ encoder ++ " ]"
 
@@ -205,7 +205,7 @@ fromRecord argument a =
 
 fromRecordField : Argument -> Node RecordField -> String
 fromRecordField argument (Node _ ( Node _ a, b )) =
-    "( " ++ toJsonString (normalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation { argument | suffix = "." ++ a } b ++ " )"
+    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation { argument | suffix = "." ++ a } b ++ " )"
 
 
 encoderName : String -> String
