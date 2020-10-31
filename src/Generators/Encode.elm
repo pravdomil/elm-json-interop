@@ -88,11 +88,11 @@ customTypeConstructorToEncoder (Node _ a) =
 
         encoder : String
         encoder =
-            ("string " ++ encodeJsonString name) :: (a.arguments |> List.indexedMap map) |> join ", "
+            ("string " ++ encodeJsonString name) :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
 
-        map : Int -> Node TypeAnnotation -> String
-        map i b =
-            fromTypeAnnotation (Argument "" (1 + i) "" False) b
+        argToEncoder : Int -> Node TypeAnnotation -> String
+        argToEncoder i b =
+            b |> fromTypeAnnotation (Argument "" (1 + i) "" False)
     in
     "A." ++ name ++ arguments ++ " -> list identity [ " ++ encoder ++ " ]"
 
