@@ -68,6 +68,32 @@ customTypeToEncoder a =
     typeToEncoder a ++ "\n  case a of\n    " ++ cases
 
 
+{-| To get encoder from custom type constructor.
+-}
+customTypeConstructorToEncoder : Node ValueConstructor -> String
+customTypeConstructorToEncoder (Node _ a) =
+    let
+        name =
+            Node.value a.name
+
+        params =
+            case a.arguments of
+                [] ->
+                    ""
+
+                _ ->
+                    " " ++ (join " " <| List.indexedMap (\b _ -> letterByInt (b + 1)) a.arguments)
+
+        map i b =
+            fromTypeAnnotation (Argument "" (1 + i) "" False) b
+
+        encoder : String
+        encoder =
+            String.join ", " <| (::) ("string " ++ encodeJsonString name) <| List.indexedMap map a.arguments
+    in
+    "A." ++ name ++ params ++ " -> list identity [ " ++ encoder ++ " ]"
+
+
 {-| To get encoder from type.
 -}
 typeToEncoder : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
@@ -100,32 +126,6 @@ typeToEncoder a =
                     " " ++ (a.generics |> List.map (\v -> "t_" ++ Node.value v) |> join " ")
     in
     signature ++ declaration
-
-
-{-| To get encoder from custom type constructor.
--}
-customTypeConstructorToEncoder : Node ValueConstructor -> String
-customTypeConstructorToEncoder (Node _ a) =
-    let
-        name =
-            Node.value a.name
-
-        params =
-            case a.arguments of
-                [] ->
-                    ""
-
-                _ ->
-                    " " ++ (join " " <| List.indexedMap (\b _ -> letterByInt (b + 1)) a.arguments)
-
-        map i b =
-            fromTypeAnnotation (Argument "" (1 + i) "" False) b
-
-        encoder : String
-        encoder =
-            String.join ", " <| (::) ("string " ++ encodeJsonString name) <| List.indexedMap map a.arguments
-    in
-    "A." ++ name ++ params ++ " -> list identity [ " ++ encoder ++ " ]"
 
 
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
