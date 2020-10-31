@@ -6,7 +6,7 @@ import Elm.Syntax.File exposing (File)
 import Eval exposing (consoleErrorAndExit, consoleLog, getArguments, mkDir, readFile, realPath, writeFile)
 import Generators.Decode exposing (fileToElmDecodeModule)
 import Generators.Encode exposing (fileToElmEncodeModule)
-import Generators.TypeScript exposing (toTypeScript)
+import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
 import Parser exposing (deadEndsToString)
 import Regex
 import String exposing (contains, join, replace)
@@ -81,7 +81,7 @@ processElmFile a =
                     [ folderPath |> mkDir |> (\_ -> ())
                     , file |> fileToElmEncodeModule |> writeFile (folderPath ++ "/" ++ fileName ++ "Encode.elm")
                     , file |> fileToElmDecodeModule |> writeFile (folderPath ++ "/" ++ fileName ++ "Decode.elm")
-                    , file |> toTypeScript |> writeFile (folderPath ++ "/" ++ fileName ++ ".ts")
+                    , file |> fileToTypeScriptDeclaration |> writeFile (folderPath ++ "/" ++ fileName ++ ".ts")
                     ]
             in
             "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder:\n" ++ folderPath

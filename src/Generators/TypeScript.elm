@@ -1,4 +1,4 @@
-module Generators.TypeScript exposing (toTypeScript)
+module Generators.TypeScript exposing (fileToTypeScriptDeclaration)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
@@ -14,8 +14,9 @@ import String exposing (join)
 import Utils exposing (encodeJsonString, moduleImports, normalizeRecordFieldName)
 
 
-toTypeScript : File -> String
-toTypeScript f =
+{-| -}
+fileToTypeScriptDeclaration : File -> String
+fileToTypeScriptDeclaration f =
     let
         root =
             "../" |> String.repeat ((Node.value f.moduleDefinition |> Module.moduleName |> List.length) - 1)
