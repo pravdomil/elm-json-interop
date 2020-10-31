@@ -127,7 +127,7 @@ customTypeTagToTs a =
 -}
 customTypeConstructorToTs : Node ValueConstructor -> String
 customTypeConstructorToTs (Node _ a) =
-    Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments |> fromTuple
+    Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments |> tupleToTs
 
 
 {-| To get TypeScript from type.
@@ -175,7 +175,7 @@ typeAnnotationToTs a =
             "[]"
 
         Tupled nodes ->
-            fromTuple nodes
+            tupleToTs nodes
 
         Record b ->
             fromRecord b
@@ -240,9 +240,11 @@ typedToTs (Node _ ( moduleName, name )) arguments =
     fn ++ generics
 
 
-fromTuple : List (Node TypeAnnotation) -> String
-fromTuple a =
-    "[" ++ (join ", " <| List.map typeAnnotationToTs a) ++ "]"
+{-| To get TypeScript from tuple.
+-}
+tupleToTs : List (Node TypeAnnotation) -> String
+tupleToTs a =
+    "[" ++ (a |> List.map typeAnnotationToTs |> join ", ") ++ "]"
 
 
 fromRecord : List (Node RecordField) -> String
