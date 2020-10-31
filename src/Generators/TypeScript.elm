@@ -43,7 +43,7 @@ declarationToTs : Node Declaration -> Maybe String
 declarationToTs a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just (fromTypeAlias b)
+            Just (typeAliasToTs b)
 
         CustomTypeDeclaration b ->
             Just (fromCustomType b)
@@ -52,8 +52,10 @@ declarationToTs a =
             Nothing
 
 
-fromTypeAlias : TypeAlias -> String
-fromTypeAlias a =
+{-| To get TypeScript from type alias.
+-}
+typeAliasToTs : TypeAlias -> String
+typeAliasToTs a =
     fromType a ++ " " ++ fromTypeAnnotation a.typeAnnotation
 
 
