@@ -34,14 +34,15 @@ fileToElmDecoderModule f =
         ]
 
 
+{-| -}
 fromDeclaration : Node Declaration -> Maybe String
-fromDeclaration (Node _ a) =
-    case a of
+fromDeclaration a =
+    case a |> Node.value of
         AliasDeclaration b ->
-            Just <| fromTypeAlias b
+            Just (fromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just <| fromCustomType b
+            Just (fromCustomType b)
 
         _ ->
             Nothing
