@@ -63,7 +63,7 @@ decoderFromCustomType a =
     let
         cases : String
         cases =
-            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
+            a.constructors |> List.map decoderFromCustomTypeConstructor |> join "\n    "
 
         fail : String
         fail =
@@ -72,8 +72,8 @@ decoderFromCustomType a =
     decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )") a
 
 
-fromCustomTypeConstructor : Node ValueConstructor -> String
-fromCustomTypeConstructor (Node _ a) =
+decoderFromCustomTypeConstructor : Node ValueConstructor -> String
+decoderFromCustomTypeConstructor (Node _ a) =
     let
         name =
             "A." ++ Node.value a.name
