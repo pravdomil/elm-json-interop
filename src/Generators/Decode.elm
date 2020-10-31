@@ -79,7 +79,7 @@ decoderFromCustomTypeConstructor (Node _ a) =
     let
         name : String
         name =
-            "A." ++ Node.value a.name
+            Node.value a.name
 
         len : Int
         len =
@@ -93,12 +93,12 @@ decoderFromCustomTypeConstructor (Node _ a) =
         val =
             case a.arguments of
                 [] ->
-                    "succeed " ++ name
+                    "succeed A." ++ name
 
                 _ ->
-                    mapFn len ++ " " ++ name ++ " " ++ join " " tup
+                    mapFn len ++ " A." ++ name ++ " " ++ join " " tup
     in
-    encodeJsonString (Node.value a.name) ++ " -> " ++ val
+    encodeJsonString name ++ " -> " ++ val
 
 
 {-| To get decoder from type.
