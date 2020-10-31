@@ -64,10 +64,19 @@ typeAliasToTs a =
 customTypeToTs : Type -> String
 customTypeToTs a =
     let
+        jsRef : Maybe String
+        jsRef =
+            case a.name |> Node.value |> String.split "JsRef" of
+                _ :: b :: [] ->
+                    Just b
+
+                _ ->
+                    Nothing
+
         type_ : Type
         type_ =
-            case ( String.split "JsRef" (Node.value a.name), a.constructors ) of
-                ( _ :: t :: [], (Node _ { name }) :: [] ) ->
+            case ( jsRef, a.constructors ) of
+                ( Just t, (Node _ { name }) :: [] ) ->
                     { a
                         | constructors =
                             [ node
