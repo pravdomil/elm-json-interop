@@ -14,7 +14,8 @@ import String exposing (join)
 import Utils exposing (encodeJsonString, moduleImports, normalizeRecordFieldName)
 
 
-{-| -}
+{-| To get TypeScript declaration from file.
+-}
 fileToTypeScriptDeclaration : File -> String
 fileToTypeScriptDeclaration a =
     let
