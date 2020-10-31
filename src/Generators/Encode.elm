@@ -134,8 +134,8 @@ typeToEncoder a =
 {-| To get encoder from type annotation.
 -}
 typeAnnotationToEncoder : Argument -> Node TypeAnnotation -> String
-typeAnnotationToEncoder argument (Node _ a) =
-    (case a of
+typeAnnotationToEncoder argument a =
+    (case a |> Node.value of
         GenericType b ->
             "t_" ++ b ++ argumentToString argument
 
