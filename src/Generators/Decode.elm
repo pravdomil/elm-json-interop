@@ -178,11 +178,11 @@ typeAnnotationToDecoder a =
 {-| To get decoder from typed.
 -}
 typedToDecoder : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-typedToDecoder (Node _ ( name, str )) nodes =
+typedToDecoder (Node _ ( moduleName, name )) arguments =
     let
         fn : String
         fn =
-            case name ++ [ str ] |> join "." of
+            case moduleName ++ [ name ] |> join "." of
                 "Int" ->
                     "int"
 
@@ -211,18 +211,18 @@ typedToDecoder (Node _ ( name, str )) nodes =
                     "value"
 
                 _ ->
-                    name ++ [ decoderName str ] |> join "."
+                    moduleName ++ [ decoderName name ] |> join "."
 
-        generics : String
-        generics =
-            case nodes of
+        arguments_ : String
+        arguments_ =
+            case arguments of
                 [] ->
                     ""
 
                 _ ->
-                    " " ++ (nodes |> List.map typeAnnotationToDecoder |> join " ")
+                    " " ++ (arguments |> List.map typeAnnotationToDecoder |> join " ")
     in
-    fn ++ generics
+    fn ++ arguments_
 
 
 {-| To get decoder from tuple.
