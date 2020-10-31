@@ -15,20 +15,20 @@ import Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleIm
 {-| To get Elm module for decoding types in file.
 -}
 fileToElmDecodeModule : File -> String
-fileToElmDecodeModule f =
-    [ "module Generated." ++ fileToModuleName f ++ "Decode exposing (..)"
+fileToElmDecodeModule a =
+    [ "module Generated." ++ fileToModuleName a ++ "Decode exposing (..)"
     , ""
-    , "import " ++ fileToModuleName f ++ " as A"
+    , "import " ++ fileToModuleName a ++ " as A"
     , "import Generated.Basics.BasicsDecode exposing (..)"
     , "import Json.Decode exposing (..)"
-    , f.imports
+    , a.imports
         |> moduleImports
             (\v vv ->
                 "import Generated." ++ moduleNameToString v ++ "Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")"
             )
         |> join "\n"
     , ""
-    , f.declarations |> List.filterMap declarationToDecoder |> join "\n\n"
+    , a.declarations |> List.filterMap declarationToDecoder |> join "\n\n"
     , ""
     ]
         |> join "\n"
