@@ -164,10 +164,10 @@ typeAnnotationToDecoder a =
             tupleToDecoder nodes
 
         Record b ->
-            fromRecord b
+            recordToDecoder b
 
         GenericRecord _ (Node _ b) ->
-            fromRecord b
+            recordToDecoder b
 
         FunctionTypeAnnotation _ _ ->
             "Debug.todo \"I don't know how to decode function.\""
@@ -244,8 +244,10 @@ arrayAtDecoder i a =
     "(index " ++ String.fromInt i ++ " " ++ typeAnnotationToDecoder a ++ ")"
 
 
-fromRecord : RecordDefinition -> String
-fromRecord a =
+{-| To get decoder from record.
+-}
+recordToDecoder : RecordDefinition -> String
+recordToDecoder a =
     let
         len =
             List.length a
