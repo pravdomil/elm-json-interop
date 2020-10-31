@@ -40,7 +40,7 @@ declarationToEncoder : Node Declaration -> Maybe String
 declarationToEncoder a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just <| fromTypeAlias b
+            Just <| typeAliasToEncoder b
 
         CustomTypeDeclaration b ->
             Just <| fromCustomType b
@@ -49,8 +49,10 @@ declarationToEncoder a =
             Nothing
 
 
-fromTypeAlias : TypeAlias -> String
-fromTypeAlias a =
+{-| To get encoder from type alias.
+-}
+typeAliasToEncoder : TypeAlias -> String
+typeAliasToEncoder a =
     fromType a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
 
 
