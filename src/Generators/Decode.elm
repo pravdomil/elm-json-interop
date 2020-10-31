@@ -53,7 +53,7 @@ decoderFromDeclaration a =
 -}
 decoderFromTypeAlias : TypeAlias -> String
 decoderFromTypeAlias a =
-    fromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
+    decoderFromType a ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
 
 
 {-| To get decoder from custom type.
@@ -69,11 +69,13 @@ decoderFromCustomType a =
         fail =
             "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
     in
-    fromType a ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    decoderFromType a ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
-fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String -> String
-fromType a body =
+{-| To get decoder from type.
+-}
+decoderFromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String -> String
+decoderFromType a body =
     let
         lazyDecoded =
             a.documentation |> Maybe.map Node.value |> Maybe.withDefault "" |> String.toLower |> String.contains "lazy decode"
