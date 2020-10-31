@@ -77,15 +77,19 @@ decoderFromCustomType a =
 decoderFromCustomTypeConstructor : Node ValueConstructor -> String
 decoderFromCustomTypeConstructor (Node _ a) =
     let
+        name : String
         name =
             "A." ++ Node.value a.name
 
+        len : Int
         len =
             List.length a.arguments
 
+        tup : List String
         tup =
             List.indexedMap (tupleMap 1) a.arguments
 
+        val : String
         val =
             case a.arguments of
                 [] ->
