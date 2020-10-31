@@ -40,10 +40,10 @@ declarationToEncoder : Node Declaration -> Maybe String
 declarationToEncoder a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just <| typeAliasToEncoder b
+            Just (typeAliasToEncoder b)
 
         CustomTypeDeclaration b ->
-            Just <| customTypeToEncoder b
+            Just (customTypeToEncoder b)
 
         _ ->
             Nothing
