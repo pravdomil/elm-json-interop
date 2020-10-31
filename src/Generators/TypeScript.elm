@@ -31,14 +31,16 @@ fileToTypeScriptDeclaration a =
             )
         |> join "\n"
     , ""
-    , List.filterMap fromDeclaration a.declarations |> join "\n\n\n"
+    , List.filterMap declarationToTs a.declarations |> join "\n\n\n"
     , ""
     ]
         |> join "\n"
 
 
-fromDeclaration : Node Declaration -> Maybe String
-fromDeclaration (Node _ a) =
+{-| To get TypeScript from declaration.
+-}
+declarationToTs : Node Declaration -> Maybe String
+declarationToTs (Node _ a) =
     case a of
         AliasDeclaration b ->
             Just (fromTypeAlias b)
