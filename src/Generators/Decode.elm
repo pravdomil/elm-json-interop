@@ -61,9 +61,11 @@ decoderFromTypeAlias a =
 decoderFromCustomType : Type -> String
 decoderFromCustomType a =
     let
+        cases : String
         cases =
             join "\n    " <| List.map fromCustomTypeConstructor a.constructors
 
+        fail : String
         fail =
             "\n    _ -> fail <| \"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\""
     in
