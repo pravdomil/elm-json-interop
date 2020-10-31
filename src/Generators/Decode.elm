@@ -258,7 +258,7 @@ recordToDecoder a =
         fields : String
         fields =
             a
-                |> List.indexedMap (\i (Node _ ( Node _ b, _ )) -> b ++ " = " ++ letterByInt i)
+                |> List.indexedMap (\i b -> (b |> Node.value |> Tuple.first |> Node.value) ++ " = " ++ letterByInt i)
                 |> join ", "
 
         constructorFn : String
