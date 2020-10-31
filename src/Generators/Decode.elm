@@ -96,6 +96,10 @@ decoderFromType a body =
                 _ ->
                     ""
 
+        declaration : String
+        declaration =
+            decoderName name ++ generics ++ " ="
+
         generics : String
         generics =
             case a.generics of
@@ -104,10 +108,6 @@ decoderFromType a body =
 
                 _ ->
                     (++) " " <| join " " <| List.map (\(Node _ v) -> "t_" ++ v) a.generics
-
-        declaration : String
-        declaration =
-            decoderName name ++ generics ++ " ="
     in
     [ signature
     , declaration
