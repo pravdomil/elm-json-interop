@@ -63,7 +63,7 @@ customTypeToEncoder a =
     let
         cases : String
         cases =
-            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
+            a.constructors |> List.map customTypeConstructorToEncoder |> join "\n    "
     in
     typeToEncoder a ++ "\n  case a of\n    " ++ cases
 
@@ -102,8 +102,10 @@ typeToEncoder a =
     signature ++ declaration
 
 
-fromCustomTypeConstructor : Node ValueConstructor -> String
-fromCustomTypeConstructor (Node _ a) =
+{-| To get encoder from custom type constructor.
+-}
+customTypeConstructorToEncoder : Node ValueConstructor -> String
+customTypeConstructorToEncoder (Node _ a) =
     let
         name =
             Node.value a.name
