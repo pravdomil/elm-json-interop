@@ -13,20 +13,20 @@ import Utils exposing (Argument, argumentToString, encodeJsonString, fileToModul
 
 
 fileToElmEncodeModule : File -> String
-fileToElmEncodeModule f =
-    [ "module Generated." ++ fileToModuleName f ++ "Encode exposing (..)"
+fileToElmEncodeModule a =
+    [ "module Generated." ++ fileToModuleName a ++ "Encode exposing (..)"
     , ""
-    , "import " ++ fileToModuleName f ++ " as A"
+    , "import " ++ fileToModuleName a ++ " as A"
     , "import Generated.Basics.BasicsEncode exposing (..)"
     , "import Json.Encode exposing (..)"
-    , f.imports
+    , a.imports
         |> moduleImports
             (\v vv ->
                 "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")"
             )
         |> join "\n"
     , ""
-    , f.declarations |> List.filterMap fromDeclaration |> join "\n\n"
+    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
     , ""
     ]
         |> join "\n"
