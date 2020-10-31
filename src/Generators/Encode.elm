@@ -140,7 +140,7 @@ typeAnnotationToEncoder argument a =
             "t_" ++ b ++ argumentToString argument
 
         Typed b c ->
-            fromTyped argument b c
+            typedToEncoder argument b c
 
         Unit ->
             "(\\_ -> list identity [])" ++ argumentToString argument
@@ -160,8 +160,10 @@ typeAnnotationToEncoder argument a =
         |> wrapInParentheses
 
 
-fromTyped : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-fromTyped argument (Node _ ( name, str )) nodes =
+{-| To get encoder from typed.
+-}
+typedToEncoder : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+typedToEncoder argument (Node _ ( name, str )) nodes =
     let
         generics =
             case nodes of
