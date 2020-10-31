@@ -53,7 +53,7 @@ declarationToEncoder a =
 -}
 typeAliasToEncoder : TypeAlias -> String
 typeAliasToEncoder a =
-    typeToEncoder a ++ " " ++ fromTypeAnnotation (Argument "" 0 "" False) a.typeAnnotation
+    typeToEncoder a ++ " " ++ typeAnnotationToEncoder (Argument "" 0 "" False) a.typeAnnotation
 
 
 {-| To get encoder from custom type.
@@ -92,7 +92,7 @@ customTypeConstructorToEncoder (Node _ a) =
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i b =
-            b |> fromTypeAnnotation (Argument "" (1 + i) "" False)
+            b |> typeAnnotationToEncoder (Argument "" (1 + i) "" False)
     in
     "A." ++ name ++ arguments ++ " -> list identity [ " ++ encoder ++ " ]"
 
@@ -131,8 +131,10 @@ typeToEncoder a =
     signature ++ declaration
 
 
-fromTypeAnnotation : Argument -> Node TypeAnnotation -> String
-fromTypeAnnotation argument (Node _ a) =
+{-| To get encoder from type annotation.
+-}
+typeAnnotationToEncoder : Argument -> Node TypeAnnotation -> String
+typeAnnotationToEncoder argument (Node _ a) =
     let
         result =
             case a of
@@ -169,7 +171,7 @@ fromTyped argument (Node _ ( name, str )) nodes =
                     ""
 
                 _ ->
-                    (++) " " <| join " " <| List.map (fromTypeAnnotation { argument | disabled = True }) nodes
+                    (++) " " <| join " " <| List.map (typeAnnotationToEncoder { argument | disabled = True }) nodes
 
         fn =
             case name ++ [ str ] |> join "." of
@@ -216,7 +218,7 @@ fromTuple argument a =
             join ", " <| List.indexedMap (\i _ -> tupleArgument i |> argumentToString) a
 
         map i b =
-            fromTypeAnnotation (tupleArgument i) b
+            typeAnnotationToEncoder (tupleArgument i) b
     in
     "(\\( " ++ arguments ++ " ) -> list identity [ " ++ (join ", " <| List.indexedMap map a) ++ " ])" ++ argumentToString argument
 
@@ -228,7 +230,7 @@ fromRecord argument a =
 
 fromRecordField : Argument -> Node RecordField -> String
 fromRecordField argument (Node _ ( Node _ a, b )) =
-    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation { argument | suffix = "." ++ a } b ++ " )"
+    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ typeAnnotationToEncoder { argument | suffix = "." ++ a } b ++ " )"
 
 
 encoderName : String -> String
