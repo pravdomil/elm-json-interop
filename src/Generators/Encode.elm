@@ -231,6 +231,12 @@ fromRecordField argument (Node _ ( Node _ a, b )) =
     "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ typeAnnotationToEncoder { argument | suffix = "." ++ a } b ++ " )"
 
 
+
+--
+
+
+{-| To get encoder name.
+-}
 encoderName : String -> String
 encoderName a =
     "encode" ++ a
