@@ -88,7 +88,7 @@ customTypeConstructorToEncoder (Node _ a) =
 
         encoder : String
         encoder =
-            String.join ", " <| (::) ("string " ++ encodeJsonString name) <| List.indexedMap map a.arguments
+            ("string " ++ encodeJsonString name) :: (a.arguments |> List.indexedMap map) |> join ", "
 
         map : Int -> Node TypeAnnotation -> String
         map i b =
