@@ -4,17 +4,32 @@ import Json.Decode as Decode exposing (decodeValue)
 import Json.Encode as Encode exposing (Value, encode)
 
 
-{-| To run JavaScript code. Function implementation gets replaced by eval() function.
+{-| -}
+type alias Eval =
+    String -> Decode.Value
+
+
+{-| To create command line program.
 -}
-eval : String -> Decode.Value
-eval _ =
-    Encode.string "EVAL()"
+cliProgram : (Eval -> model) -> Program flags model msg
+cliProgram init =
+    let
+        {- To run JavaScript code. Function implementation gets replaced by eval() function. -}
+        eval : Eval
+        eval _ =
+            Encode.string "EVAL()"
+    in
+    Platform.worker
+        { init = \_ -> ( init eval, Cmd.none )
+        , update = \_ m -> ( m, Cmd.none )
+        , subscriptions = \_ -> Sub.none
+        }
 
 
 {-| To get program arguments.
 -}
-getArguments : () -> List String
-getArguments _ =
+getArguments : Eval -> List String
+getArguments eval =
     "process.argv"
         |> eval
         |> decodeValue (Decode.list Decode.string)
@@ -23,8 +38,8 @@ getArguments _ =
 
 {-| To get stdin.
 -}
-getStdin : () -> Maybe String
-getStdin _ =
+getStdin : Eval -> Maybe String
+getStdin eval =
     "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
         |> eval
         |> decodeValue (Decode.maybe Decode.string)
@@ -33,8 +48,8 @@ getStdin _ =
 
 {-| To call console.log function.
 -}
-consoleLog : String -> ()
-consoleLog message =
+consoleLog : Eval -> String -> ()
+consoleLog eval message =
     ("console.log(" ++ toString message ++ ")")
         |> eval
         |> Decode.decodeValue (Decode.succeed ())
@@ -43,8 +58,8 @@ consoleLog message =
 
 {-| To call console.error and kill process with 1 exit code.
 -}
-consoleErrorAndExit : String -> ()
-consoleErrorAndExit message =
+consoleErrorAndExit : Eval -> String -> ()
+consoleErrorAndExit eval message =
     ("console.error(" ++ toString message ++ ");process.exit(1);")
         |> eval
         |> Decode.decodeValue (Decode.succeed ())
@@ -53,8 +68,8 @@ consoleErrorAndExit message =
 
 {-| To read file.
 -}
-readFile : String -> String
-readFile path =
+readFile : Eval -> String -> String
+readFile eval path =
     ("require('fs').readFileSync(" ++ toString path ++ ", 'utf8')")
         |> eval
         |> decodeValue Decode.string
@@ -63,8 +78,8 @@ readFile path =
 
 {-| To write file.
 -}
-writeFile : String -> String -> ()
-writeFile path content =
+writeFile : Eval -> String -> String -> ()
+writeFile eval path content =
     ("require('fs').writeFileSync(" ++ toString path ++ ", " ++ toString content ++ ")")
         |> eval
         |> Decode.decodeValue (Decode.succeed ())
@@ -73,8 +88,8 @@ writeFile path content =
 
 {-| To create directory recursively.
 -}
-mkDir : String -> Maybe String
-mkDir path =
+mkDir : Eval -> String -> Maybe String
+mkDir eval path =
     ("require('fs').mkdirSync(" ++ toString path ++ ", { recursive: true })")
         |> eval
         |> decodeValue (Decode.maybe Decode.string)
@@ -83,8 +98,8 @@ mkDir path =
 
 {-| To get real path.
 -}
-realPath : String -> String
-realPath path =
+realPath : Eval -> String -> String
+realPath eval path =
     ("require('fs').realpathSync(" ++ toString path ++ ", 'utf8')")
         |> eval
         |> decodeValue Decode.string
