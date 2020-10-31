@@ -72,6 +72,8 @@ decoderFromCustomType a =
     decoderFromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )") a
 
 
+{-| To get decoder from custom type constructor.
+-}
 decoderFromCustomTypeConstructor : Node ValueConstructor -> String
 decoderFromCustomTypeConstructor (Node _ a) =
     let
