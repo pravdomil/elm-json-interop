@@ -78,7 +78,7 @@ moduleImports toImport_ a =
 
         filterExpose : Node TopLevelExpose -> Maybe String
         filterExpose b =
-            case b of
+            case b |> Node.value of
                 TypeOrAliasExpose name ->
                     Just name
 
