@@ -84,10 +84,10 @@ processElmFile eval a =
                     rawFile_ |> Processing.process Processing.init
 
                 _ =
-                    [ folderPath |> mkDir eval |> (\_ -> ())
-                    , file |> fileToElmEncodeModule |> writeFile eval (folderPath ++ "/" ++ fileName ++ "Encode.elm")
-                    , file |> fileToElmDecodeModule |> writeFile eval (folderPath ++ "/" ++ fileName ++ "Decode.elm")
-                    , file |> fileToTypeScriptDeclaration |> writeFile eval (folderPath ++ "/" ++ fileName ++ ".ts")
+                    [ mkDir eval folderPath
+                    , writeFile eval (folderPath ++ "/" ++ fileName ++ "Encode.elm") (fileToElmEncodeModule file)
+                    , writeFile eval (folderPath ++ "/" ++ fileName ++ "Decode.elm") (fileToElmDecodeModule file)
+                    , writeFile eval (folderPath ++ "/" ++ fileName ++ ".ts") (fileToTypeScriptDeclaration file)
                     ]
             in
             "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder: " ++ folderPath

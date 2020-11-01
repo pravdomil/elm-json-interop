@@ -52,8 +52,7 @@ consoleLog : Eval -> String -> ()
 consoleLog eval message =
     ("console.log(" ++ toString message ++ ")")
         |> eval
-        |> Decode.decodeValue (Decode.succeed ())
-        |> Result.withDefault ()
+        |> (\_ -> ())
 
 
 {-| To call console.error and kill process with 1 exit code.
@@ -62,8 +61,7 @@ consoleErrorAndExit : Eval -> String -> ()
 consoleErrorAndExit eval message =
     ("console.error(" ++ toString message ++ ");process.exit(1);")
         |> eval
-        |> Decode.decodeValue (Decode.succeed ())
-        |> Result.withDefault ()
+        |> (\_ -> ())
 
 
 {-| To read file.
@@ -82,18 +80,16 @@ writeFile : Eval -> String -> String -> ()
 writeFile eval path content =
     ("require('fs').writeFileSync(" ++ toString path ++ ", " ++ toString content ++ ")")
         |> eval
-        |> Decode.decodeValue (Decode.succeed ())
-        |> Result.withDefault ()
+        |> (\_ -> ())
 
 
 {-| To create directory recursively.
 -}
-mkDir : Eval -> String -> Maybe String
+mkDir : Eval -> String -> ()
 mkDir eval path =
     ("require('fs').mkdirSync(" ++ toString path ++ ", { recursive: true })")
         |> eval
-        |> decodeValue (Decode.maybe Decode.string)
-        |> Result.withDefault Nothing
+        |> (\_ -> ())
 
 
 {-| To get real path.
