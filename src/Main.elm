@@ -97,7 +97,7 @@ processElmFile eval a =
                     , writeFile eval (folderPath ++ "/" ++ moduleName ++ ".ts") (fileToTypeScriptDeclaration file)
                     ]
             in
-            "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder: " ++ folderPath
+            "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder:\n" ++ folderPath
 
         Err b ->
             b |> consoleErrorAndExit eval |> (\_ -> "")
