@@ -28,7 +28,7 @@ setDecoder a =
     map Set.fromList (list a)
 
 
-{-| To decode dict.
+{-| To decode dictionary.
 -}
 dictDecoder : k -> Decoder v -> Decoder (Dict String v)
 dictDecoder _ a =
