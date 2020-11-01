@@ -4,7 +4,7 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Eval exposing (Eval, cliProgram, consoleErrorAndExit, consoleLog, getArguments, mkDir, readFile, realPath, writeFile)
+import Eval exposing (Eval, cliProgram, consoleErrorAndExit, consoleLog, copyFile, dirname__, getArguments, mkDir, readFile, realPath, writeFile)
 import Generators.Decode exposing (fileToElmDecodeModule)
 import Generators.Encode exposing (fileToElmEncodeModule)
 import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
@@ -82,6 +82,13 @@ processElmFile eval a =
                 file : File
                 file =
                     rawFile_ |> Processing.process Processing.init
+
+                _ =
+                    [ mkDir eval (srcPath_ ++ "Generated/Basics")
+                    , copyFile eval (dirname__ eval ++ "/../src/Basics/BasicsEncode.elm") (srcPath_ ++ "Generated/Basics/BasicsEncode.elm")
+                    , copyFile eval (dirname__ eval ++ "/../src/Basics/BasicsDecode.elm") (srcPath_ ++ "Generated/Basics/BasicsDecode.elm")
+                    , copyFile eval (dirname__ eval ++ "/../src/Basics/Basics.ts") (srcPath_ ++ "Generated/Basics/Basics.ts")
+                    ]
 
                 _ =
                     [ mkDir eval folderPath
