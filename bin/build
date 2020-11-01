@@ -21,3 +21,7 @@ elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 ) >bin/elm-json-interop
 rm bin/elm-json-interop.js
 chmod +x bin/elm-json-interop
+
+# To build example.
+bin/elm-json-interop example/src/Example.elm
+elm-format --yes example/src/Generated/*.elm
