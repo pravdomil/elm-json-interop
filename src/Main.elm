@@ -71,8 +71,8 @@ processElmFile eval a =
     case Result.map2 Tuple.pair srcPath rawFile of
         Ok ( srcPath_, rawFile_ ) ->
             let
-                fileName : String
-                fileName =
+                moduleName : String
+                moduleName =
                     path |> basename ".elm"
 
                 folderPath : String
@@ -92,9 +92,9 @@ processElmFile eval a =
 
                 _ =
                     [ mkDir eval folderPath
-                    , writeFile eval (folderPath ++ "/" ++ fileName ++ "Encode.elm") (fileToElmEncodeModule file)
-                    , writeFile eval (folderPath ++ "/" ++ fileName ++ "Decode.elm") (fileToElmDecodeModule file)
-                    , writeFile eval (folderPath ++ "/" ++ fileName ++ ".ts") (fileToTypeScriptDeclaration file)
+                    , writeFile eval (folderPath ++ "/" ++ moduleName ++ "Encode.elm") (fileToElmEncodeModule file)
+                    , writeFile eval (folderPath ++ "/" ++ moduleName ++ "Decode.elm") (fileToElmDecodeModule file)
+                    , writeFile eval (folderPath ++ "/" ++ moduleName ++ ".ts") (fileToTypeScriptDeclaration file)
                     ]
             in
             "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder: " ++ folderPath
