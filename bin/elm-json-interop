@@ -4445,7 +4445,7 @@ var $author$project$Generators$TypeScript$fileToTypeScriptDeclaration = function
 		'\n',
 		_List_fromArray(
 			[
-				'import { Maybe, Result } from \"' + (root + 'Basics/Basics\"'),
+				'import { Maybe, Result } from \"./' + (root + 'Basics/Basics\"'),
 				A2(
 				$elm$core$String$join,
 				'\n',
