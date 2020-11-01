@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Elm.Parser
 import Elm.Processing as Processing
+import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Eval exposing (Eval, cliProgram, consoleErrorAndExit, consoleLog, getArguments, mkDir, readFile, realPath, writeFile)
 import Generators.Decode exposing (fileToElmDecodeModule)
@@ -44,22 +45,30 @@ usage =
 
 {-| To process Elm file.
 -}
-processElmFile : Eval -> String -> String
+processElmFile : Eval -> String -> Result String String
 processElmFile eval a =
     let
         path : String
         path =
             a |> realPath eval
 
-        _ =
-            if path |> contains "/src/" then
-                ()
+        srcPath : Result String String
+        srcPath =
+            path
+                |> Regex.find ("^.*/src/" |> Regex.fromString |> Maybe.withDefault Regex.never)
+                |> List.head
+                |> Maybe.map .match
+                |> Result.fromMaybe "Elm file must be inside \"src\" folder."
 
-            else
-                "Elm file must be inside \"src\" folder." |> consoleErrorAndExit eval
+        rawFile : Result String RawFile
+        rawFile =
+            path
+                |> readFile eval
+                |> Elm.Parser.parse
+                |> Result.mapError (\v -> "I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString v ++ ".")
     in
-    case path |> readFile eval |> Elm.Parser.parse of
-        Ok rawFile ->
+    case Result.map2 Tuple.pair srcPath rawFile of
+        Ok ( srcPath_, rawFile_ ) ->
             let
                 fileName : String
                 fileName =
@@ -67,11 +76,11 @@ processElmFile eval a =
 
                 folderPath : String
                 folderPath =
-                    path |> replace "/src/" "/src/Generated/" |> dirname
+                    path |> replace srcPath_ (srcPath_ ++ "Generated/") |> dirname
 
                 file : File
                 file =
-                    rawFile |> Processing.process Processing.init
+                    rawFile_ |> Processing.process Processing.init
 
                 _ =
                     [ folderPath |> mkDir eval |> (\_ -> ())
@@ -80,12 +89,10 @@ processElmFile eval a =
                     , file |> fileToTypeScriptDeclaration |> writeFile eval (folderPath ++ "/" ++ fileName ++ ".ts")
                     ]
             in
-            "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder:\n" ++ folderPath
+            Ok ("I have generated Elm encoder, Elm decoder, TypeScript declaration in folder: " ++ folderPath)
 
         Err b ->
-            ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString b ++ ".")
-                |> consoleErrorAndExit eval
-                |> (\_ -> "")
+            Err b
 
 
 
