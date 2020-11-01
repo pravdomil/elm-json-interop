@@ -46,7 +46,7 @@ usage =
 
 {-| To process Elm file.
 -}
-processElmFile : Eval -> String -> Result String String
+processElmFile : Eval -> String -> String
 processElmFile eval a =
     let
         path : String
@@ -90,10 +90,10 @@ processElmFile eval a =
                     , file |> fileToTypeScriptDeclaration |> writeFile eval (folderPath ++ "/" ++ fileName ++ ".ts")
                     ]
             in
-            Ok ("I have generated Elm encoder, Elm decoder, TypeScript declaration in folder: " ++ folderPath)
+            "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder: " ++ folderPath
 
         Err b ->
-            Err b
+            b |> consoleErrorAndExit eval |> (\_ -> "")
 
 
 
