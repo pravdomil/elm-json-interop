@@ -23,7 +23,7 @@ fileToTypeScriptDeclaration a =
         root =
             "../" |> String.repeat ((Node.value a.moduleDefinition |> Module.moduleName |> List.length) - 1)
     in
-    [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
+    [ "import { Maybe, Result } from \"./" ++ root ++ "Basics/Basics\""
     , a.imports
         |> moduleImports
             (\v vv ->
