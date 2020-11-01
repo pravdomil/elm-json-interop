@@ -23,7 +23,7 @@ encodeMaybe a b =
             null
 
 
-{-| To encode string.
+{-| To encode dictionary.
 -}
 encodeDict : (k -> Value) -> (v -> Value) -> Dict String v -> Value
 encodeDict _ b c =
