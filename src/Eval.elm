@@ -118,6 +118,15 @@ writeFile eval path content =
         |> (\_ -> ())
 
 
+{-| To copy file.
+-}
+copyFile : Eval -> String -> String -> ()
+copyFile eval source destination =
+    ("require('fs').copyFileSync(" ++ toString source ++ ", " ++ toString destination ++ ")")
+        |> eval
+        |> (\_ -> ())
+
+
 
 --
 
