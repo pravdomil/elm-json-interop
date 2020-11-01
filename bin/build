@@ -16,7 +16,7 @@ npm i
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 (
   echo "#!/usr/bin/env node"
-  sed "s/('EVAL()')/(eval(_v0))/" bin/elm-json-interop.js
+  sed "s/('EVAL()')/(eval(_v3))/" bin/elm-json-interop.js
   echo ";this.Elm.Main.init();"
 ) >bin/elm-json-interop
 rm bin/elm-json-interop.js
