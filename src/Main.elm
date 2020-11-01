@@ -91,11 +91,9 @@ processElmFile eval a =
 {-| To get basename.
 -}
 basename : String -> String -> String
-basename extension path =
-    path
-        |> Regex.replace
-            ("^.*/" |> Regex.fromString |> Maybe.withDefault Regex.never)
-            (\_ -> "")
+basename extension a =
+    a
+        |> regexReplace "^.*/" ""
         |> (\v ->
                 if v |> String.endsWith extension then
                     v |> String.dropRight (extension |> String.length)
