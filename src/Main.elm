@@ -29,11 +29,12 @@ run eval =
         elmFiles =
             getArguments eval |> List.drop 2
     in
-    if elmFiles |> List.isEmpty then
-        usage |> consoleErrorAndExit eval
+    case elmFiles of
+        [] ->
+            usage |> consoleErrorAndExit eval
 
-    else
-        elmFiles |> List.map (processElmFile eval) |> join "\n" |> consoleLog eval
+        _ ->
+            elmFiles |> List.map (processElmFile eval) |> join "\n" |> consoleLog eval
 
 
 {-| To get program usage.
