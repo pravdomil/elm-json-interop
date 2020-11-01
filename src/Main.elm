@@ -85,9 +85,9 @@ processElmFile eval a =
 
                 _ =
                     [ mkDir eval (srcPath_ ++ "Generated/Basics")
-                    , copyFile eval (dirname__ eval ++ "/../src/Basics/BasicsEncode.elm") (srcPath_ ++ "Generated/Basics/BasicsEncode.elm")
-                    , copyFile eval (dirname__ eval ++ "/../src/Basics/BasicsDecode.elm") (srcPath_ ++ "Generated/Basics/BasicsDecode.elm")
-                    , copyFile eval (dirname__ eval ++ "/../src/Basics/Basics.ts") (srcPath_ ++ "Generated/Basics/Basics.ts")
+                    , copyFile eval (dirname__ eval ++ "/../src/Generated/Basics/BasicsEncode.elm") (srcPath_ ++ "Generated/Basics/BasicsEncode.elm")
+                    , copyFile eval (dirname__ eval ++ "/../src/Generated/Basics/BasicsDecode.elm") (srcPath_ ++ "Generated/Basics/BasicsDecode.elm")
+                    , copyFile eval (dirname__ eval ++ "/../src/Generated/Basics/Basics.ts") (srcPath_ ++ "Generated/Basics/Basics.ts")
                     ]
 
                 _ =
