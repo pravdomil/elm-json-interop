@@ -26,6 +26,10 @@ cliProgram init =
         }
 
 
+
+--
+
+
 {-| To get program arguments.
 -}
 getArguments : Eval -> List String
@@ -46,6 +50,10 @@ getStdin eval =
         |> Result.withDefault Nothing
 
 
+
+--
+
+
 {-| To call console.log function.
 -}
 consoleLog : Eval -> String -> ()
@@ -62,6 +70,10 @@ consoleErrorAndExit eval message =
     ("console.error(" ++ toString message ++ ");process.exit(1);")
         |> eval
         |> (\_ -> ())
+
+
+
+--
 
 
 {-| To read file.
@@ -100,6 +112,10 @@ realPath eval path =
         |> eval
         |> decodeValue Decode.string
         |> Result.withDefault ""
+
+
+
+--
 
 
 {-| To encode string into JSON string.
