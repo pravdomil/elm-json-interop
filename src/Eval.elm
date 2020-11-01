@@ -76,6 +76,26 @@ consoleErrorAndExit eval message =
 --
 
 
+{-| To get \_\_filename.
+-}
+filename__ : Eval -> String
+filename__ eval =
+    "filename__"
+        |> eval
+        |> decodeValue Decode.string
+        |> Result.withDefault ""
+
+
+{-| To get \_\_dirname.
+-}
+dirname__ : Eval -> String
+dirname__ eval =
+    "dirname__"
+        |> eval
+        |> decodeValue Decode.string
+        |> Result.withDefault ""
+
+
 {-| To get real path.
 -}
 realPath : Eval -> String -> String
