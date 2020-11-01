@@ -109,10 +109,7 @@ basename extension path =
 -}
 dirname : String -> String
 dirname a =
-    a
-        |> Regex.replace
-            ("/[^/]+$" |> Regex.fromString |> Maybe.withDefault Regex.never)
-            (\_ -> "")
+    a |> regexReplace "/[^/]+$" ""
 
 
 {-| To do simple regular expression replace.
