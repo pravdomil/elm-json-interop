@@ -71,13 +71,13 @@ processElmFile eval a =
     case Result.map2 Tuple.pair srcPath rawFile of
         Ok ( srcPath_, rawFile_ ) ->
             let
-                moduleName : String
-                moduleName =
-                    path |> basename ".elm"
-
                 folderPath : String
                 folderPath =
                     path |> replace srcPath_ (srcPath_ ++ "Generated/") |> dirname
+
+                moduleName : String
+                moduleName =
+                    path |> basename ".elm"
 
                 file : File
                 file =
