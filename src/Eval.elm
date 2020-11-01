@@ -80,7 +80,7 @@ consoleErrorAndExit eval message =
 -}
 filename__ : Eval -> String
 filename__ eval =
-    "filename__"
+    "__filename"
         |> eval
         |> decodeValue Decode.string
         |> Result.withDefault ""
@@ -90,7 +90,7 @@ filename__ eval =
 -}
 dirname__ : Eval -> String
 dirname__ eval =
-    "dirname__"
+    "__dirname"
         |> eval
         |> decodeValue Decode.string
         |> Result.withDefault ""
