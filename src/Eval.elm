@@ -76,6 +76,25 @@ consoleErrorAndExit eval message =
 --
 
 
+{-| To get real path.
+-}
+realPath : Eval -> String -> String
+realPath eval path =
+    ("require('fs').realpathSync(" ++ toString path ++ ", 'utf8')")
+        |> eval
+        |> decodeValue Decode.string
+        |> Result.withDefault ""
+
+
+{-| To create directory recursively.
+-}
+mkDir : Eval -> String -> ()
+mkDir eval path =
+    ("require('fs').mkdirSync(" ++ toString path ++ ", { recursive: true })")
+        |> eval
+        |> (\_ -> ())
+
+
 {-| To read file.
 -}
 readFile : Eval -> String -> String
@@ -93,25 +112,6 @@ writeFile eval path content =
     ("require('fs').writeFileSync(" ++ toString path ++ ", " ++ toString content ++ ")")
         |> eval
         |> (\_ -> ())
-
-
-{-| To create directory recursively.
--}
-mkDir : Eval -> String -> ()
-mkDir eval path =
-    ("require('fs').mkdirSync(" ++ toString path ++ ", { recursive: true })")
-        |> eval
-        |> (\_ -> ())
-
-
-{-| To get real path.
--}
-realPath : Eval -> String -> String
-realPath eval path =
-    ("require('fs').realpathSync(" ++ toString path ++ ", 'utf8')")
-        |> eval
-        |> decodeValue Decode.string
-        |> Result.withDefault ""
 
 
 
