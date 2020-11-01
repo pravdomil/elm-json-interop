@@ -30,7 +30,7 @@ setDecoder a =
 
 {-| To decode dict.
 -}
-dictDecoder : Decoder k -> Decoder v -> Decoder (Dict String v)
+dictDecoder : k -> Decoder v -> Decoder (Dict String v)
 dictDecoder _ a =
     dict a
 
