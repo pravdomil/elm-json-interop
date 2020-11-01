@@ -10,7 +10,7 @@ import Generators.Encode exposing (fileToElmEncodeModule)
 import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
 import Parser exposing (deadEndsToString)
 import Regex
-import String exposing (contains, join, replace)
+import String exposing (join, replace)
 
 
 {-| To define main entry point.
