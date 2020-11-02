@@ -1,10 +1,15 @@
 # Elm JSON Interop
 
-## Install & Usage
+## Install
 
 ```sh
 npm i pravdomil/elm-json-interop -g
-elm-json-interop src/Main.elm
+```
+
+## Usage
+
+```sh
+elm-json-interop [File.elm ...]
 ```
 
 For more information see [example folder](example/src).
