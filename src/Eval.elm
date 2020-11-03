@@ -4,6 +4,15 @@ import Json.Decode as Decode exposing (decodeValue)
 import Json.Encode as Encode exposing (Value, encode)
 
 
+{-| To define JavaScript error.
+-}
+type alias Error =
+    { name : String
+    , message : String
+    , stack : Maybe String
+    }
+
+
 {-| -}
 type alias Eval =
     String -> Decode.Value
