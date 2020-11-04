@@ -4,10 +4,10 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Eval exposing (..)
 import Generators.Decode exposing (fileToElmDecodeModule)
 import Generators.Encode exposing (fileToElmEncodeModule)
 import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
+import JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
 import String exposing (join, replace)

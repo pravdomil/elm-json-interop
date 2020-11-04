@@ -1,4 +1,4 @@
-module Eval exposing (..)
+module JsCode exposing (..)
 
 {-| Read <https://guide.elm-lang.org/interop/limits.html>
 -}
