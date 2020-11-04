@@ -11104,4 +11104,4 @@ var $author$project$Main$main = $author$project$JsCode$cliProgram(
 			A2($elm$core$Task$andThen, $author$project$JsCode$consoleLog, $author$project$Main$run))));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
-;this.Elm.Main.init();
+this.Elm.Main.init();
