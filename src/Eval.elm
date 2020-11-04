@@ -24,17 +24,11 @@ type alias Eval =
 
 {-| To create command line program.
 -}
-cliProgram : (Eval -> model) -> Program flags model msg
+cliProgram : Cmd msg -> Program flags () msg
 cliProgram init =
-    let
-        {- To run JavaScript code. Function implementation gets replaced by eval() function. -}
-        eval : Eval
-        eval _ =
-            Encode.string "EVAL()"
-    in
     Platform.worker
-        { init = \_ -> ( init eval, Cmd.none )
-        , update = \_ m -> ( m, Cmd.none )
+        { init = \_ -> ( (), init )
+        , update = \_ _ -> ( (), Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
 
