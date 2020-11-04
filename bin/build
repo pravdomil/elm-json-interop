@@ -16,7 +16,7 @@ npm i
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 (
   echo "#!/usr/bin/env node"
-  sed "s/var evalTask = /var evalTask = _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(eval(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } });\/\//" bin/elm-json-interop.js
+  sed -E "/^.*jsCode\('/s/\\\'/'/g;s/^.*jsCode\('(.*)'));$/_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(\1)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));/g" bin/elm-json-interop.js
   echo ";this.Elm.Main.init();"
 ) >bin/elm-json-interop
 rm bin/elm-json-interop.js
