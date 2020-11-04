@@ -3270,7 +3270,7 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$core$Platform$worker = _Platform_worker;
-var $author$project$Eval$cliProgram = function (init) {
+var $author$project$JsCode$cliProgram = function (init) {
 	return $elm$core$Platform$worker(
 		{
 			bs: function (_v0) {
@@ -3286,7 +3286,6 @@ var $author$project$Eval$cliProgram = function (init) {
 		});
 };
 var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $elm$core$Task$fail = _Scheduler_fail;
 var $elm$core$Result$mapError = F2(
 	function (f, result) {
 		if (!result.$) {
@@ -3298,7 +3297,8 @@ var $elm$core$Result$mapError = F2(
 				f(e));
 		}
 	});
-var $author$project$Eval$resultToTask = function (a) {
+var $elm$core$Task$fail = _Scheduler_fail;
+var $author$project$JsCode$resultToTask = function (a) {
 	if (!a.$) {
 		var b = a.a;
 		return $elm$core$Task$succeed(b);
@@ -3307,39 +3307,40 @@ var $author$project$Eval$resultToTask = function (a) {
 		return $elm$core$Task$fail(b);
 	}
 };
-var $author$project$Eval$eval = F2(
-	function (decoder, _v0) {
-		var evalTask = _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(eval(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } });//$elm$core$Task$fail('Eval function is not implemented.');
+var $author$project$JsCode$decodeTaskValue = F2(
+	function (decoder, a) {
 		return A2(
 			$elm$core$Task$andThen,
 			function (v) {
-				return $author$project$Eval$resultToTask(
+				return $author$project$JsCode$resultToTask(
 					A2(
 						$elm$core$Result$mapError,
 						$elm$json$Json$Decode$errorToString,
 						A2($elm$json$Json$Decode$decodeValue, decoder, v)));
 			},
-			evalTask);
+			a);
 	});
+var $author$project$JsCode$jsCode = function (_v0) {
+	return $elm$core$Task$fail('Function is not implemented.');
+};
 var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Eval$toString = function (a) {
+var $author$project$JsCode$consoleError = function (_v0) {
 	return A2(
-		$elm$json$Json$Encode$encode,
-		0,
-		$elm$json$Json$Encode$string(a));
-};
-var $author$project$Eval$consoleErrorAndExit = function (message) {
-	return A2(
-		$author$project$Eval$eval,
+		$author$project$JsCode$decodeTaskValue,
 		$elm$json$Json$Decode$succeed(0),
-		'console.error(' + ($author$project$Eval$toString(message) + ');process.exit(1);'));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(console.error(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $author$project$Eval$consoleLog = function (message) {
+var $author$project$JsCode$consoleLog = function (_v0) {
 	return A2(
-		$author$project$Eval$eval,
+		$author$project$JsCode$decodeTaskValue,
 		$elm$json$Json$Decode$succeed(0),
-		'console.log(' + ($author$project$Eval$toString(message) + ')'));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(console.log(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+};
+var $author$project$JsCode$processExit = function (_v0) {
+	return A2(
+		$author$project$JsCode$decodeTaskValue,
+		$elm$json$Json$Decode$succeed(0),
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(process.exit(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -3364,10 +3365,10 @@ var $elm$core$List$drop = F2(
 	});
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Eval$getArguments = A2(
-	$author$project$Eval$eval,
+var $author$project$JsCode$getArguments = A2(
+	$author$project$JsCode$decodeTaskValue,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	'process.argv');
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(process.argv)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -3423,17 +3424,20 @@ var $author$project$Main$basename = F2(
 		}(
 			A3($author$project$Main$regexReplace, '^.*/', '', a));
 	});
-var $author$project$Eval$copyFile = F2(
-	function (source, destination) {
+var $author$project$JsCode$copyFile = F2(
+	function (_v0, _v1) {
 		return A2(
-			$author$project$Eval$eval,
+			$author$project$JsCode$decodeTaskValue,
 			$elm$json$Json$Decode$succeed(0),
-			'require(\'fs\').copyFileSync(' + ($author$project$Eval$toString(source) + (', ' + ($author$project$Eval$toString(destination) + ')'))));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').copyFileSync(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
 var $author$project$Main$dirname = function (a) {
 	return A3($author$project$Main$regexReplace, '/[^/]+$', '', a);
 };
-var $author$project$Eval$dirname__ = A2($author$project$Eval$eval, $elm$json$Json$Decode$string, '__dirname');
+var $author$project$JsCode$dirname__ = A2(
+	$author$project$JsCode$decodeTaskValue,
+	$elm$json$Json$Decode$string,
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(__dirname)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $elm$core$String$fromList = _String_fromList;
 var $elm$core$String$foldr = _String_foldr;
 var $elm$core$String$toList = function (string) {
@@ -3457,6 +3461,7 @@ var $author$project$Generators$Decode$firstToLowerCase = function (a) {
 var $author$project$Generators$Decode$decoderName = function (a) {
 	return $author$project$Generators$Decode$firstToLowerCase(a) + 'Decoder';
 };
+var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Utils$encodeJsonString = function (a) {
 	return A2(
 		$elm$json$Json$Encode$encode,
@@ -4562,11 +4567,11 @@ var $stil4m$elm_syntax$Elm$Processing$ProcessContext = $elm$core$Basics$identity
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $stil4m$elm_syntax$Elm$Processing$init = $elm$core$Dict$empty;
-var $author$project$Eval$mkDir = function (path) {
+var $author$project$JsCode$mkDir = function (_v0) {
 	return A2(
-		$author$project$Eval$eval,
+		$author$project$JsCode$decodeTaskValue,
 		$elm$json$Json$Decode$succeed(0),
-		'require(\'fs\').mkdirSync(' + ($author$project$Eval$toString(path) + ', { recursive: true })'));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').mkdirSync(_v0, { recursive: true }))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $stil4m$elm_syntax$Elm$Syntax$Expression$Application = function (a) {
 	return {$: 1, a: a};
@@ -10928,17 +10933,17 @@ var $stil4m$elm_syntax$Elm$Parser$parse = function (input) {
 		return $elm$core$Result$Err(s);
 	}
 };
-var $author$project$Eval$readFile = function (path) {
+var $author$project$JsCode$readFile = function (_v0) {
 	return A2(
-		$author$project$Eval$eval,
+		$author$project$JsCode$decodeTaskValue,
 		$elm$json$Json$Decode$string,
-		'require(\'fs\').readFileSync(' + ($author$project$Eval$toString(path) + ', \'utf8\')'));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').readFileSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Main$readAndParseElmFile = function (a) {
 	return A2(
 		$elm$core$Task$andThen,
 		function (v) {
-			return $author$project$Eval$resultToTask(
+			return $author$project$JsCode$resultToTask(
 				A2(
 					$elm$core$Result$mapError,
 					function (vv) {
@@ -10946,13 +10951,13 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 					},
 					$stil4m$elm_syntax$Elm$Parser$parse(v)));
 		},
-		$author$project$Eval$readFile(a));
+		$author$project$JsCode$readFile(a));
 };
-var $author$project$Eval$realPath = function (path) {
+var $author$project$JsCode$realPath = function (_v0) {
 	return A2(
-		$author$project$Eval$eval,
+		$author$project$JsCode$decodeTaskValue,
 		$elm$json$Json$Decode$string,
-		'require(\'fs\').realpathSync(' + ($author$project$Eval$toString(path) + ', \'utf8\')'));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').realpathSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
@@ -10961,7 +10966,7 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
-var $author$project$Eval$maybeToTask = F2(
+var $author$project$JsCode$maybeToTask = F2(
 	function (x, a) {
 		if (!a.$) {
 			var b = a.a;
@@ -10988,11 +10993,11 @@ var $author$project$Main$srcFolderPath = function (path) {
 };
 var $author$project$Main$srcFolderPathTask = function (a) {
 	return A2(
-		$author$project$Eval$maybeToTask,
+		$author$project$JsCode$maybeToTask,
 		'Elm file must be inside \"src\" folder.',
 		$author$project$Main$srcFolderPath(a));
 };
-var $author$project$Eval$taskAndThen2 = F3(
+var $author$project$JsCode$taskAndThen2 = F3(
 	function (func, taskA, taskB) {
 		return A2(
 			$elm$core$Task$andThen,
@@ -11006,12 +11011,12 @@ var $author$project$Eval$taskAndThen2 = F3(
 			},
 			taskA);
 	});
-var $author$project$Eval$writeFile = F2(
-	function (path, content) {
+var $author$project$JsCode$writeFile = F2(
+	function (_v0, _v1) {
 		return A2(
-			$author$project$Eval$eval,
+			$author$project$JsCode$decodeTaskValue,
 			$elm$json$Json$Decode$succeed(0),
-			'require(\'fs\').writeFileSync(' + ($author$project$Eval$toString(path) + (', ' + ($author$project$Eval$toString(content) + ')'))));
+_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').writeFileSync(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
 var $author$project$Main$processFile = function (path) {
 	var generateTask = F4(
@@ -11028,31 +11033,31 @@ var $author$project$Main$processFile = function (path) {
 				$elm$core$Task$sequence(
 					_List_fromArray(
 						[
-							$author$project$Eval$mkDir(srcFolder + 'Generated/Basics'),
-							A2($author$project$Eval$copyFile, binPath + '/../src/Generated/Basics/BasicsEncode.elm', srcFolder + 'Generated/Basics/BasicsEncode.elm'),
-							A2($author$project$Eval$copyFile, binPath + '/../src/Generated/Basics/BasicsDecode.elm', srcFolder + 'Generated/Basics/BasicsDecode.elm'),
-							A2($author$project$Eval$copyFile, binPath + '/../src/Generated/Basics/Basics.ts', srcFolder + 'Generated/Basics/Basics.ts'),
-							$author$project$Eval$mkDir(generatedFolder),
+							$author$project$JsCode$mkDir(srcFolder + 'Generated/Basics'),
+							A2($author$project$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsEncode.elm', srcFolder + 'Generated/Basics/BasicsEncode.elm'),
+							A2($author$project$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsDecode.elm', srcFolder + 'Generated/Basics/BasicsDecode.elm'),
+							A2($author$project$JsCode$copyFile, binPath + '/../src/Generated/Basics/Basics.ts', srcFolder + 'Generated/Basics/Basics.ts'),
+							$author$project$JsCode$mkDir(generatedFolder),
 							A2(
-							$author$project$Eval$writeFile,
+							$author$project$JsCode$writeFile,
 							generatedFolder + ('/' + (moduleName + 'Encode.elm')),
 							$author$project$Generators$Encode$fileToElmEncodeModule(file)),
 							A2(
-							$author$project$Eval$writeFile,
+							$author$project$JsCode$writeFile,
 							generatedFolder + ('/' + (moduleName + 'Decode.elm')),
 							$author$project$Generators$Decode$fileToElmDecodeModule(file)),
 							A2(
-							$author$project$Eval$writeFile,
+							$author$project$JsCode$writeFile,
 							generatedFolder + ('/' + (moduleName + '.ts')),
 							$author$project$Generators$TypeScript$fileToTypeScriptDeclaration(file))
 						])));
 		});
 	return A3(
-		$author$project$Eval$taskAndThen2,
+		$author$project$JsCode$taskAndThen2,
 		F2(
 			function (a, b) {
 				return A3(
-					$author$project$Eval$taskAndThen2,
+					$author$project$JsCode$taskAndThen2,
 					F2(
 						function (c, d) {
 							return A4(generateTask, a, b, c, d);
@@ -11060,8 +11065,8 @@ var $author$project$Main$processFile = function (path) {
 					$author$project$Main$srcFolderPathTask(b),
 					$author$project$Main$readAndParseElmFile(b));
 			}),
-		$author$project$Eval$dirname__,
-		$author$project$Eval$realPath(path));
+		$author$project$JsCode$dirname__,
+		$author$project$JsCode$realPath(path));
 };
 var $author$project$Main$usage = 'Usage: elm-json-interop [File.elm ...]';
 var $author$project$Main$run = A2(
@@ -11079,17 +11084,24 @@ var $author$project$Main$run = A2(
 					A2($elm$core$List$map, $author$project$Main$processFile, a)));
 		}
 	},
-	$author$project$Eval$getArguments);
-var $author$project$Main$main = $author$project$Eval$cliProgram(
+	$author$project$JsCode$getArguments);
+var $author$project$Main$main = $author$project$JsCode$cliProgram(
 	A2(
 		$elm$core$Task$attempt,
-		function (_v0) {
+		function (_v1) {
 			return 0;
 		},
 		A2(
 			$elm$core$Task$onError,
-			$author$project$Eval$consoleErrorAndExit,
-			A2($elm$core$Task$andThen, $author$project$Eval$consoleLog, $author$project$Main$run))));
+			function (v) {
+				return A2(
+					$elm$core$Task$andThen,
+					function (_v0) {
+						return $author$project$JsCode$processExit(1);
+					},
+					$author$project$JsCode$consoleError(v));
+			},
+			A2($elm$core$Task$andThen, $author$project$JsCode$consoleLog, $author$project$Main$run))));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
 ;this.Elm.Main.init();
