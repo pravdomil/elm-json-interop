@@ -3298,7 +3298,7 @@ var $elm$core$Result$mapError = F2(
 		}
 	});
 var $elm$core$Task$fail = _Scheduler_fail;
-var $author$project$JsCode$resultToTask = function (a) {
+var $author$project$TaskUtil$resultToTask = function (a) {
 	if (!a.$) {
 		var b = a.a;
 		return $elm$core$Task$succeed(b);
@@ -3312,7 +3312,7 @@ var $author$project$JsCode$decodeTaskValue = F2(
 		return A2(
 			$elm$core$Task$andThen,
 			function (v) {
-				return $author$project$JsCode$resultToTask(
+				return $author$project$TaskUtil$resultToTask(
 					A2(
 						$elm$core$Result$mapError,
 						$elm$json$Json$Decode$errorToString,
@@ -10943,7 +10943,7 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 	return A2(
 		$elm$core$Task$andThen,
 		function (v) {
-			return $author$project$JsCode$resultToTask(
+			return $author$project$TaskUtil$resultToTask(
 				A2(
 					$elm$core$Result$mapError,
 					function (vv) {
@@ -10966,7 +10966,7 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
-var $author$project$JsCode$maybeToTask = F2(
+var $author$project$TaskUtil$maybeToTask = F2(
 	function (x, a) {
 		if (!a.$) {
 			var b = a.a;
@@ -10993,11 +10993,11 @@ var $author$project$Main$srcFolderPath = function (path) {
 };
 var $author$project$Main$srcFolderPathTask = function (a) {
 	return A2(
-		$author$project$JsCode$maybeToTask,
+		$author$project$TaskUtil$maybeToTask,
 		'Elm file must be inside \"src\" folder.',
 		$author$project$Main$srcFolderPath(a));
 };
-var $author$project$JsCode$taskAndThen2 = F3(
+var $author$project$TaskUtil$taskAndThen2 = F3(
 	function (func, taskA, taskB) {
 		return A2(
 			$elm$core$Task$andThen,
@@ -11053,11 +11053,11 @@ var $author$project$Main$processFile = function (path) {
 						])));
 		});
 	return A3(
-		$author$project$JsCode$taskAndThen2,
+		$author$project$TaskUtil$taskAndThen2,
 		F2(
 			function (a, b) {
 				return A3(
-					$author$project$JsCode$taskAndThen2,
+					$author$project$TaskUtil$taskAndThen2,
 					F2(
 						function (c, d) {
 							return A4(generateTask, a, b, c, d);
