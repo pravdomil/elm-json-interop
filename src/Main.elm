@@ -21,7 +21,7 @@ main =
     cliProgram
         (run
             |> Task.andThen consoleLog
-            |> Task.onError consoleErrorAndExit
+            |> Task.onError (\v -> consoleError v |> Task.andThen (\_ -> processExit 1))
             |> Task.attempt (\_ -> ())
         )
 

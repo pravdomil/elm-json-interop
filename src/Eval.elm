@@ -77,11 +77,19 @@ consoleLog message =
         |> eval (Decode.succeed ())
 
 
-{-| To call console.error and kill process with 1 exit code.
+{-| To call console.error function.
 -}
-consoleErrorAndExit : String -> Task Error ()
-consoleErrorAndExit message =
-    ("console.error(" ++ toString message ++ ");process.exit(1);")
+consoleError : String -> Task Error ()
+consoleError message =
+    ("console.error(" ++ toString message ++ ")")
+        |> eval (Decode.succeed ())
+
+
+{-| To kill process with exit code.
+-}
+processExit : Int -> Task Error ()
+processExit a =
+    ("process.exit(" ++ String.fromInt a ++ ")")
         |> eval (Decode.succeed ())
 
 
