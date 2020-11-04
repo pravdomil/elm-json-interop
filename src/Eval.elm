@@ -1,7 +1,8 @@
 module Eval exposing (..)
 
-import Json.Decode as Decode exposing (decodeValue)
+import Json.Decode as Decode exposing (Decoder, decodeValue)
 import Json.Encode as Encode exposing (Value, encode)
+import Task exposing (Task)
 
 
 {-| To define JavaScript error.
@@ -11,11 +12,6 @@ type alias Error =
     , message : String
     , stack : Maybe String
     }
-
-
-{-| -}
-type alias Eval =
-    String -> Decode.Value
 
 
 
@@ -37,24 +33,31 @@ cliProgram init =
 --
 
 
+{-| To run JavaScript code. Function implementation gets replaced by eval() function.
+-}
+eval : Decoder a -> String -> Task Error a
+eval _ _ =
+    Task.fail (Error "NotImplemented" "Function is not implemented." Nothing)
+
+
+
+--
+
+
 {-| To get program arguments.
 -}
-getArguments : Eval -> List String
-getArguments eval =
+getArguments : Task Error (List String)
+getArguments =
     "process.argv"
-        |> eval
-        |> decodeValue (Decode.list Decode.string)
-        |> Result.withDefault []
+        |> eval (Decode.list Decode.string)
 
 
 {-| To get stdin.
 -}
-getStdin : Eval -> Maybe String
-getStdin eval =
+getStdin : Task Error (Maybe String)
+getStdin =
     "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
-        |> eval
-        |> decodeValue (Decode.maybe Decode.string)
-        |> Result.withDefault Nothing
+        |> eval (Decode.maybe Decode.string)
 
 
 
@@ -63,20 +66,18 @@ getStdin eval =
 
 {-| To call console.log function.
 -}
-consoleLog : Eval -> String -> ()
-consoleLog eval message =
+consoleLog : String -> Task Error ()
+consoleLog message =
     ("console.log(" ++ toString message ++ ")")
-        |> eval
-        |> (\_ -> ())
+        |> eval (Decode.succeed ())
 
 
 {-| To call console.error and kill process with 1 exit code.
 -}
-consoleErrorAndExit : Eval -> String -> ()
-consoleErrorAndExit eval message =
+consoleErrorAndExit : String -> Task Error ()
+consoleErrorAndExit message =
     ("console.error(" ++ toString message ++ ");process.exit(1);")
-        |> eval
-        |> (\_ -> ())
+        |> eval (Decode.succeed ())
 
 
 
@@ -85,32 +86,26 @@ consoleErrorAndExit eval message =
 
 {-| To get \_\_filename.
 -}
-filename__ : Eval -> String
-filename__ eval =
+filename__ : Task Error String
+filename__ =
     "__filename"
-        |> eval
-        |> decodeValue Decode.string
-        |> Result.withDefault ""
+        |> eval Decode.string
 
 
 {-| To get \_\_dirname.
 -}
-dirname__ : Eval -> String
-dirname__ eval =
+dirname__ : Task Error String
+dirname__ =
     "__dirname"
-        |> eval
-        |> decodeValue Decode.string
-        |> Result.withDefault ""
+        |> eval Decode.string
 
 
 {-| To get real path.
 -}
-realPath : Eval -> String -> String
-realPath eval path =
+realPath : String -> Task Error String
+realPath path =
     ("require('fs').realpathSync(" ++ toString path ++ ", 'utf8')")
-        |> eval
-        |> decodeValue Decode.string
-        |> Result.withDefault ""
+        |> eval Decode.string
 
 
 
@@ -119,39 +114,34 @@ realPath eval path =
 
 {-| To create directory recursively.
 -}
-mkDir : Eval -> String -> ()
-mkDir eval path =
+mkDir : String -> Task Error ()
+mkDir path =
     ("require('fs').mkdirSync(" ++ toString path ++ ", { recursive: true })")
-        |> eval
-        |> (\_ -> ())
+        |> eval (Decode.succeed ())
 
 
 {-| To read file.
 -}
-readFile : Eval -> String -> String
-readFile eval path =
+readFile : String -> Task Error String
+readFile path =
     ("require('fs').readFileSync(" ++ toString path ++ ", 'utf8')")
-        |> eval
-        |> decodeValue Decode.string
-        |> Result.withDefault ""
+        |> eval Decode.string
 
 
 {-| To write file.
 -}
-writeFile : Eval -> String -> String -> ()
-writeFile eval path content =
+writeFile : String -> String -> Task Error ()
+writeFile path content =
     ("require('fs').writeFileSync(" ++ toString path ++ ", " ++ toString content ++ ")")
-        |> eval
-        |> (\_ -> ())
+        |> eval (Decode.succeed ())
 
 
 {-| To copy file.
 -}
-copyFile : Eval -> String -> String -> ()
-copyFile eval source destination =
+copyFile : String -> String -> Task Error ()
+copyFile source destination =
     ("require('fs').copyFileSync(" ++ toString source ++ ", " ++ toString destination ++ ")")
-        |> eval
-        |> (\_ -> ())
+        |> eval (Decode.succeed ())
 
 
 
