@@ -153,7 +153,7 @@ copyFile _ _ =
 
 
 {-| -}
-decodeTaskValue : Decoder a -> Task String Decode.Value -> Task String a
+decodeTaskValue : Decoder a -> Task Error Decode.Value -> Task Error a
 decodeTaskValue decoder a =
     a
         |> Task.andThen
