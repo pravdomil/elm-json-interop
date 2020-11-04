@@ -26,11 +26,23 @@ cliProgram init =
 --
 
 
-{-| To run JavaScript code. Function implementation gets replaced by eval() function.
+{-| To run JavaScript code. Function implementation gets replaced by eval() function in build step.
 -}
 eval : Decoder a -> String -> Task Error a
-eval _ _ =
-    Task.fail "Function is not implemented."
+eval decoder _ =
+    let
+        evalTask : Task String Decode.Value
+        evalTask =
+            Task.fail "Eval function is not implemented."
+    in
+    evalTask
+        |> Task.andThen
+            (\v ->
+                v
+                    |> Decode.decodeValue decoder
+                    |> Result.mapError Decode.errorToString
+                    |> resultToTask
+            )
 
 
 
