@@ -1,21 +1,14 @@
 module Eval exposing (..)
 
-import Json.Decode as Decode exposing (Decoder, decodeValue)
+import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value, encode)
 import Task exposing (Task)
 
 
-{-| To define JavaScript error.
+{-| To define error.
 -}
 type alias Error =
-    { name : String
-    , message : String
-    , stack : Maybe String
-    }
-
-
-
---
+    String
 
 
 {-| To create command line program.
@@ -37,7 +30,7 @@ cliProgram init =
 -}
 eval : Decoder a -> String -> Task Error a
 eval _ _ =
-    Task.fail (Error "NotImplemented" "Function is not implemented." Nothing)
+    Task.fail "Function is not implemented."
 
 
 
@@ -225,3 +218,29 @@ taskAndThen5 func taskA taskB taskC taskD taskE =
                                     )
                         )
             )
+
+
+
+--
+
+
+{-| -}
+maybeToTask : x -> Maybe a -> Task x a
+maybeToTask x a =
+    case a of
+        Just b ->
+            Task.succeed b
+
+        Nothing ->
+            Task.fail x
+
+
+{-| -}
+resultToTask : Result x a -> Task x a
+resultToTask a =
+    case a of
+        Ok b ->
+            Task.succeed b
+
+        Err b ->
+            Task.fail b
