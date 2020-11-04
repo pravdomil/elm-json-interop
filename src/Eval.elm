@@ -26,23 +26,11 @@ cliProgram init =
 --
 
 
-{-| To run JavaScript code. Function implementation gets replaced by eval() function in build step.
+{-| To run JavaScript code. Function implementation gets replaced by actual function in build step.
 -}
-eval : Decoder a -> String -> Task Error a
-eval decoder _ =
-    let
-        evalTask : Task String Decode.Value
-        evalTask =
-            Task.fail "Eval function is not implemented."
-    in
-    evalTask
-        |> Task.andThen
-            (\v ->
-                v
-                    |> Decode.decodeValue decoder
-                    |> Result.mapError Decode.errorToString
-                    |> resultToTask
-            )
+jsCode : String -> Task String Decode.Value
+jsCode _ =
+    Task.fail "Function is not implemented."
 
 
 
@@ -53,16 +41,16 @@ eval decoder _ =
 -}
 getArguments : Task Error (List String)
 getArguments =
-    "process.argv"
-        |> eval (Decode.list Decode.string)
+    jsCode "process.argv"
+        |> decodeTaskValue (Decode.list Decode.string)
 
 
 {-| To get stdin.
 -}
 getStdin : Task Error (Maybe String)
 getStdin =
-    "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
-        |> eval (Decode.maybe Decode.string)
+    jsCode "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
+        |> decodeTaskValue (Decode.maybe Decode.string)
 
 
 
@@ -72,25 +60,25 @@ getStdin =
 {-| To call console.log function.
 -}
 consoleLog : String -> Task Error ()
-consoleLog message =
-    ("console.log(" ++ toString message ++ ")")
-        |> eval (Decode.succeed ())
+consoleLog _ =
+    jsCode "console.log(_v0)"
+        |> decodeTaskValue (Decode.succeed ())
 
 
 {-| To call console.error function.
 -}
 consoleError : String -> Task Error ()
-consoleError message =
-    ("console.error(" ++ toString message ++ ")")
-        |> eval (Decode.succeed ())
+consoleError _ =
+    jsCode "console.error(_v0)"
+        |> decodeTaskValue (Decode.succeed ())
 
 
 {-| To kill process with exit code.
 -}
 processExit : Int -> Task Error ()
-processExit a =
-    ("process.exit(" ++ String.fromInt a ++ ")")
-        |> eval (Decode.succeed ())
+processExit _ =
+    jsCode "process.exit(_v0)"
+        |> decodeTaskValue (Decode.succeed ())
 
 
 
@@ -101,24 +89,24 @@ processExit a =
 -}
 filename__ : Task Error String
 filename__ =
-    "__filename"
-        |> eval Decode.string
+    jsCode "__filename"
+        |> decodeTaskValue Decode.string
 
 
 {-| To get \_\_dirname.
 -}
 dirname__ : Task Error String
 dirname__ =
-    "__dirname"
-        |> eval Decode.string
+    jsCode "__dirname"
+        |> decodeTaskValue Decode.string
 
 
 {-| To get real path.
 -}
 realPath : String -> Task Error String
-realPath path =
-    ("require('fs').realpathSync(" ++ toString path ++ ", 'utf8')")
-        |> eval Decode.string
+realPath _ =
+    jsCode "require('fs').realpathSync(_v0, 'utf8')"
+        |> decodeTaskValue Decode.string
 
 
 
@@ -128,44 +116,33 @@ realPath path =
 {-| To create directory recursively.
 -}
 mkDir : String -> Task Error ()
-mkDir path =
-    ("require('fs').mkdirSync(" ++ toString path ++ ", { recursive: true })")
-        |> eval (Decode.succeed ())
+mkDir _ =
+    jsCode "require('fs').mkdirSync(_v0, { recursive: true })"
+        |> decodeTaskValue (Decode.succeed ())
 
 
 {-| To read file.
 -}
 readFile : String -> Task Error String
-readFile path =
-    ("require('fs').readFileSync(" ++ toString path ++ ", 'utf8')")
-        |> eval Decode.string
+readFile _ =
+    jsCode "require('fs').readFileSync(_v0, 'utf8')"
+        |> decodeTaskValue Decode.string
 
 
 {-| To write file.
 -}
 writeFile : String -> String -> Task Error ()
-writeFile path content =
-    ("require('fs').writeFileSync(" ++ toString path ++ ", " ++ toString content ++ ")")
-        |> eval (Decode.succeed ())
+writeFile _ _ =
+    jsCode "require('fs').writeFileSync(_v0, _v1)"
+        |> decodeTaskValue (Decode.succeed ())
 
 
 {-| To copy file.
 -}
 copyFile : String -> String -> Task Error ()
-copyFile source destination =
-    ("require('fs').copyFileSync(" ++ toString source ++ ", " ++ toString destination ++ ")")
-        |> eval (Decode.succeed ())
-
-
-
---
-
-
-{-| To encode string into JSON string.
--}
-toString : String -> String
-toString a =
-    a |> Encode.string |> encode 0
+copyFile _ _ =
+    jsCode "require('fs').copyFileSync(_v0, _v1)"
+        |> decodeTaskValue (Decode.succeed ())
 
 
 
@@ -264,3 +241,20 @@ resultToTask a =
 
         Err b ->
             Task.fail b
+
+
+
+--
+
+
+{-| -}
+decodeTaskValue : Decoder a -> Task String Decode.Value -> Task String a
+decodeTaskValue decoder a =
+    a
+        |> Task.andThen
+            (\v ->
+                v
+                    |> Decode.decodeValue decoder
+                    |> Result.mapError Decode.errorToString
+                    |> resultToTask
+            )
