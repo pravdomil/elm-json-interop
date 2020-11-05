@@ -9,7 +9,7 @@ module Example exposing (..)
 type Msg
     = PressedEnter
     | ChangedDraft String
-    | ReceivedMessage { user : User, message : String }
+    | ReceivedMessages (List { user : User, message : String })
     | ClickedExit
 
 
