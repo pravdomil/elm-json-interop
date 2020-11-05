@@ -140,7 +140,7 @@ readAndParseElmFile a =
 basename : String -> String -> String
 basename extension a =
     a
-        |> regexReplace "^.*/" ""
+        |> regexReplace "^.*/" (always "")
         |> (\v ->
                 if v |> String.endsWith extension then
                     v |> String.dropRight (extension |> String.length)
@@ -154,4 +154,4 @@ basename extension a =
 -}
 dirname : String -> String
 dirname a =
-    a |> regexReplace "/[^/]+$" ""
+    a |> regexReplace "/[^/]+$" (always "")

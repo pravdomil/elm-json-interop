@@ -139,9 +139,9 @@ wrapInParentheses a =
 
 {-| To do simple regular expression replace.
 -}
-regexReplace : String -> String -> String -> String
+regexReplace : String -> (String -> String) -> String -> String
 regexReplace regex replacement a =
     a
         |> Regex.replace
             (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
-            (\_ -> replacement)
+            (.match >> replacement)
