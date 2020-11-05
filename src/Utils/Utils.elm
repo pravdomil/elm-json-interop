@@ -1,4 +1,4 @@
-module Utils exposing (..)
+module Utils.Utils exposing (..)
 
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.File exposing (File)

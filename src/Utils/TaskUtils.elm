@@ -1,4 +1,4 @@
-module TaskUtil exposing (..)
+module Utils.TaskUtils exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)

@@ -12,7 +12,7 @@ import Parser exposing (deadEndsToString)
 import Regex
 import String exposing (join, replace)
 import Task exposing (Task)
-import TaskUtil exposing (..)
+import Utils.TaskUtils exposing (..)
 
 
 {-| To define main entry point.
