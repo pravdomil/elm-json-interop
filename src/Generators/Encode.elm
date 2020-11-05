@@ -8,7 +8,7 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
-import String exposing (join)
+import String exposing (join, replace)
 import Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName, wrapInParentheses)
 
 
@@ -205,7 +205,18 @@ typedToEncoder parameter (Node _ ( moduleName, name )) arguments =
                     ""
 
                 _ ->
-                    " " ++ (arguments |> List.map (typeAnnotationToEncoder parameter) |> join " ")
+                    let
+                        nextParameter : String
+                        nextParameter =
+                            (parameter |> replace "." "_") ++ "_"
+                    in
+                    arguments
+                        |> List.map (typeAnnotationToEncoder nextParameter)
+                        |> List.map
+                            (\v ->
+                                "(\\" ++ nextParameter ++ " -> " ++ v ++ " )"
+                            )
+                        |> join " "
     in
     fn ++ arguments_ ++ parameterToString parameter
 
