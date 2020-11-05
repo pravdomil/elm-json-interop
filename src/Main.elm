@@ -7,7 +7,7 @@ import Elm.Syntax.File exposing (File)
 import Generators.Decode exposing (fileToElmDecodeModule)
 import Generators.Encode exposing (fileToElmEncodeModule)
 import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
-import JsCode exposing (..)
+import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
 import String exposing (join, replace)

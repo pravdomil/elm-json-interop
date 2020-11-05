@@ -1,4 +1,4 @@
-module JsCode exposing (..)
+module Interop.JsCode exposing (..)
 
 {-| Read <https://guide.elm-lang.org/interop/limits.html>.
 -}
