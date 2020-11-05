@@ -3369,6 +3369,10 @@ var $author$project$Interop$JsCode$getArguments = A2(
 	$author$project$Utils$TaskUtils$decodeTask,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(process.argv)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -3379,6 +3383,11 @@ var $elm$core$String$dropRight = F2(
 	});
 var $elm$core$String$endsWith = _String_endsWith;
 var $elm$core$String$length = _String_length;
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var $elm$regex$Regex$Match = F4(
 	function (match, index, number, submatches) {
 		return {br: index, bw: match, bz: number, bI: submatches};
@@ -3401,7 +3410,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Main$regexReplace = F3(
+var $author$project$Utils$Utils$regexReplace = F3(
 	function (regex, replacement, a) {
 		return A3(
 			$elm$regex$Regex$replace,
@@ -3409,9 +3418,12 @@ var $author$project$Main$regexReplace = F3(
 				$elm$core$Maybe$withDefault,
 				$elm$regex$Regex$never,
 				$elm$regex$Regex$fromString(regex)),
-			function (_v0) {
-				return replacement;
-			},
+			A2(
+				$elm$core$Basics$composeR,
+				function ($) {
+					return $.bw;
+				},
+				replacement),
 			a);
 	});
 var $author$project$Main$basename = F2(
@@ -3422,7 +3434,11 @@ var $author$project$Main$basename = F2(
 				$elm$core$String$length(extension),
 				v) : v;
 		}(
-			A3($author$project$Main$regexReplace, '^.*/', '', a));
+			A3(
+				$author$project$Utils$Utils$regexReplace,
+				'^.*/',
+				$elm$core$Basics$always(''),
+				a));
 	});
 var $author$project$Interop$JsCode$copyFile = F2(
 	function (_v0, _v1) {
@@ -3432,7 +3448,11 @@ var $author$project$Interop$JsCode$copyFile = F2(
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').copyFileSync(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
 var $author$project$Main$dirname = function (a) {
-	return A3($author$project$Main$regexReplace, '/[^/]+$', '', a);
+	return A3(
+		$author$project$Utils$Utils$regexReplace,
+		'/[^/]+$',
+		$elm$core$Basics$always(''),
+		a);
 };
 var $author$project$Interop$JsCode$dirname__ = A2(
 	$author$project$Utils$TaskUtils$decodeTask,
@@ -4732,11 +4752,6 @@ var $stil4m$elm_syntax$Elm$Processing$findNextSplit = F2(
 							$elm$core$List$drop,
 							$elm$core$List$length(prefix),
 							exps)))));
-	});
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
 	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -6445,10 +6460,6 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$PrefixOperator = function (a) {
 	return {$: 5, a: a};
 };
 var $stil4m$elm_syntax$Elm$Syntax$Expression$UnitExpr = {$: 0};
-var $elm$core$Basics$always = F2(
-	function (a, _v0) {
-		return a;
-	});
 var $stil4m$elm_syntax$Combine$andThen = F2(
 	function (f, _v0) {
 		var p = _v0;
