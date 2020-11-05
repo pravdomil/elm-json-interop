@@ -3270,7 +3270,7 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$core$Platform$worker = _Platform_worker;
-var $author$project$JsCode$cliProgram = function (init) {
+var $author$project$Interop$JsCode$cliProgram = function (init) {
 	return $elm$core$Platform$worker(
 		{
 			bs: function (_v0) {
@@ -3298,7 +3298,7 @@ var $elm$core$Result$mapError = F2(
 		}
 	});
 var $elm$core$Task$fail = _Scheduler_fail;
-var $author$project$TaskUtil$resultToTask = function (a) {
+var $author$project$Utils$TaskUtils$resultToTask = function (a) {
 	if (!a.$) {
 		var b = a.a;
 		return $elm$core$Task$succeed(b);
@@ -3307,12 +3307,12 @@ var $author$project$TaskUtil$resultToTask = function (a) {
 		return $elm$core$Task$fail(b);
 	}
 };
-var $author$project$TaskUtil$decodeTask = F2(
+var $author$project$Utils$TaskUtils$decodeTask = F2(
 	function (decoder, a) {
 		return A2(
 			$elm$core$Task$andThen,
 			function (v) {
-				return $author$project$TaskUtil$resultToTask(
+				return $author$project$Utils$TaskUtils$resultToTask(
 					A2(
 						$elm$core$Result$mapError,
 						$elm$json$Json$Decode$errorToString,
@@ -3320,25 +3320,25 @@ var $author$project$TaskUtil$decodeTask = F2(
 			},
 			a);
 	});
-var $author$project$JsCode$jsCode = function (_v0) {
+var $author$project$Interop$JsCode$jsCode = function (_v0) {
 	return $elm$core$Task$fail('Function is not implemented.');
 };
 var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $author$project$JsCode$consoleError = function (_v0) {
+var $author$project$Interop$JsCode$consoleError = function (_v0) {
 	return A2(
-		$author$project$TaskUtil$decodeTask,
+		$author$project$Utils$TaskUtils$decodeTask,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(console.error(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $author$project$JsCode$consoleLog = function (_v0) {
+var $author$project$Interop$JsCode$consoleLog = function (_v0) {
 	return A2(
-		$author$project$TaskUtil$decodeTask,
+		$author$project$Utils$TaskUtils$decodeTask,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(console.log(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $author$project$JsCode$processExit = function (_v0) {
+var $author$project$Interop$JsCode$processExit = function (_v0) {
 	return A2(
-		$author$project$TaskUtil$decodeTask,
+		$author$project$Utils$TaskUtils$decodeTask,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(process.exit(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
@@ -3365,8 +3365,8 @@ var $elm$core$List$drop = F2(
 	});
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$JsCode$getArguments = A2(
-	$author$project$TaskUtil$decodeTask,
+var $author$project$Interop$JsCode$getArguments = A2(
+	$author$project$Utils$TaskUtils$decodeTask,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(process.argv)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $elm$core$Basics$negate = function (n) {
@@ -3424,18 +3424,18 @@ var $author$project$Main$basename = F2(
 		}(
 			A3($author$project$Main$regexReplace, '^.*/', '', a));
 	});
-var $author$project$JsCode$copyFile = F2(
+var $author$project$Interop$JsCode$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
-			$author$project$TaskUtil$decodeTask,
+			$author$project$Utils$TaskUtils$decodeTask,
 			$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').copyFileSync(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
 var $author$project$Main$dirname = function (a) {
 	return A3($author$project$Main$regexReplace, '/[^/]+$', '', a);
 };
-var $author$project$JsCode$dirname__ = A2(
-	$author$project$TaskUtil$decodeTask,
+var $author$project$Interop$JsCode$dirname__ = A2(
+	$author$project$Utils$TaskUtils$decodeTask,
 	$elm$json$Json$Decode$string,
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(__dirname)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $elm$core$String$fromList = _String_fromList;
@@ -3462,7 +3462,7 @@ var $author$project$Generators$Decode$decoderName = function (a) {
 	return $author$project$Generators$Decode$firstToLowerCase(a) + 'Decoder';
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Utils$encodeJsonString = function (a) {
+var $author$project$Utils$Utils$encodeJsonString = function (a) {
 	return A2(
 		$elm$json$Json$Encode$encode,
 		0,
@@ -3473,7 +3473,7 @@ var $elm$core$String$fromChar = function (_char) {
 	return A2($elm$core$String$cons, _char, '');
 };
 var $elm$core$Char$fromCode = _Char_fromCode;
-var $author$project$Utils$letterByInt = function (a) {
+var $author$project$Utils$Utils$letterByInt = function (a) {
 	return $elm$core$String$fromChar(
 		$elm$core$Char$fromCode(a + 97));
 };
@@ -3485,7 +3485,7 @@ var $author$project$Generators$Decode$mapFn = function (a) {
 		return 'map' + $elm$core$String$fromInt(b);
 	}
 };
-var $author$project$Utils$elmKeywords = _List_fromArray(
+var $author$project$Utils$Utils$elmKeywords = _List_fromArray(
 	['module', 'where', 'import', 'as', 'exposing', 'if', 'then', 'else', 'case', 'of', 'let', 'in', 'type', 'port', 'infix']);
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -3517,7 +3517,7 @@ var $elm$core$List$member = F2(
 			},
 			xs);
 	});
-var $author$project$Utils$normalizeRecordFieldName = function (a) {
+var $author$project$Utils$Utils$normalizeRecordFieldName = function (a) {
 	var putUnderScoreToFront = function (v) {
 		return A2($elm$core$String$endsWith, '_', v) ? ('_' + A2($elm$core$String$dropRight, 1, v)) : v;
 	};
@@ -3525,7 +3525,7 @@ var $author$project$Utils$normalizeRecordFieldName = function (a) {
 		return A2(
 			$elm$core$List$member,
 			A2($elm$core$String$dropRight, 1, v),
-			$author$project$Utils$elmKeywords) ? A2($elm$core$String$dropRight, 1, v) : v;
+			$author$project$Utils$Utils$elmKeywords) ? A2($elm$core$String$dropRight, 1, v) : v;
 	};
 	return putUnderScoreToFront(
 		dropUnderscoreIfKeyword(a));
@@ -3544,7 +3544,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
 	var v = _v0.b;
 	return v;
 };
-var $author$project$Utils$wrapInParentheses = function (a) {
+var $author$project$Utils$Utils$wrapInParentheses = function (a) {
 	return '(' + (a + ')');
 };
 var $author$project$Generators$Decode$elementAtDecoder = F2(
@@ -3566,8 +3566,8 @@ var $author$project$Generators$Decode$recordFieldToDecoder = function (_v7) {
 			return 'field';
 		}
 	}();
-	return '(' + (decoder + (' ' + ($author$project$Utils$encodeJsonString(
-		$author$project$Utils$normalizeRecordFieldName(a)) + (' ' + ($author$project$Generators$Decode$typeAnnotationToDecoder(b) + ')')))));
+	return '(' + (decoder + (' ' + ($author$project$Utils$Utils$encodeJsonString(
+		$author$project$Utils$Utils$normalizeRecordFieldName(a)) + (' ' + ($author$project$Generators$Decode$typeAnnotationToDecoder(b) + ')')))));
 };
 var $author$project$Generators$Decode$recordToDecoder = function (a) {
 	var parameters = A2(
@@ -3577,7 +3577,7 @@ var $author$project$Generators$Decode$recordToDecoder = function (a) {
 			$elm$core$List$indexedMap,
 			F2(
 				function (i, _v6) {
-					return $author$project$Utils$letterByInt(i);
+					return $author$project$Utils$Utils$letterByInt(i);
 				}),
 			a));
 	var fields = A2(
@@ -3588,7 +3588,7 @@ var $author$project$Generators$Decode$recordToDecoder = function (a) {
 			F2(
 				function (i, b) {
 					return $stil4m$elm_syntax$Elm$Syntax$Node$value(
-						$stil4m$elm_syntax$Elm$Syntax$Node$value(b).a) + (' = ' + $author$project$Utils$letterByInt(i));
+						$stil4m$elm_syntax$Elm$Syntax$Node$value(b).a) + (' = ' + $author$project$Utils$Utils$letterByInt(i));
 				}),
 			a));
 	var constructorFn = '(\\' + (parameters + (' -> { ' + (fields + ' })')));
@@ -3608,7 +3608,7 @@ var $author$project$Generators$Decode$tupleToDecoder = function (a) {
 		$elm$core$List$length(a)) + (' ' + _arguments)));
 };
 var $author$project$Generators$Decode$typeAnnotationToDecoder = function (a) {
-	return $author$project$Utils$wrapInParentheses(
+	return $author$project$Utils$Utils$wrapInParentheses(
 		function () {
 			var _v4 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
 			switch (_v4.$) {
@@ -3714,7 +3714,7 @@ var $author$project$Generators$Decode$customTypeConstructorToDecoder = function 
 				$elm$core$List$length(a.P)) + (' A.' + (name + (' ' + _arguments)));
 		}
 	}();
-	return $author$project$Utils$encodeJsonString(name) + (' -> ' + decoder);
+	return $author$project$Utils$Utils$encodeJsonString(name) + (' -> ' + decoder);
 };
 var $elm$core$String$contains = _String_contains;
 var $elm$core$Maybe$map = F2(
@@ -3779,7 +3779,7 @@ var $author$project$Generators$Decode$typeToDecoder = F2(
 		return _Utils_ap(signature, declaration);
 	});
 var $author$project$Generators$Decode$customTypeToDecoder = function (a) {
-	var fail = '\n    _ -> fail (\"I can\'t decode \" ++ ' + ($author$project$Utils$encodeJsonString(
+	var fail = '\n    _ -> fail (\"I can\'t decode \" ++ ' + ($author$project$Utils$Utils$encodeJsonString(
 		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)) + ' ++ \", what \" ++ tag ++ \" means?\")');
 	var cases = A2(
 		$elm$core$String$join,
@@ -3821,11 +3821,11 @@ var $stil4m$elm_syntax$Elm$Syntax$Module$moduleName = function (m) {
 			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.aJ);
 	}
 };
-var $author$project$Utils$moduleNameToString = function (a) {
+var $author$project$Utils$Utils$moduleNameToString = function (a) {
 	return A2($elm$core$String$join, '.', a);
 };
-var $author$project$Utils$fileToModuleName = function (a) {
-	return $author$project$Utils$moduleNameToString(
+var $author$project$Utils$Utils$fileToModuleName = function (a) {
+	return $author$project$Utils$Utils$moduleNameToString(
 		$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
 			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.bx)));
 };
@@ -3856,7 +3856,7 @@ var $elm$core$Maybe$andThen = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
-var $author$project$Utils$moduleImports = F2(
+var $author$project$Utils$Utils$moduleImports = F2(
 	function (toImport_, a) {
 		var onlyExplicitImports = function (b) {
 			var _v5 = $stil4m$elm_syntax$Elm$Syntax$Node$value(b).bm;
@@ -3939,19 +3939,19 @@ var $author$project$Generators$Decode$fileToElmDecodeModule = function (a) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Generated.' + ($author$project$Utils$fileToModuleName(a) + 'Decode exposing (..)'),
+				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + 'Decode exposing (..)'),
 				'',
-				'import ' + ($author$project$Utils$fileToModuleName(a) + ' as A'),
+				'import ' + ($author$project$Utils$Utils$fileToModuleName(a) + ' as A'),
 				'import Generated.Basics.BasicsDecode exposing (..)',
 				'import Json.Decode exposing (..)',
 				A2(
 				$elm$core$String$join,
 				'\n',
 				A2(
-					$author$project$Utils$moduleImports,
+					$author$project$Utils$Utils$moduleImports,
 					F2(
 						function (v, vv) {
-							return 'import Generated.' + ($author$project$Utils$moduleNameToString(v) + ('Decode exposing (' + (A2(
+							return 'import Generated.' + ($author$project$Utils$Utils$moduleNameToString(v) + ('Decode exposing (' + (A2(
 								$elm$core$String$join,
 								', ',
 								A2($elm$core$List$map, $author$project$Generators$Decode$decoderName, vv)) + ')')));
@@ -3969,7 +3969,7 @@ var $author$project$Generators$Encode$encoderName = function (a) {
 	return 'encode' + a;
 };
 var $author$project$Generators$Encode$parameterToString = function (a) {
-	return ' ' + $author$project$Utils$wrapInParentheses(a);
+	return ' ' + $author$project$Utils$Utils$wrapInParentheses(a);
 };
 var $elm$core$String$replace = F3(
 	function (before, after, string) {
@@ -3984,8 +3984,8 @@ var $author$project$Generators$Encode$recordFieldToEncoder = F2(
 		var _v9 = _v8.a;
 		var a = _v9.b;
 		var b = _v8.b;
-		return '( ' + ($author$project$Utils$encodeJsonString(
-			$author$project$Utils$normalizeRecordFieldName(a)) + (', ' + (A2($author$project$Generators$Encode$typeAnnotationToEncoder, parameter + ('.' + a), b) + ' )')));
+		return '( ' + ($author$project$Utils$Utils$encodeJsonString(
+			$author$project$Utils$Utils$normalizeRecordFieldName(a)) + (', ' + (A2($author$project$Generators$Encode$typeAnnotationToEncoder, parameter + ('.' + a), b) + ' )')));
 	});
 var $author$project$Generators$Encode$recordToEncoder = F2(
 	function (parameter, a) {
@@ -4000,7 +4000,7 @@ var $author$project$Generators$Encode$recordToEncoder = F2(
 var $author$project$Generators$Encode$tupleToEncoder = F2(
 	function (parameter, a) {
 		var parameterFromInt = function (i) {
-			return parameter + ('_' + $author$project$Utils$letterByInt(i));
+			return parameter + ('_' + $author$project$Utils$Utils$letterByInt(i));
 		};
 		var parameters = A2(
 			$elm$core$String$join,
@@ -4026,7 +4026,7 @@ var $author$project$Generators$Encode$tupleToEncoder = F2(
 	});
 var $author$project$Generators$Encode$typeAnnotationToEncoder = F2(
 	function (parameter, a) {
-		return $author$project$Utils$wrapInParentheses(
+		return $author$project$Utils$Utils$wrapInParentheses(
 			function () {
 				var _v4 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
 				switch (_v4.$) {
@@ -4138,7 +4138,7 @@ var $author$project$Generators$Encode$customTypeConstructorToEncoder = function 
 					$elm$core$List$indexedMap,
 					F2(
 						function (i, _v2) {
-							return $author$project$Utils$letterByInt(i + 1);
+							return $author$project$Utils$Utils$letterByInt(i + 1);
 						}),
 					a.P));
 		}
@@ -4147,7 +4147,7 @@ var $author$project$Generators$Encode$customTypeConstructorToEncoder = function 
 		function (i, b) {
 			return A2(
 				$author$project$Generators$Encode$typeAnnotationToEncoder,
-				$author$project$Utils$letterByInt(1 + i),
+				$author$project$Utils$Utils$letterByInt(1 + i),
 				b);
 		});
 	var encoder = A2(
@@ -4155,7 +4155,7 @@ var $author$project$Generators$Encode$customTypeConstructorToEncoder = function 
 		', ',
 		A2(
 			$elm$core$List$cons,
-			'string ' + $author$project$Utils$encodeJsonString(name),
+			'string ' + $author$project$Utils$Utils$encodeJsonString(name),
 			A2($elm$core$List$indexedMap, argToEncoder, a.P)));
 	return 'A.' + (name + (_arguments + (' -> list identity [ ' + (encoder + ' ]'))));
 };
@@ -4198,7 +4198,7 @@ var $author$project$Generators$Encode$customTypeToEncoder = function (a) {
 var $author$project$Generators$Encode$typeAliasToEncoder = function (a) {
 	return $author$project$Generators$Encode$typeToEncoder(a) + (' ' + A2(
 		$author$project$Generators$Encode$typeAnnotationToEncoder,
-		$author$project$Utils$letterByInt(0),
+		$author$project$Utils$Utils$letterByInt(0),
 		a.bL));
 };
 var $author$project$Generators$Encode$declarationToEncoder = function (a) {
@@ -4222,19 +4222,19 @@ var $author$project$Generators$Encode$fileToElmEncodeModule = function (a) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Generated.' + ($author$project$Utils$fileToModuleName(a) + 'Encode exposing (..)'),
+				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + 'Encode exposing (..)'),
 				'',
-				'import ' + ($author$project$Utils$fileToModuleName(a) + ' as A'),
+				'import ' + ($author$project$Utils$Utils$fileToModuleName(a) + ' as A'),
 				'import Generated.Basics.BasicsEncode exposing (..)',
 				'import Json.Encode exposing (..)',
 				A2(
 				$elm$core$String$join,
 				'\n',
 				A2(
-					$author$project$Utils$moduleImports,
+					$author$project$Utils$Utils$moduleImports,
 					F2(
 						function (v, vv) {
-							return 'import Generated.' + ($author$project$Utils$moduleNameToString(v) + ('Encode exposing (' + (A2(
+							return 'import Generated.' + ($author$project$Utils$Utils$moduleNameToString(v) + ('Encode exposing (' + (A2(
 								$elm$core$String$join,
 								', ',
 								A2($elm$core$List$map, $author$project$Generators$Encode$encoderName, vv)) + ')')));
@@ -4282,7 +4282,7 @@ var $author$project$Generators$TypeScript$recordFieldToTs = function (_v6) {
 			return '';
 		}
 	}();
-	return $author$project$Utils$normalizeRecordFieldName(a) + (maybeField + (': ' + $author$project$Generators$TypeScript$typeAnnotationToTs(b)));
+	return $author$project$Utils$Utils$normalizeRecordFieldName(a) + (maybeField + (': ' + $author$project$Generators$TypeScript$typeAnnotationToTs(b)));
 };
 var $author$project$Generators$TypeScript$recordToTs = function (a) {
 	return '{ ' + (A2(
@@ -4389,7 +4389,7 @@ var $author$project$Generators$TypeScript$customTypeTagToTs = function (a) {
 	var toTagNameConstant = function (b) {
 		var tag = $stil4m$elm_syntax$Elm$Syntax$Node$value(
 			$stil4m$elm_syntax$Elm$Syntax$Node$value(b).T);
-		return 'export const ' + (tag + (' = ' + $author$project$Utils$encodeJsonString(tag)));
+		return 'export const ' + (tag + (' = ' + $author$project$Utils$Utils$encodeJsonString(tag)));
 	};
 	return A2(
 		$elm$core$String$join,
@@ -4539,7 +4539,7 @@ var $author$project$Generators$TypeScript$fileToTypeScriptDeclaration = function
 				$elm$core$String$join,
 				'\n',
 				A2(
-					$author$project$Utils$moduleImports,
+					$author$project$Utils$Utils$moduleImports,
 					F2(
 						function (v, vv) {
 							return 'import { ' + (A2($elm$core$String$join, ', ', vv) + (' } from \"' + (root + (A2($elm$core$String$join, '/', v) + '\"'))));
@@ -4557,9 +4557,9 @@ var $stil4m$elm_syntax$Elm$Processing$ProcessContext = $elm$core$Basics$identity
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $stil4m$elm_syntax$Elm$Processing$init = $elm$core$Dict$empty;
-var $author$project$JsCode$mkDir = function (_v0) {
+var $author$project$Interop$JsCode$mkDir = function (_v0) {
 	return A2(
-		$author$project$TaskUtil$decodeTask,
+		$author$project$Utils$TaskUtils$decodeTask,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').mkdirSync(_v0, { recursive: true }))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
@@ -10923,9 +10923,9 @@ var $stil4m$elm_syntax$Elm$Parser$parse = function (input) {
 		return $elm$core$Result$Err(s);
 	}
 };
-var $author$project$JsCode$readFile = function (_v0) {
+var $author$project$Interop$JsCode$readFile = function (_v0) {
 	return A2(
-		$author$project$TaskUtil$decodeTask,
+		$author$project$Utils$TaskUtils$decodeTask,
 		$elm$json$Json$Decode$string,
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').readFileSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
@@ -10933,7 +10933,7 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 	return A2(
 		$elm$core$Task$andThen,
 		function (v) {
-			return $author$project$TaskUtil$resultToTask(
+			return $author$project$Utils$TaskUtils$resultToTask(
 				A2(
 					$elm$core$Result$mapError,
 					function (vv) {
@@ -10941,15 +10941,15 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 					},
 					$stil4m$elm_syntax$Elm$Parser$parse(v)));
 		},
-		$author$project$JsCode$readFile(a));
+		$author$project$Interop$JsCode$readFile(a));
 };
-var $author$project$JsCode$realPath = function (_v0) {
+var $author$project$Interop$JsCode$realPath = function (_v0) {
 	return A2(
-		$author$project$TaskUtil$decodeTask,
+		$author$project$Utils$TaskUtils$decodeTask,
 		$elm$json$Json$Decode$string,
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').realpathSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $author$project$TaskUtil$maybeToTask = F2(
+var $author$project$Utils$TaskUtils$maybeToTask = F2(
 	function (x, a) {
 		if (!a.$) {
 			var b = a.a;
@@ -10976,11 +10976,11 @@ var $author$project$Main$srcFolderPath = function (path) {
 };
 var $author$project$Main$srcFolderPathTask = function (a) {
 	return A2(
-		$author$project$TaskUtil$maybeToTask,
+		$author$project$Utils$TaskUtils$maybeToTask,
 		'Elm file must be inside \"src\" folder.',
 		$author$project$Main$srcFolderPath(a));
 };
-var $author$project$TaskUtil$taskAndThen2 = F3(
+var $author$project$Utils$TaskUtils$taskAndThen2 = F3(
 	function (func, taskA, taskB) {
 		return A2(
 			$elm$core$Task$andThen,
@@ -10994,10 +10994,10 @@ var $author$project$TaskUtil$taskAndThen2 = F3(
 			},
 			taskA);
 	});
-var $author$project$JsCode$writeFile = F2(
+var $author$project$Interop$JsCode$writeFile = F2(
 	function (_v0, _v1) {
 		return A2(
-			$author$project$TaskUtil$decodeTask,
+			$author$project$Utils$TaskUtils$decodeTask,
 			$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').writeFileSync(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
@@ -11016,31 +11016,31 @@ var $author$project$Main$processFile = function (path) {
 				$elm$core$Task$sequence(
 					_List_fromArray(
 						[
-							$author$project$JsCode$mkDir(srcFolder + 'Generated/Basics'),
-							A2($author$project$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsEncode.elm', srcFolder + 'Generated/Basics/BasicsEncode.elm'),
-							A2($author$project$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsDecode.elm', srcFolder + 'Generated/Basics/BasicsDecode.elm'),
-							A2($author$project$JsCode$copyFile, binPath + '/../src/Generated/Basics/Basics.ts', srcFolder + 'Generated/Basics/Basics.ts'),
-							$author$project$JsCode$mkDir(generatedFolder),
+							$author$project$Interop$JsCode$mkDir(srcFolder + 'Generated/Basics'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsEncode.elm', srcFolder + 'Generated/Basics/BasicsEncode.elm'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsDecode.elm', srcFolder + 'Generated/Basics/BasicsDecode.elm'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/Basics.ts', srcFolder + 'Generated/Basics/Basics.ts'),
+							$author$project$Interop$JsCode$mkDir(generatedFolder),
 							A2(
-							$author$project$JsCode$writeFile,
+							$author$project$Interop$JsCode$writeFile,
 							generatedFolder + ('/' + (moduleName + 'Encode.elm')),
 							$author$project$Generators$Encode$fileToElmEncodeModule(file)),
 							A2(
-							$author$project$JsCode$writeFile,
+							$author$project$Interop$JsCode$writeFile,
 							generatedFolder + ('/' + (moduleName + 'Decode.elm')),
 							$author$project$Generators$Decode$fileToElmDecodeModule(file)),
 							A2(
-							$author$project$JsCode$writeFile,
+							$author$project$Interop$JsCode$writeFile,
 							generatedFolder + ('/' + (moduleName + '.ts')),
 							$author$project$Generators$TypeScript$fileToTypeScriptDeclaration(file))
 						])));
 		});
 	return A3(
-		$author$project$TaskUtil$taskAndThen2,
+		$author$project$Utils$TaskUtils$taskAndThen2,
 		F2(
 			function (a, b) {
 				return A3(
-					$author$project$TaskUtil$taskAndThen2,
+					$author$project$Utils$TaskUtils$taskAndThen2,
 					F2(
 						function (c, d) {
 							return A4(generateTask, a, b, c, d);
@@ -11048,8 +11048,8 @@ var $author$project$Main$processFile = function (path) {
 					$author$project$Main$srcFolderPathTask(b),
 					$author$project$Main$readAndParseElmFile(b));
 			}),
-		$author$project$JsCode$dirname__,
-		$author$project$JsCode$realPath(path));
+		$author$project$Interop$JsCode$dirname__,
+		$author$project$Interop$JsCode$realPath(path));
 };
 var $author$project$Main$usage = 'Usage: elm-json-interop [File.elm ...]';
 var $author$project$Main$run = A2(
@@ -11067,8 +11067,8 @@ var $author$project$Main$run = A2(
 					A2($elm$core$List$map, $author$project$Main$processFile, a)));
 		}
 	},
-	$author$project$JsCode$getArguments);
-var $author$project$Main$main = $author$project$JsCode$cliProgram(
+	$author$project$Interop$JsCode$getArguments);
+var $author$project$Main$main = $author$project$Interop$JsCode$cliProgram(
 	A2(
 		$elm$core$Task$attempt,
 		function (_v1) {
@@ -11080,11 +11080,11 @@ var $author$project$Main$main = $author$project$JsCode$cliProgram(
 				return A2(
 					$elm$core$Task$andThen,
 					function (_v0) {
-						return $author$project$JsCode$processExit(1);
+						return $author$project$Interop$JsCode$processExit(1);
 					},
-					$author$project$JsCode$consoleError(v));
+					$author$project$Interop$JsCode$consoleError(v));
 			},
-			A2($elm$core$Task$andThen, $author$project$JsCode$consoleLog, $author$project$Main$run))));
+			A2($elm$core$Task$andThen, $author$project$Interop$JsCode$consoleLog, $author$project$Main$run))));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
 this.Elm.Main.init();
