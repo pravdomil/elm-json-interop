@@ -3969,13 +3969,15 @@ var $author$project$Generators$Encode$encoderName = function (a) {
 	return 'encode' + a;
 };
 var $author$project$Generators$Encode$parameterToString = function (a) {
-	if (!a.$) {
-		var b = a.a;
-		return ' ' + $author$project$Utils$wrapInParentheses(b);
-	} else {
-		return '';
-	}
+	return ' ' + $author$project$Utils$wrapInParentheses(a);
 };
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $author$project$Generators$Encode$recordFieldToEncoder = F2(
 	function (parameter, _v7) {
 		var _v8 = _v7.b;
@@ -3983,15 +3985,7 @@ var $author$project$Generators$Encode$recordFieldToEncoder = F2(
 		var a = _v9.b;
 		var b = _v8.b;
 		return '( ' + ($author$project$Utils$encodeJsonString(
-			$author$project$Utils$normalizeRecordFieldName(a)) + (', ' + (A2(
-			$author$project$Generators$Encode$typeAnnotationToEncoder,
-			A2(
-				$elm$core$Maybe$map,
-				function (v) {
-					return v + ('.' + a);
-				},
-				parameter),
-			b) + ' )')));
+			$author$project$Utils$normalizeRecordFieldName(a)) + (', ' + (A2($author$project$Generators$Encode$typeAnnotationToEncoder, parameter + ('.' + a), b) + ' )')));
 	});
 var $author$project$Generators$Encode$recordToEncoder = F2(
 	function (parameter, a) {
@@ -4006,26 +4000,18 @@ var $author$project$Generators$Encode$recordToEncoder = F2(
 var $author$project$Generators$Encode$tupleToEncoder = F2(
 	function (parameter, a) {
 		var parameterFromInt = function (i) {
-			return A2(
-				$elm$core$Maybe$map,
-				function (v) {
-					return v + ('_' + $author$project$Utils$letterByInt(i));
-				},
-				parameter);
+			return parameter + ('_' + $author$project$Utils$letterByInt(i));
 		};
 		var parameters = A2(
 			$elm$core$String$join,
 			', ',
 			A2(
-				$elm$core$List$filterMap,
-				$elm$core$Basics$identity,
-				A2(
-					$elm$core$List$indexedMap,
-					F2(
-						function (i, _v6) {
-							return parameterFromInt(i);
-						}),
-					a)));
+				$elm$core$List$indexedMap,
+				F2(
+					function (i, _v6) {
+						return parameterFromInt(i);
+					}),
+				a));
 		var toEncoder = F2(
 			function (i, b) {
 				return A2(
@@ -4116,13 +4102,19 @@ var $author$project$Generators$Encode$typedToEncoder = F3(
 			if (!_arguments.b) {
 				return '';
 			} else {
-				return ' ' + A2(
+				var nextParameter = A3($elm$core$String$replace, '.', '_', parameter) + '_';
+				return A2(
 					$elm$core$String$join,
 					' ',
 					A2(
 						$elm$core$List$map,
-						$author$project$Generators$Encode$typeAnnotationToEncoder($elm$core$Maybe$Nothing),
-						_arguments));
+						function (v) {
+							return '(\\' + (nextParameter + (' -> ' + (v + ' )')));
+						},
+						A2(
+							$elm$core$List$map,
+							$author$project$Generators$Encode$typeAnnotationToEncoder(nextParameter),
+							_arguments)));
 			}
 		}();
 		return _Utils_ap(
@@ -4155,8 +4147,7 @@ var $author$project$Generators$Encode$customTypeConstructorToEncoder = function 
 		function (i, b) {
 			return A2(
 				$author$project$Generators$Encode$typeAnnotationToEncoder,
-				$elm$core$Maybe$Just(
-					$author$project$Utils$letterByInt(1 + i)),
+				$author$project$Utils$letterByInt(1 + i),
 				b);
 		});
 	var encoder = A2(
@@ -4207,8 +4198,7 @@ var $author$project$Generators$Encode$customTypeToEncoder = function (a) {
 var $author$project$Generators$Encode$typeAliasToEncoder = function (a) {
 	return $author$project$Generators$Encode$typeToEncoder(a) + (' ' + A2(
 		$author$project$Generators$Encode$typeAnnotationToEncoder,
-		$elm$core$Maybe$Just(
-			$author$project$Utils$letterByInt(0)),
+		$author$project$Utils$letterByInt(0),
 		a.bL));
 };
 var $author$project$Generators$Encode$declarationToEncoder = function (a) {
@@ -10959,13 +10949,6 @@ var $author$project$JsCode$realPath = function (_v0) {
 		$elm$json$Json$Decode$string,
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').realpathSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
 var $author$project$TaskUtil$maybeToTask = F2(
 	function (x, a) {
 		if (!a.$) {
