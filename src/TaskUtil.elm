@@ -1,5 +1,6 @@
 module TaskUtil exposing (..)
 
+import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
 
 
@@ -95,3 +96,20 @@ resultToTask a =
 
         Err b ->
             Task.fail b
+
+
+
+--
+
+
+{-| -}
+decodeTask : Decoder a -> Task String Decode.Value -> Task String a
+decodeTask decoder a =
+    a
+        |> Task.andThen
+            (\v ->
+                v
+                    |> Decode.decodeValue decoder
+                    |> Result.mapError Decode.errorToString
+                    |> resultToTask
+            )

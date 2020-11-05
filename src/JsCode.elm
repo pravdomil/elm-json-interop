@@ -5,7 +5,7 @@ module JsCode exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
-import TaskUtil exposing (resultToTask)
+import TaskUtil exposing (decodeTask)
 
 
 {-| To define error.
@@ -45,7 +45,7 @@ jsCode _ =
 getArguments : Task Error (List String)
 getArguments =
     jsCode "process.argv"
-        |> decodeTaskValue (Decode.list Decode.string)
+        |> decodeTask (Decode.list Decode.string)
 
 
 {-| To get stdin.
@@ -53,7 +53,7 @@ getArguments =
 getStdin : Task Error (Maybe String)
 getStdin =
     jsCode "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
-        |> decodeTaskValue (Decode.maybe Decode.string)
+        |> decodeTask (Decode.maybe Decode.string)
 
 
 
@@ -65,7 +65,7 @@ getStdin =
 consoleLog : String -> Task Error ()
 consoleLog _ =
     jsCode "console.log(_v0)"
-        |> decodeTaskValue (Decode.succeed ())
+        |> decodeTask (Decode.succeed ())
 
 
 {-| To call console.error function.
@@ -73,7 +73,7 @@ consoleLog _ =
 consoleError : String -> Task Error ()
 consoleError _ =
     jsCode "console.error(_v0)"
-        |> decodeTaskValue (Decode.succeed ())
+        |> decodeTask (Decode.succeed ())
 
 
 {-| To kill process with exit code.
@@ -81,7 +81,7 @@ consoleError _ =
 processExit : Int -> Task Error ()
 processExit _ =
     jsCode "process.exit(_v0)"
-        |> decodeTaskValue (Decode.succeed ())
+        |> decodeTask (Decode.succeed ())
 
 
 
@@ -93,7 +93,7 @@ processExit _ =
 filename__ : Task Error String
 filename__ =
     jsCode "__filename"
-        |> decodeTaskValue Decode.string
+        |> decodeTask Decode.string
 
 
 {-| To get \_\_dirname.
@@ -101,7 +101,7 @@ filename__ =
 dirname__ : Task Error String
 dirname__ =
     jsCode "__dirname"
-        |> decodeTaskValue Decode.string
+        |> decodeTask Decode.string
 
 
 {-| To get real path.
@@ -109,7 +109,7 @@ dirname__ =
 realPath : String -> Task Error String
 realPath _ =
     jsCode "require('fs').realpathSync(_v0, 'utf8')"
-        |> decodeTaskValue Decode.string
+        |> decodeTask Decode.string
 
 
 
@@ -121,7 +121,7 @@ realPath _ =
 mkDir : String -> Task Error ()
 mkDir _ =
     jsCode "require('fs').mkdirSync(_v0, { recursive: true })"
-        |> decodeTaskValue (Decode.succeed ())
+        |> decodeTask (Decode.succeed ())
 
 
 {-| To read file.
@@ -129,7 +129,7 @@ mkDir _ =
 readFile : String -> Task Error String
 readFile _ =
     jsCode "require('fs').readFileSync(_v0, 'utf8')"
-        |> decodeTaskValue Decode.string
+        |> decodeTask Decode.string
 
 
 {-| To write file.
@@ -137,7 +137,7 @@ readFile _ =
 writeFile : String -> String -> Task Error ()
 writeFile _ _ =
     jsCode "require('fs').writeFileSync(_v0, _v1)"
-        |> decodeTaskValue (Decode.succeed ())
+        |> decodeTask (Decode.succeed ())
 
 
 {-| To copy file.
@@ -145,21 +145,4 @@ writeFile _ _ =
 copyFile : String -> String -> Task Error ()
 copyFile _ _ =
     jsCode "require('fs').copyFileSync(_v0, _v1)"
-        |> decodeTaskValue (Decode.succeed ())
-
-
-
---
-
-
-{-| -}
-decodeTaskValue : Decoder a -> Task Error Decode.Value -> Task Error a
-decodeTaskValue decoder a =
-    a
-        |> Task.andThen
-            (\v ->
-                v
-                    |> Decode.decodeValue decoder
-                    |> Result.mapError Decode.errorToString
-                    |> resultToTask
-            )
+        |> decodeTask (Decode.succeed ())
