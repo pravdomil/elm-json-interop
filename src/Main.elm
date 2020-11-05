@@ -13,6 +13,7 @@ import Regex
 import String exposing (join, replace)
 import Task exposing (Task)
 import Utils.TaskUtils exposing (..)
+import Utils.Utils exposing (regexReplace)
 
 
 {-| To define main entry point.
@@ -154,13 +155,3 @@ basename extension a =
 dirname : String -> String
 dirname a =
     a |> regexReplace "/[^/]+$" ""
-
-
-{-| To do simple regular expression replace.
--}
-regexReplace : String -> String -> String -> String
-regexReplace regex replacement a =
-    a
-        |> Regex.replace
-            (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
-            (\_ -> replacement)

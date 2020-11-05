@@ -7,6 +7,7 @@ import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Json.Encode as Encode
+import Regex
 import String exposing (join)
 
 
@@ -134,3 +135,13 @@ elmKeywords =
 wrapInParentheses : String -> String
 wrapInParentheses a =
     "(" ++ a ++ ")"
+
+
+{-| To do simple regular expression replace.
+-}
+regexReplace : String -> String -> String -> String
+regexReplace regex replacement a =
+    a
+        |> Regex.replace
+            (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
+            (\_ -> replacement)
