@@ -53,7 +53,7 @@ declarationToEncoder a =
 -}
 typeAliasToEncoder : TypeAlias -> String
 typeAliasToEncoder a =
-    typeToEncoder a ++ " " ++ typeAnnotationToEncoder (Just (letterByInt 0)) a.typeAnnotation
+    typeToEncoder a ++ " " ++ typeAnnotationToEncoder (letterByInt 0) a.typeAnnotation
 
 
 {-| To get encoder from custom type.
@@ -92,7 +92,7 @@ customTypeConstructorToEncoder (Node _ a) =
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i b =
-            b |> typeAnnotationToEncoder (Just (letterByInt (1 + i)))
+            b |> typeAnnotationToEncoder (letterByInt (1 + i))
     in
     "A." ++ name ++ arguments ++ " -> list identity [ " ++ encoder ++ " ]"
 
@@ -133,7 +133,7 @@ typeToEncoder a =
 
 {-| To get encoder from type annotation.
 -}
-typeAnnotationToEncoder : Maybe String -> Node TypeAnnotation -> String
+typeAnnotationToEncoder : String -> Node TypeAnnotation -> String
 typeAnnotationToEncoder parameter a =
     (case a |> Node.value of
         GenericType b ->
@@ -162,7 +162,7 @@ typeAnnotationToEncoder parameter a =
 
 {-| To get encoder from typed.
 -}
-typedToEncoder : Maybe String -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+typedToEncoder : String -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 typedToEncoder parameter (Node _ ( moduleName, name )) arguments =
     let
         fn : String
@@ -205,43 +205,43 @@ typedToEncoder parameter (Node _ ( moduleName, name )) arguments =
                     ""
 
                 _ ->
-                    " " ++ (arguments |> List.map (typeAnnotationToEncoder Nothing) |> join " ")
+                    " " ++ (arguments |> List.map (typeAnnotationToEncoder parameter) |> join " ")
     in
     fn ++ arguments_ ++ parameterToString parameter
 
 
 {-| To get encoder for tuple.
 -}
-tupleToEncoder : Maybe String -> List (Node TypeAnnotation) -> String
+tupleToEncoder : String -> List (Node TypeAnnotation) -> String
 tupleToEncoder parameter a =
     let
         parameters : String
         parameters =
-            a |> List.indexedMap (\i _ -> parameterFromInt i) |> List.filterMap identity |> join ", "
+            a |> List.indexedMap (\i _ -> parameterFromInt i) |> join ", "
 
         toEncoder : Int -> Node TypeAnnotation -> String
         toEncoder i b =
             b |> typeAnnotationToEncoder (parameterFromInt i)
 
-        parameterFromInt : Int -> Maybe String
+        parameterFromInt : Int -> String
         parameterFromInt i =
-            parameter |> Maybe.map (\v -> v ++ "_" ++ letterByInt i)
+            parameter ++ "_" ++ letterByInt i
     in
     "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
 
 
 {-| To get encoder from record.
 -}
-recordToEncoder : Maybe String -> RecordDefinition -> String
+recordToEncoder : String -> RecordDefinition -> String
 recordToEncoder parameter a =
     "object [ " ++ (a |> List.map (recordFieldToEncoder parameter) |> join ", ") ++ " ]"
 
 
 {-| To get encoder from record field.
 -}
-recordFieldToEncoder : Maybe String -> Node RecordField -> String
+recordFieldToEncoder : String -> Node RecordField -> String
 recordFieldToEncoder parameter (Node _ ( Node _ a, b )) =
-    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ typeAnnotationToEncoder (parameter |> Maybe.map (\v -> v ++ "." ++ a)) b ++ " )"
+    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ typeAnnotationToEncoder (parameter ++ "." ++ a) b ++ " )"
 
 
 
@@ -257,11 +257,6 @@ encoderName a =
 
 {-| To convert parameter to string.
 -}
-parameterToString : Maybe String -> String
+parameterToString : String -> String
 parameterToString a =
-    case a of
-        Just b ->
-            " " ++ (b |> wrapInParentheses)
-
-        Nothing ->
-            ""
+    " " ++ (a |> wrapInParentheses)
