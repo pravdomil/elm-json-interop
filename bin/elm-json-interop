@@ -3311,16 +3311,14 @@ var $author$project$Utils$TaskUtils$decodeTask = F2(
 	function (decoder, a) {
 		return A2(
 			$elm$core$Task$andThen,
-			$author$project$Utils$TaskUtils$resultToTask,
-			A2(
-				$elm$core$Task$map,
-				function (v) {
-					return A2(
+			function (v) {
+				return $author$project$Utils$TaskUtils$resultToTask(
+					A2(
 						$elm$core$Result$mapError,
 						$elm$json$Json$Decode$errorToString,
-						A2($elm$json$Json$Decode$decodeValue, decoder, v));
-				},
-				a));
+						A2($elm$json$Json$Decode$decodeValue, decoder, v)));
+			},
+			a);
 	});
 var $author$project$Interop$JsCode$jsCode = function (_v0) {
 	return $elm$core$Task$fail('Function is not implemented.');
