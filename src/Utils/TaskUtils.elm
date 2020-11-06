@@ -8,6 +8,49 @@ import Task exposing (..)
 
 
 {-| -}
+maybeToTask : x -> Maybe a -> Task x a
+maybeToTask x a =
+    case a of
+        Just b ->
+            succeed b
+
+        Nothing ->
+            fail x
+
+
+{-| -}
+resultToTask : Result x a -> Task x a
+resultToTask a =
+    case a of
+        Ok b ->
+            succeed b
+
+        Err b ->
+            fail b
+
+
+
+--
+
+
+{-| -}
+decodeTask : Decoder a -> Task String Decode.Value -> Task String a
+decodeTask decoder a =
+    a
+        |> andThen
+            (\v ->
+                v
+                    |> Decode.decodeValue decoder
+                    |> Result.mapError Decode.errorToString
+                    |> resultToTask
+            )
+
+
+
+--
+
+
+{-| -}
 taskAndThen2 :
     (a -> b -> Task x result)
     -> Task x a
@@ -401,46 +444,3 @@ taskAndThen10 fn a b c d e f g h i j =
                 b
         )
         a
-
-
-
---
-
-
-{-| -}
-maybeToTask : x -> Maybe a -> Task x a
-maybeToTask x a =
-    case a of
-        Just b ->
-            succeed b
-
-        Nothing ->
-            fail x
-
-
-{-| -}
-resultToTask : Result x a -> Task x a
-resultToTask a =
-    case a of
-        Ok b ->
-            succeed b
-
-        Err b ->
-            fail b
-
-
-
---
-
-
-{-| -}
-decodeTask : Decoder a -> Task String Decode.Value -> Task String a
-decodeTask decoder a =
-    a
-        |> andThen
-            (\v ->
-                v
-                    |> Decode.decodeValue decoder
-                    |> Result.mapError Decode.errorToString
-                    |> resultToTask
-            )
