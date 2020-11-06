@@ -1,5 +1,8 @@
 module Utils.TaskUtils exposing (..)
 
+{-| <https://github.com/avh4/elm-format/issues/568#issuecomment-554753735>
+-}
+
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
 
