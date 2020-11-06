@@ -37,8 +37,13 @@ resultToTask a =
 decodeTask : Decoder a -> Task String Decode.Value -> Task String a
 decodeTask decoder a =
     a
-        |> Task.map (\v -> v |> Decode.decodeValue decoder |> Result.mapError Decode.errorToString)
-        |> Task.andThen resultToTask
+        |> Task.andThen
+            (\v ->
+                v
+                    |> Decode.decodeValue decoder
+                    |> Result.mapError Decode.errorToString
+                    |> resultToTask
+            )
 
 
 
