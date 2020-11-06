@@ -3298,23 +3298,20 @@ var $elm$core$Result$mapError = F2(
 		}
 	});
 var $elm$core$Task$fail = _Scheduler_fail;
-var $author$project$Utils$TaskUtils$resultToFail = function (a) {
-	return A2(
-		$elm$core$Task$andThen,
-		function (b) {
-			if (!b.$) {
-				var c = b.a;
-				return $elm$core$Task$succeed(c);
-			} else {
-				var c = b.a;
-				return $elm$core$Task$fail(c);
-			}
-		},
-		a);
+var $author$project$Utils$TaskUtils$resultToTask = function (a) {
+	if (!a.$) {
+		var b = a.a;
+		return $elm$core$Task$succeed(b);
+	} else {
+		var b = a.a;
+		return $elm$core$Task$fail(b);
+	}
 };
 var $author$project$Utils$TaskUtils$decodeTask = F2(
 	function (decoder, a) {
-		return $author$project$Utils$TaskUtils$resultToFail(
+		return A2(
+			$elm$core$Task$andThen,
+			$author$project$Utils$TaskUtils$resultToTask,
 			A2(
 				$elm$core$Task$map,
 				function (v) {
@@ -10946,18 +10943,18 @@ var $author$project$Interop$JsCode$readFile = function (_v0) {
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').readFileSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Main$readAndParseElmFile = function (a) {
-	return $author$project$Utils$TaskUtils$resultToFail(
-		A2(
-			$elm$core$Task$map,
-			function (v) {
-				return A2(
+	return A2(
+		$elm$core$Task$andThen,
+		function (v) {
+			return $author$project$Utils$TaskUtils$resultToTask(
+				A2(
 					$elm$core$Result$mapError,
 					function (vv) {
 						return 'I can\'t parse \"' + (a + ('\", because: ' + ($elm$parser$Parser$deadEndsToString(vv) + '.')));
 					},
-					$stil4m$elm_syntax$Elm$Parser$parse(v));
-			},
-			$author$project$Interop$JsCode$readFile(a)));
+					$stil4m$elm_syntax$Elm$Parser$parse(v)));
+		},
+		$author$project$Interop$JsCode$readFile(a));
 };
 var $author$project$Interop$JsCode$realPath = function (_v0) {
 	return A2(
@@ -10965,19 +10962,14 @@ var $author$project$Interop$JsCode$realPath = function (_v0) {
 		$elm$json$Json$Decode$string,
 _Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(require('fs').realpathSync(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $author$project$Utils$TaskUtils$maybeToFail = F2(
+var $author$project$Utils$TaskUtils$maybeToTask = F2(
 	function (x, a) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (b) {
-				if (!b.$) {
-					var c = b.a;
-					return $elm$core$Task$succeed(c);
-				} else {
-					return $elm$core$Task$fail(x);
-				}
-			},
-			a);
+		if (!a.$) {
+			var b = a.a;
+			return $elm$core$Task$succeed(b);
+		} else {
+			return $elm$core$Task$fail(x);
+		}
 	});
 var $elm$regex$Regex$find = _Regex_findAtMost(_Regex_infinity);
 var $author$project$Main$srcFolderPath = function (path) {
@@ -10997,10 +10989,9 @@ var $author$project$Main$srcFolderPath = function (path) {
 };
 var $author$project$Main$srcFolderPathTask = function (a) {
 	return A2(
-		$author$project$Utils$TaskUtils$maybeToFail,
+		$author$project$Utils$TaskUtils$maybeToTask,
 		'Elm file must be inside \"src\" folder.',
-		$elm$core$Task$succeed(
-			$author$project$Main$srcFolderPath(a)));
+		$author$project$Main$srcFolderPath(a));
 };
 var $author$project$Utils$TaskUtils$taskAndThen2 = F3(
 	function (fn, a, b) {
