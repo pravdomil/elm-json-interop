@@ -10992,18 +10992,18 @@ var $author$project$Main$srcFolderPathTask = function (a) {
 		$author$project$Main$srcFolderPath(a));
 };
 var $author$project$Utils$TaskUtils$taskAndThen2 = F3(
-	function (func, taskA, taskB) {
+	function (fn, a, b) {
 		return A2(
 			$elm$core$Task$andThen,
-			function (a) {
+			function (a_) {
 				return A2(
 					$elm$core$Task$andThen,
-					function (b) {
-						return A2(func, a, b);
+					function (b_) {
+						return A2(fn, a_, b_);
 					},
-					taskB);
+					b);
 			},
-			taskA);
+			a);
 	});
 var $author$project$Interop$JsCode$writeFile = F2(
 	function (_v0, _v1) {
