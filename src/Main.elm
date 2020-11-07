@@ -51,7 +51,7 @@ run =
 -}
 usage : String
 usage =
-    "Usage: elm-json-interop [File.elm ...]"
+    "Usage: elm-to-json-and-ts [File.elm ...]"
 
 
 {-| To process generate types for file.

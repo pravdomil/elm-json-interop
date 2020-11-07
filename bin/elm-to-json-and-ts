@@ -11062,7 +11062,7 @@ var $author$project$Main$processFile = function (path) {
 		$author$project$Interop$JsCode$dirname__,
 		$author$project$Interop$JsCode$realPath(path));
 };
-var $author$project$Main$usage = 'Usage: elm-json-interop [File.elm ...]';
+var $author$project$Main$usage = 'Usage: elm-to-json-and-ts [File.elm ...]';
 var $author$project$Main$run = A2(
 	$elm$core$Task$andThen,
 	function (args) {

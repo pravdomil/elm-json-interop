@@ -10,16 +10,16 @@ set -u
 cd "${0%/*}/.."
 
 # To compile our app.
-elm make src/Main.elm --output bin/elm-json-interop.js --optimize
+elm make src/Main.elm --output bin/elm-to-json-and-ts.js --optimize
 gsed -i -E \
   "             1s/^/#!\/usr\/bin\/env node\n/
    /^.*jsCode\('/s/\\\'/'/g
                  s/^.*jsCode\('(.*)'\)\);$/_Scheduler_binding(function(callback) { try { callback(_Scheduler_succeed(\1)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));/g
                \$s/$/\nthis.Elm.Main.init();/" \
-  bin/elm-json-interop.js
-mv bin/elm-json-interop.js bin/elm-json-interop
-chmod +x bin/elm-json-interop
+  bin/elm-to-json-and-ts.js
+mv bin/elm-to-json-and-ts.js bin/elm-to-json-and-ts
+chmod +x bin/elm-to-json-and-ts
 
 # To build example.
-bin/elm-json-interop example/src/Example.elm
+bin/elm-to-json-and-ts example/src/Example.elm
 elm-format --yes example/src/Generated/*.elm
