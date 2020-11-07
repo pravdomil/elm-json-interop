@@ -1,15 +1,17 @@
-# Elm JSON Interop
+# elm-to-json-and-ts
+
+Convert Elm types to JSON encoders/decoders and TypeScript types.
 
 ## Install
 
 ```sh
-npm i pravdomil/elm-json-interop -g
+npm i pravdomil/elm-to-json-and-ts -g
 ```
 
 ## Usage
 
 ```sh
-elm-json-interop [File.elm ...]
+elm-to-json-and-ts [File.elm ...]
 ```
 
 For more information see [example folder](example/src).
