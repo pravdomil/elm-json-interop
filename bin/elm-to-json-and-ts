@@ -11022,7 +11022,7 @@ var $author$project$Main$processFile = function (path) {
 			return A2(
 				$elm$core$Task$map,
 				function (_v0) {
-					return 'I have generated JSON encoders/decoders and TypeScript declarations in folder:\n' + generatedFolder;
+					return 'I have create JSON encoders/decoders and TypeScript types in folder:\n' + generatedFolder;
 				},
 				$elm$core$Task$sequence(
 					_List_fromArray(
