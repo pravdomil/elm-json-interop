@@ -6,7 +6,7 @@ import { Maybe, Result } from "./Basics/Basics"
 export type Msg =
   | [typeof PressedEnter]
   | [typeof ChangedDraft, string]
-  | [typeof ReceivedMessages, Array<{ user: User; message: string }>]
+  | [typeof ReceivedMessages, Array<{ user: User; message?: Maybe<string> }>]
   | [typeof ClickedExit]
 
 export const PressedEnter = "PressedEnter"

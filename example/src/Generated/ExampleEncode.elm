@@ -15,7 +15,7 @@ encodeMsg a =
             list identity [ string "ChangedDraft", string b ]
 
         A.ReceivedMessages b ->
-            list identity [ string "ReceivedMessages", list (\b_ -> object [ ( "user", encodeUser b_.user ), ( "message", string b_.message ) ]) b ]
+            list identity [ string "ReceivedMessages", list (\b_ -> object [ ( "user", encodeUser b_.user ), ( "message", encodeMaybe (\b__message_ -> string b__message_) b_.message ) ]) b ]
 
         A.ClickedExit ->
             list identity [ string "ClickedExit" ]

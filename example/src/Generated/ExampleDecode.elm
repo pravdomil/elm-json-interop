@@ -18,7 +18,7 @@ msgDecoder =
                         map A.ChangedDraft (index 1 string)
 
                     "ReceivedMessages" ->
-                        map A.ReceivedMessages (index 1 (list (map2 (\a b -> { user = a, message = b }) (field "user" userDecoder) (field "message" string))))
+                        map A.ReceivedMessages (index 1 (list (map2 (\a b -> { user = a, message = b }) (field "user" userDecoder) (nullableOrMissingField "message" (nullable string)))))
 
                     "ClickedExit" ->
                         succeed A.ClickedExit
