@@ -53,7 +53,7 @@ getArguments =
 getStdin : Task Error (Maybe String)
 getStdin =
     jsCode "process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8')"
-        |> decodeTask (Decode.maybe Decode.string)
+        |> decodeTask (Decode.nullable Decode.string)
 
 
 
