@@ -1,7 +1,5 @@
 {
   "name": "elm-to-json-and-ts",
   "version": "2.0.0",
-  "bin": {
-    "elm-to-json-and-ts": "bin/elm-to-json-and-ts"
-  }
+  "bin": "bin/elm-to-json-and-ts"
 }
