@@ -1,4 +1,4 @@
-module Generators.TypeScript exposing (fileToTypeScriptDeclaration)
+module Generators.TypeScriptDeclaration exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
@@ -16,8 +16,8 @@ import Utils.Utils exposing (encodeJsonString, moduleImports, normalizeRecordFie
 
 {-| To get TypeScript declaration from file.
 -}
-fileToTypeScriptDeclaration : File -> String
-fileToTypeScriptDeclaration a =
+fromFile : File -> String
+fromFile a =
     let
         root : String
         root =

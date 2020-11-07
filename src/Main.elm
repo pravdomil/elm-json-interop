@@ -6,7 +6,7 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.ElmDecoder as ElmDecoder
 import Generators.ElmEncoder as ElmEncoder
-import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
+import Generators.TypeScriptDeclaration as TypeScriptDeclaration
 import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
@@ -81,7 +81,7 @@ processFile path =
             , mkDir generatedFolder
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (ElmEncoder.fromFile file)
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (ElmDecoder.fromFile file)
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (fileToTypeScriptDeclaration file)
+            , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (TypeScriptDeclaration.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map
