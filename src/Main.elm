@@ -4,8 +4,8 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Generators.ElmDecoder as ElmDecoder exposing (fromFile)
-import Generators.ElmEncoder as ElmEncoder exposing (fileToElmEncodeModule)
+import Generators.ElmDecoder as ElmDecoder
+import Generators.ElmEncoder as ElmEncoder
 import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
 import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
