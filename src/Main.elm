@@ -54,7 +54,7 @@ usage =
     "Usage: elm-to-json-and-ts [File.elm ...]"
 
 
-{-| To process generate types for file.
+{-| To process file.
 -}
 processFile : String -> Task Error String
 processFile path =
