@@ -1,4 +1,4 @@
-# elm-to-json-and-ts
+# Elm-to-JSON-and-TS
 
 Convert Elm types to JSON encoders/decoders and TypeScript types.
 
