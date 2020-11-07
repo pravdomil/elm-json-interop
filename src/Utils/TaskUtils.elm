@@ -34,8 +34,8 @@ resultToTask a =
 
 
 {-| -}
-decodeTask : Decoder a -> Task String Decode.Value -> Task String a
-decodeTask decoder a =
+andThenDecode : Decoder a -> Task String Decode.Value -> Task String a
+andThenDecode decoder a =
     a
         |> Task.andThen
             (\v ->
