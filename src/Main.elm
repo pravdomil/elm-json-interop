@@ -86,7 +86,7 @@ processFile path =
                 |> Task.sequence
                 |> Task.map
                     (\_ ->
-                        "I have generated Elm encoder, Elm decoder, TypeScript declaration in folder:\n" ++ generatedFolder
+                        "I have generated JSON encoders/decoders and TypeScript declarations in folder:\n" ++ generatedFolder
                     )
     in
     taskAndThen2
