@@ -1,4 +1,4 @@
-module Generators.Decode exposing (fileToElmDecodeModule)
+module Generators.ElmDecoder exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
@@ -14,8 +14,8 @@ import Utils.Utils exposing (encodeJsonString, fileToModuleName, letterByInt, mo
 
 {-| To get Elm module for decoding types in file.
 -}
-fileToElmDecodeModule : File -> String
-fileToElmDecodeModule a =
+fromFile : File -> String
+fromFile a =
     [ "module Generated." ++ fileToModuleName a ++ "Decode exposing (..)"
     , ""
     , "import " ++ fileToModuleName a ++ " as A"
@@ -28,7 +28,7 @@ fileToElmDecodeModule a =
             )
         |> join "\n"
     , ""
-    , a.declarations |> List.filterMap declarationToDecoder |> join "\n\n"
+    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
     , ""
     ]
         |> join "\n"
@@ -36,14 +36,14 @@ fileToElmDecodeModule a =
 
 {-| To maybe get decoder from declaration.
 -}
-declarationToDecoder : Node Declaration -> Maybe String
-declarationToDecoder a =
+fromDeclaration : Node Declaration -> Maybe String
+fromDeclaration a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just (typeAliasToDecoder b)
+            Just (fromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just (customTypeToDecoder b)
+            Just (fromCustomType b)
 
         _ ->
             Nothing
@@ -51,31 +51,31 @@ declarationToDecoder a =
 
 {-| To get decoder from type alias.
 -}
-typeAliasToDecoder : TypeAlias -> String
-typeAliasToDecoder a =
-    a |> typeToDecoder ("\n  " ++ typeAnnotationToDecoder a.typeAnnotation)
+fromTypeAlias : TypeAlias -> String
+fromTypeAlias a =
+    a |> fromType ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
 
 
 {-| To get decoder from custom type.
 -}
-customTypeToDecoder : Type -> String
-customTypeToDecoder a =
+fromCustomType : Type -> String
+fromCustomType a =
     let
         cases : String
         cases =
-            a.constructors |> List.map customTypeConstructorToDecoder |> join "\n    "
+            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
 
         fail : String
         fail =
             "\n    _ -> fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\")"
     in
-    a |> typeToDecoder ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
 -}
-customTypeConstructorToDecoder : Node ValueConstructor -> String
-customTypeConstructorToDecoder (Node _ a) =
+fromCustomTypeConstructor : Node ValueConstructor -> String
+fromCustomTypeConstructor (Node _ a) =
     let
         name : String
         name =
@@ -83,7 +83,7 @@ customTypeConstructorToDecoder (Node _ a) =
 
         arguments : String
         arguments =
-            a.arguments |> List.indexedMap (\i v -> elementAtDecoder (1 + i) v) |> join " "
+            a.arguments |> List.indexedMap (\i v -> fromElementAt (1 + i) v) |> join " "
 
         decoder : String
         decoder =
@@ -99,8 +99,8 @@ customTypeConstructorToDecoder (Node _ a) =
 
 {-| To get decoder from type.
 -}
-typeToDecoder : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-typeToDecoder body a =
+fromType : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+fromType body a =
     let
         name : String
         name =
@@ -148,26 +148,26 @@ typeToDecoder body a =
 
 {-| To get decoder from type annotation.
 -}
-typeAnnotationToDecoder : Node TypeAnnotation -> String
-typeAnnotationToDecoder a =
+fromTypeAnnotation : Node TypeAnnotation -> String
+fromTypeAnnotation a =
     (case a |> Node.value of
         GenericType b ->
             "t_" ++ b
 
         Typed b c ->
-            typedToDecoder b c
+            fromTyped b c
 
         Unit ->
             "succeed ()"
 
         Tupled nodes ->
-            tupleToDecoder nodes
+            fromTuple nodes
 
         Record b ->
-            recordToDecoder b
+            fromRecord b
 
         GenericRecord _ (Node _ b) ->
-            recordToDecoder b
+            fromRecord b
 
         FunctionTypeAnnotation _ _ ->
             "Debug.todo \"I don't know how to decode function.\""
@@ -177,8 +177,8 @@ typeAnnotationToDecoder a =
 
 {-| To get decoder from typed.
 -}
-typedToDecoder : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-typedToDecoder (Node _ ( moduleName, name )) arguments =
+fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+fromTyped (Node _ ( moduleName, name )) arguments =
     let
         fn : String
         fn =
@@ -220,34 +220,34 @@ typedToDecoder (Node _ ( moduleName, name )) arguments =
                     ""
 
                 _ ->
-                    " " ++ (arguments |> List.map typeAnnotationToDecoder |> join " ")
+                    " " ++ (arguments |> List.map fromTypeAnnotation |> join " ")
     in
     fn ++ arguments_
 
 
 {-| To get decoder from tuple.
 -}
-tupleToDecoder : List (Node TypeAnnotation) -> String
-tupleToDecoder a =
+fromTuple : List (Node TypeAnnotation) -> String
+fromTuple a =
     let
         arguments : String
         arguments =
-            a |> List.indexedMap elementAtDecoder |> join " "
+            a |> List.indexedMap fromElementAt |> join " "
     in
     mapFn (List.length a) ++ " " ++ tupleFn (List.length a) ++ " " ++ arguments
 
 
 {-| To get decoder for decoding element at index.
 -}
-elementAtDecoder : Int -> Node TypeAnnotation -> String
-elementAtDecoder i a =
-    "(index " ++ String.fromInt i ++ " " ++ typeAnnotationToDecoder a ++ ")"
+fromElementAt : Int -> Node TypeAnnotation -> String
+fromElementAt i a =
+    "(index " ++ String.fromInt i ++ " " ++ fromTypeAnnotation a ++ ")"
 
 
 {-| To get decoder from record.
 -}
-recordToDecoder : RecordDefinition -> String
-recordToDecoder a =
+fromRecord : RecordDefinition -> String
+fromRecord a =
     let
         parameters : String
         parameters =
@@ -265,13 +265,13 @@ recordToDecoder a =
         constructorFn =
             "(\\" ++ parameters ++ " -> { " ++ fields ++ " })"
     in
-    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map recordFieldToDecoder |> join " ")
+    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map fromRecordField |> join " ")
 
 
 {-| To get decoder from record field.
 -}
-recordFieldToDecoder : Node RecordField -> String
-recordFieldToDecoder (Node _ ( Node _ a, b )) =
+fromRecordField : Node RecordField -> String
+fromRecordField (Node _ ( Node _ a, b )) =
     let
         decoder : String
         decoder =
@@ -282,7 +282,7 @@ recordFieldToDecoder (Node _ ( Node _ a, b )) =
                 _ ->
                     "field"
     in
-    "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ typeAnnotationToDecoder b ++ ")"
+    "(" ++ decoder ++ " " ++ encodeJsonString (normalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
 

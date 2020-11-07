@@ -4,7 +4,7 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Generators.Decode exposing (fileToElmDecodeModule)
+import Generators.ElmDecoder as ElmDecoder exposing (fromFile)
 import Generators.Encode exposing (fileToElmEncodeModule)
 import Generators.TypeScript exposing (fileToTypeScriptDeclaration)
 import Interop.JsCode exposing (..)
@@ -80,7 +80,7 @@ processFile path =
             , copyFile (binPath ++ "/../src/Generated/Basics/Basics.ts") (srcFolder ++ "Generated/Basics/Basics.ts")
             , mkDir generatedFolder
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (fileToElmEncodeModule file)
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (fileToElmDecodeModule file)
+            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (ElmDecoder.fromFile file)
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (fileToTypeScriptDeclaration file)
             ]
                 |> Task.sequence
