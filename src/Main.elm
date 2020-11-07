@@ -4,8 +4,8 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Generators.ElmDecoder as ElmDecoder
-import Generators.ElmEncoder as ElmEncoder
+import Generators.JsonDecoder as JsonDecoder
+import Generators.JsonEncoder as JsonEncoder
 import Generators.TypeScriptDeclaration as TypeScriptDeclaration
 import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
@@ -79,8 +79,8 @@ processFile path =
             , copyFile (binPath ++ "/../src/Generated/Basics/BasicsDecode.elm") (srcFolder ++ "Generated/Basics/BasicsDecode.elm")
             , copyFile (binPath ++ "/../src/Generated/Basics/Basics.ts") (srcFolder ++ "Generated/Basics/Basics.ts")
             , mkDir generatedFolder
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (ElmEncoder.fromFile file)
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (ElmDecoder.fromFile file)
+            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (JsonEncoder.fromFile file)
+            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (JsonDecoder.fromFile file)
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (TypeScriptDeclaration.fromFile file)
             ]
                 |> Task.sequence
