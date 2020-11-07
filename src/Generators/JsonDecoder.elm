@@ -277,7 +277,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
         decoder =
             case Node.value b of
                 Typed (Node _ ( _, "Maybe" )) _ ->
-                    "nullableOrMissingField"
+                    "maybeField"
 
                 _ ->
                     "field"

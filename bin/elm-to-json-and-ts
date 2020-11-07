@@ -3649,7 +3649,7 @@ var $author$project$Generators$JsonDecoder$fromRecordField = function (_v6) {
 		if ((_v9.$ === 1) && (_v9.a.b.b === 'Maybe')) {
 			var _v10 = _v9.a;
 			var _v11 = _v10.b;
-			return 'nullableOrMissingField';
+			return 'maybeField';
 		} else {
 			return 'field';
 		}

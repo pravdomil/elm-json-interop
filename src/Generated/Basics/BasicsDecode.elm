@@ -37,8 +37,8 @@ dictDecoder _ a =
 
 {-| To maybe decode field.
 -}
-nullableOrMissingField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
-nullableOrMissingField name a =
+maybeField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
+maybeField name a =
     oneOf
         [ map Just (field name value)
         , succeed Nothing
