@@ -1,4 +1,4 @@
-module Generators.ElmEncoder exposing (fileToElmEncodeModule)
+module Generators.ElmEncoder exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
@@ -14,8 +14,8 @@ import Utils.Utils exposing (encodeJsonString, fileToModuleName, letterByInt, mo
 
 {-| To get Elm module for encoding types in file.
 -}
-fileToElmEncodeModule : File -> String
-fileToElmEncodeModule a =
+fromFile : File -> String
+fromFile a =
     [ "module Generated." ++ fileToModuleName a ++ "Encode exposing (..)"
     , ""
     , "import " ++ fileToModuleName a ++ " as A"
@@ -28,7 +28,7 @@ fileToElmEncodeModule a =
             )
         |> join "\n"
     , ""
-    , a.declarations |> List.filterMap declarationToEncoder |> join "\n\n"
+    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
     , ""
     ]
         |> join "\n"
@@ -36,14 +36,14 @@ fileToElmEncodeModule a =
 
 {-| To maybe get encoder from declaration.
 -}
-declarationToEncoder : Node Declaration -> Maybe String
-declarationToEncoder a =
+fromDeclaration : Node Declaration -> Maybe String
+fromDeclaration a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just (typeAliasToEncoder b)
+            Just (fromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just (customTypeToEncoder b)
+            Just (fromCustomType b)
 
         _ ->
             Nothing
@@ -51,27 +51,27 @@ declarationToEncoder a =
 
 {-| To get encoder from type alias.
 -}
-typeAliasToEncoder : TypeAlias -> String
-typeAliasToEncoder a =
-    typeToEncoder a ++ " " ++ typeAnnotationToEncoder (letterByInt 0) a.typeAnnotation
+fromTypeAlias : TypeAlias -> String
+fromTypeAlias a =
+    fromType a ++ " " ++ fromTypeAnnotation (letterByInt 0) a.typeAnnotation
 
 
 {-| To get encoder from custom type.
 -}
-customTypeToEncoder : Type -> String
-customTypeToEncoder a =
+fromCustomType : Type -> String
+fromCustomType a =
     let
         cases : String
         cases =
-            a.constructors |> List.map customTypeConstructorToEncoder |> join "\n    "
+            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
     in
-    typeToEncoder a ++ "\n  case a of\n    " ++ cases
+    fromType a ++ "\n  case a of\n    " ++ cases
 
 
 {-| To get encoder from custom type constructor.
 -}
-customTypeConstructorToEncoder : Node ValueConstructor -> String
-customTypeConstructorToEncoder (Node _ a) =
+fromCustomTypeConstructor : Node ValueConstructor -> String
+fromCustomTypeConstructor (Node _ a) =
     let
         name : String
         name =
@@ -92,15 +92,15 @@ customTypeConstructorToEncoder (Node _ a) =
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i b =
-            b |> typeAnnotationToEncoder (letterByInt (1 + i))
+            b |> fromTypeAnnotation (letterByInt (1 + i))
     in
     "A." ++ name ++ arguments ++ " -> list identity [ " ++ encoder ++ " ]"
 
 
 {-| To get encoder from type.
 -}
-typeToEncoder : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-typeToEncoder a =
+fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+fromType a =
     let
         name : String
         name =
@@ -133,26 +133,26 @@ typeToEncoder a =
 
 {-| To get encoder from type annotation.
 -}
-typeAnnotationToEncoder : String -> Node TypeAnnotation -> String
-typeAnnotationToEncoder parameter a =
+fromTypeAnnotation : String -> Node TypeAnnotation -> String
+fromTypeAnnotation parameter a =
     (case a |> Node.value of
         GenericType b ->
             "t_" ++ b ++ parameterToString parameter
 
         Typed b c ->
-            typedToEncoder parameter b c
+            fromTyped parameter b c
 
         Unit ->
             "(\\_ -> list identity [])" ++ parameterToString parameter
 
         Tupled b ->
-            tupleToEncoder parameter b
+            fromTuple parameter b
 
         Record b ->
-            recordToEncoder parameter b
+            fromRecord parameter b
 
         GenericRecord _ (Node _ b) ->
-            recordToEncoder parameter b
+            fromRecord parameter b
 
         FunctionTypeAnnotation _ _ ->
             "Debug.todo \"I don't know how to encode function.\""
@@ -162,8 +162,8 @@ typeAnnotationToEncoder parameter a =
 
 {-| To get encoder from typed.
 -}
-typedToEncoder : String -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-typedToEncoder parameter (Node _ ( moduleName, name )) arguments =
+fromTyped : String -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+fromTyped parameter (Node _ ( moduleName, name )) arguments =
     let
         fn : String
         fn =
@@ -211,7 +211,7 @@ typedToEncoder parameter (Node _ ( moduleName, name )) arguments =
                             (parameter |> replace "." "_") ++ "_"
                     in
                     arguments
-                        |> List.map (typeAnnotationToEncoder nextParameter)
+                        |> List.map (fromTypeAnnotation nextParameter)
                         |> List.map
                             (\v ->
                                 "(\\" ++ nextParameter ++ " -> " ++ v ++ " )"
@@ -223,8 +223,8 @@ typedToEncoder parameter (Node _ ( moduleName, name )) arguments =
 
 {-| To get encoder for tuple.
 -}
-tupleToEncoder : String -> List (Node TypeAnnotation) -> String
-tupleToEncoder parameter a =
+fromTuple : String -> List (Node TypeAnnotation) -> String
+fromTuple parameter a =
     let
         parameters : String
         parameters =
@@ -232,7 +232,7 @@ tupleToEncoder parameter a =
 
         toEncoder : Int -> Node TypeAnnotation -> String
         toEncoder i b =
-            b |> typeAnnotationToEncoder (parameterFromInt i)
+            b |> fromTypeAnnotation (parameterFromInt i)
 
         parameterFromInt : Int -> String
         parameterFromInt i =
@@ -243,16 +243,16 @@ tupleToEncoder parameter a =
 
 {-| To get encoder from record.
 -}
-recordToEncoder : String -> RecordDefinition -> String
-recordToEncoder parameter a =
-    "object [ " ++ (a |> List.map (recordFieldToEncoder parameter) |> join ", ") ++ " ]"
+fromRecord : String -> RecordDefinition -> String
+fromRecord parameter a =
+    "object [ " ++ (a |> List.map (fromRecordField parameter) |> join ", ") ++ " ]"
 
 
 {-| To get encoder from record field.
 -}
-recordFieldToEncoder : String -> Node RecordField -> String
-recordFieldToEncoder parameter (Node _ ( Node _ a, b )) =
-    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ typeAnnotationToEncoder (parameter ++ "." ++ a) b ++ " )"
+fromRecordField : String -> Node RecordField -> String
+fromRecordField parameter (Node _ ( Node _ a, b )) =
+    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation (parameter ++ "." ++ a) b ++ " )"
 
 
 

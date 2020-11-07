@@ -79,7 +79,7 @@ processFile path =
             , copyFile (binPath ++ "/../src/Generated/Basics/BasicsDecode.elm") (srcFolder ++ "Generated/Basics/BasicsDecode.elm")
             , copyFile (binPath ++ "/../src/Generated/Basics/Basics.ts") (srcFolder ++ "Generated/Basics/Basics.ts")
             , mkDir generatedFolder
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (ElmEncoder.fileToElmEncodeModule file)
+            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (ElmEncoder.fromFile file)
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (ElmDecoder.fromFile file)
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (fileToTypeScriptDeclaration file)
             ]
