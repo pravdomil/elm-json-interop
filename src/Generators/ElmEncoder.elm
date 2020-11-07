@@ -1,4 +1,4 @@
-module Generators.Encode exposing (fileToElmEncodeModule)
+module Generators.ElmEncoder exposing (fileToElmEncodeModule)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Documentation exposing (Documentation)
