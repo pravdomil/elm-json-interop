@@ -52,7 +52,7 @@ getArguments =
 -}
 getStdin : Task Error (Maybe String)
 getStdin =
-    jsCode "process.stdin.isTTY ? null : require('fs').readFileSync(0, 'utf8')"
+    jsCode "process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8')"
         |> decodeTask (Decode.maybe Decode.string)
 
 
@@ -108,7 +108,7 @@ dirname__ =
 -}
 realPath : String -> Task Error String
 realPath _ =
-    jsCode "require('fs').realpathSync(_v0, 'utf8')"
+    jsCode "require('fs/promises').realpath(_v0, 'utf8')"
         |> decodeTask Decode.string
 
 
@@ -120,7 +120,7 @@ realPath _ =
 -}
 mkDir : String -> Task Error ()
 mkDir _ =
-    jsCode "require('fs').mkdirSync(_v0, { recursive: true })"
+    jsCode "require('fs/promises').mkdir(_v0, { recursive: true })"
         |> decodeTask (Decode.succeed ())
 
 
@@ -128,7 +128,7 @@ mkDir _ =
 -}
 readFile : String -> Task Error String
 readFile _ =
-    jsCode "require('fs').readFileSync(_v0, 'utf8')"
+    jsCode "require('fs/promises').readFile(_v0, 'utf8')"
         |> decodeTask Decode.string
 
 
@@ -136,7 +136,7 @@ readFile _ =
 -}
 writeFile : String -> String -> Task Error ()
 writeFile _ _ =
-    jsCode "require('fs').writeFileSync(_v0, _v1)"
+    jsCode "require('fs/promises').writeFile(_v0, _v1)"
         |> decodeTask (Decode.succeed ())
 
 
@@ -144,5 +144,5 @@ writeFile _ _ =
 -}
 copyFile : String -> String -> Task Error ()
 copyFile _ _ =
-    jsCode "require('fs').copyFileSync(_v0, _v1)"
+    jsCode "require('fs/promises').copyFile(_v0, _v1)"
         |> decodeTask (Decode.succeed ())
