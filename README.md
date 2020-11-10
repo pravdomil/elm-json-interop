@@ -11,7 +11,7 @@ npm i pravdomil/elm-to-json-and-ts -g
 ## Usage
 
 ```sh
-elm-to-json-and-ts [File.elm ...]
+elm-to-json-and-ts <File.elm>...
 ```
 
 For more information see [example folder](example/src).
