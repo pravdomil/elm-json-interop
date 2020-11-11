@@ -67,7 +67,7 @@ fromCustomType a =
 
         fail : String
         fail =
-            "\n    _ -> fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", what \" ++ tag ++ \" means?\")"
+            "\n    _ -> fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
     in
     a |> fromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 

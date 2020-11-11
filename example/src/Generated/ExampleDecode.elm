@@ -24,7 +24,7 @@ msgDecoder =
                         succeed A.ClickedExit
 
                     _ ->
-                        fail ("I can't decode " ++ "Msg" ++ ", what " ++ tag ++ " means?")
+                        fail ("I can't decode " ++ "Msg" ++ ", unknown tag \"" ++ tag ++ "\".")
             )
 
 
@@ -44,5 +44,5 @@ userDecoder =
                         succeed A.Anonymous
 
                     _ ->
-                        fail ("I can't decode " ++ "User" ++ ", what " ++ tag ++ " means?")
+                        fail ("I can't decode " ++ "User" ++ ", unknown tag \"" ++ tag ++ "\".")
             )

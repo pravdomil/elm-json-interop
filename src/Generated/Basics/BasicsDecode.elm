@@ -69,7 +69,7 @@ resultDecoder errorDecoder valueDecoder =
                         map Err errorDecoder
 
                     _ ->
-                        fail ("I can't decode Result, what " ++ tag ++ " means?")
+                        fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")
             )
 
 
