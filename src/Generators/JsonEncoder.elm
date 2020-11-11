@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
-import Utils.Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, normalizeRecordFieldName, wrapInParentheses)
+import Utils.Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, denormalizeRecordFieldName, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -252,7 +252,7 @@ fromRecord parameter a =
 -}
 fromRecordField : String -> Node RecordField -> String
 fromRecordField parameter (Node _ ( Node _ a, b )) =
-    "( " ++ encodeJsonString (normalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation (parameter ++ "." ++ a) b ++ " )"
+    "( " ++ encodeJsonString (denormalizeRecordFieldName a) ++ ", " ++ fromTypeAnnotation (parameter ++ "." ++ a) b ++ " )"
 
 
 

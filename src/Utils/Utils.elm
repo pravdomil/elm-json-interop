@@ -99,10 +99,10 @@ moduleImports toImport_ a =
             )
 
 
-{-| To normalize record field name.
+{-| To denormalize record field name.
 -}
-normalizeRecordFieldName : String -> String
-normalizeRecordFieldName a =
+denormalizeRecordFieldName : String -> String
+denormalizeRecordFieldName a =
     let
         dropUnderscoreIfKeyword : String -> String
         dropUnderscoreIfKeyword b =

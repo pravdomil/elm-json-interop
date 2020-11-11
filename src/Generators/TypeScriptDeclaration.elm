@@ -11,7 +11,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils.Utils exposing (encodeJsonString, moduleImports, normalizeRecordFieldName)
+import Utils.Utils exposing (encodeJsonString, moduleImports, denormalizeRecordFieldName)
 
 
 {-| To get TypeScript declaration from file.
@@ -268,4 +268,4 @@ recordFieldToTs (Node _ ( Node _ a, b )) =
                 _ ->
                     ""
     in
-    normalizeRecordFieldName a ++ maybeField ++ ": " ++ typeAnnotationToTs b
+    denormalizeRecordFieldName a ++ maybeField ++ ": " ++ typeAnnotationToTs b
