@@ -105,20 +105,20 @@ normalizeRecordFieldName : String -> String
 normalizeRecordFieldName a =
     let
         dropUnderscoreIfKeyword : String -> String
-        dropUnderscoreIfKeyword v =
-            if elmKeywords |> List.member (String.dropRight 1 v) then
-                String.dropRight 1 v
+        dropUnderscoreIfKeyword b =
+            if elmKeywords |> List.member (String.dropRight 1 b) then
+                String.dropRight 1 b
 
             else
-                v
+                b
 
         putUnderScoreToFront : String -> String
-        putUnderScoreToFront v =
-            if String.endsWith "_" v then
-                "_" ++ String.dropRight 1 v
+        putUnderScoreToFront b =
+            if String.endsWith "_" b then
+                "_" ++ String.dropRight 1 b
 
             else
-                v
+                b
     in
     a |> dropUnderscoreIfKeyword |> putUnderScoreToFront
 
