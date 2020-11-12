@@ -6,6 +6,7 @@ import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
+import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Json.Encode as Encode
 import Regex
 import String exposing (join)
@@ -159,3 +160,42 @@ regexReplace regex replacement a =
         |> Regex.replace
             (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
             (.match >> replacement)
+
+
+{-| -}
+maybeCustomTypeHasCustomTags : File -> Type -> Maybe (List ( String, Node ValueConstructor ))
+maybeCustomTypeHasCustomTags file a =
+    let
+        zeroOrOneArguments : Node ValueConstructor -> Maybe ()
+        zeroOrOneArguments b =
+            if (b |> Node.value |> .arguments |> List.length) <= 1 then
+                Just ()
+
+            else
+                Nothing
+
+        commentAtSameLine : Node a -> Maybe String
+        commentAtSameLine b =
+            file.comments
+                |> List.filter
+                    (\c ->
+                        (c |> Node.range |> .start |> .row) == (b |> Node.range |> .start |> .row)
+                    )
+                |> List.head
+                |> Maybe.map (\v -> v |> Node.value |> String.slice 3 -3)
+    in
+    a.constructors
+        |> List.foldl
+            (\b acc ->
+                acc
+                    |> Maybe.andThen
+                        (\c ->
+                            Maybe.map2
+                                (\_ e ->
+                                    c ++ [ ( e, b ) ]
+                                )
+                                (zeroOrOneArguments b)
+                                (commentAtSameLine b)
+                        )
+            )
+            (Just [])
