@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, wrapInParentheses)
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, letterByInt, maybeCustomTypeHasCustomTags, moduleImports, moduleNameToString, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -61,21 +61,37 @@ fromTypeAlias a =
 fromCustomType : File -> Type -> String
 fromCustomType file a =
     let
+        constructors : Maybe (List ( String, Node ValueConstructor ))
+        constructors =
+            a |> maybeCustomTypeHasCustomTags file
+
+        tagDecoder : String
+        tagDecoder =
+            case constructors of
+                Just _ ->
+                    "field \"_type\" string"
+
+                Nothing ->
+                    "index 0 string"
+
         cases : String
         cases =
-            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
+            constructors
+                |> Maybe.withDefault (a.constructors |> List.map (\v -> Tuple.pair (v |> Node.value |> .name |> Node.value) v))
+                |> List.map fromCustomTypeConstructor
+                |> join "\n    "
 
         fail : String
         fail =
             "\n    _ -> fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
     in
-    a |> fromType ("\n  index 0 string |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  " ++ tagDecoder ++ " |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
 -}
-fromCustomTypeConstructor : Node ValueConstructor -> String
-fromCustomTypeConstructor (Node _ a) =
+fromCustomTypeConstructor : ( String, Node ValueConstructor ) -> String
+fromCustomTypeConstructor ( tag, Node _ a ) =
     let
         name : String
         name =
@@ -94,7 +110,7 @@ fromCustomTypeConstructor (Node _ a) =
                 _ ->
                     mapFn (List.length a.arguments) ++ " A." ++ name ++ " " ++ arguments
     in
-    encodeJsonString name ++ " -> " ++ decoder
+    encodeJsonString tag ++ " -> " ++ decoder
 
 
 {-| To get decoder from type.
