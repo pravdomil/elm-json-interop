@@ -104,23 +104,37 @@ moduleImports toImport_ a =
 denormalizeRecordFieldName : String -> String
 denormalizeRecordFieldName a =
     let
-        dropUnderscoreIfKeyword : String -> String
-        dropUnderscoreIfKeyword b =
-            if elmKeywords |> List.member (String.dropRight 1 b) then
-                String.dropRight 1 b
+        putUnderscoresToStart : String -> String
+        putUnderscoresToStart b =
+            b
+                |> Regex.replace (Regex.fromString "^(.*?)(_*)$" |> Maybe.withDefault Regex.never)
+                    (\c ->
+                        case c.submatches of
+                            [ Just d, Just e ] ->
+                                e ++ d
 
-            else
-                b
+                            _ ->
+                                b
+                    )
 
-        putUnderScoreToFront : String -> String
-        putUnderScoreToFront b =
-            if String.endsWith "_" b then
-                "_" ++ String.dropRight 1 b
-
-            else
-                b
+        unescapeKeywords : String -> String
+        unescapeKeywords b =
+            elmKeywords
+                |> List.foldl
+                    (\c acc -> acc |> swap (c ++ "_") c |> swap (c ++ "__") (c ++ "_"))
+                    b
     in
-    a |> dropUnderscoreIfKeyword |> putUnderScoreToFront
+    a |> unescapeKeywords |> putUnderscoresToStart
+
+
+{-| -}
+swap : a -> a -> a -> a
+swap a b c =
+    if a == c then
+        b
+
+    else
+        c
 
 
 {-| To define what are reserved Elm keywords.
