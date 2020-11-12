@@ -28,7 +28,7 @@ fromFile a =
             )
         |> join "\n"
     , ""
-    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
+    , a.declarations |> List.filterMap (fromDeclaration a) |> join "\n\n"
     , ""
     ]
         |> join "\n"
@@ -36,14 +36,14 @@ fromFile a =
 
 {-| To maybe get decoder from declaration.
 -}
-fromDeclaration : Node Declaration -> Maybe String
-fromDeclaration a =
+fromDeclaration : File -> Node Declaration -> Maybe String
+fromDeclaration file a =
     case a |> Node.value of
         AliasDeclaration b ->
             Just (fromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just (fromCustomType b)
+            Just (fromCustomType file b)
 
         _ ->
             Nothing
@@ -58,8 +58,8 @@ fromTypeAlias a =
 
 {-| To get decoder from custom type.
 -}
-fromCustomType : Type -> String
-fromCustomType a =
+fromCustomType : File -> Type -> String
+fromCustomType file a =
     let
         cases : String
         cases =
