@@ -1,7 +1,7 @@
 module Generated.Msg.Decode exposing (..)
 
 import Generated.Basics.Decode exposing (..)
-import Generated.UserDecode exposing (user)
+import Generated.User.Decode exposing (user)
 import Json.Decode exposing (..)
 import Msg as A
 

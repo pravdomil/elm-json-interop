@@ -24,7 +24,7 @@ fromFile a =
     , a.imports
         |> moduleImports
             (\v vv ->
-                "import Generated." ++ moduleNameToString v ++ "Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")"
+                "import Generated." ++ moduleNameToString v ++ ".Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")"
             )
         |> join "\n"
     , ""
