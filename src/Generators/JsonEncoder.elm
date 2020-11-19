@@ -16,7 +16,7 @@ import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileT
 -}
 fromFile : File -> String
 fromFile a =
-    [ "module Generated." ++ fileToModuleName a ++ "Encode exposing (..)"
+    [ "module Generated." ++ fileToModuleName a ++ ".Encode exposing (..)"
     , ""
     , "import " ++ fileToModuleName a ++ " as A"
     , "import Generated.Basics.Encode exposing (..)"

@@ -65,7 +65,7 @@ processFile path =
             let
                 generatedFolder : String
                 generatedFolder =
-                    fullPath |> replace srcFolder (srcFolder ++ "Generated/") |> dirname
+                    (fullPath |> replace srcFolder (srcFolder ++ "Generated/") |> dirname) ++ "/" ++ moduleName
 
                 moduleName : String
                 moduleName =
@@ -80,8 +80,8 @@ processFile path =
             , copyFile (binPath ++ "/../src/Generated/Basics/Decode.elm") (srcFolder ++ "Generated/Basics/Decode.elm")
             , copyFile (binPath ++ "/../src/Generated/Basics/Basics.ts") (srcFolder ++ "Generated/Basics/Basics.ts")
             , mkDir generatedFolder
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (JsonEncoder.fromFile file)
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Decode.elm") (JsonDecoder.fromFile file)
+            , writeFile (generatedFolder ++ "/Encode.elm") (JsonEncoder.fromFile file)
+            , writeFile (generatedFolder ++ "/Decode.elm") (JsonDecoder.fromFile file)
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (TypeScriptDeclaration.fromFile file)
             ]
                 |> Task.sequence

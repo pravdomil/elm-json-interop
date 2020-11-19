@@ -1,4 +1,4 @@
-module Generated.ExampleDecode exposing (..)
+module Generated.Example.Decode exposing (..)
 
 import Example as A
 import Generated.Basics.Decode exposing (..)

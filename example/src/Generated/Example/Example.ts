@@ -1,4 +1,4 @@
-import { Maybe, Result } from "./Basics/Basics"
+import { Maybe, Result } from "../Basics/Basics"
 
 
 /** To define what can happen.

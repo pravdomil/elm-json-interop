@@ -1,4 +1,4 @@
-module Generated.ExampleEncode exposing (..)
+module Generated.Example.Encode exposing (..)
 
 import Example as A
 import Generated.Basics.Encode exposing (..)

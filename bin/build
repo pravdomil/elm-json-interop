@@ -22,4 +22,4 @@ chmod +x bin/elm-to-json-and-ts
 
 # To build example.
 bin/elm-to-json-and-ts example/src/Example.elm
-elm-format --yes example/src/Generated/*.elm
+elm-format --yes example/src/Generated/Example/*.elm
