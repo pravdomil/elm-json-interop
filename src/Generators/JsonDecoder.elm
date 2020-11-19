@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, letterByInt, maybeCustomTypeHasCustomTags, moduleImports, moduleNameToString, wrapInParentheses)
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, maybeCustomTypeHasCustomTags, moduleImports, moduleNameToString, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -314,7 +314,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
 -}
 decoderName : String -> String
 decoderName a =
-    firstToLowerCase a ++ "Decoder"
+    firstToLowerCase a
 
 
 {-| To get function for constructing tuples by number.

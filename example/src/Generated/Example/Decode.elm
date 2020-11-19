@@ -5,8 +5,8 @@ import Generated.Basics.Decode exposing (..)
 import Json.Decode exposing (..)
 
 
-msgDecoder : Decoder A.Msg
-msgDecoder =
+msg : Decoder A.Msg
+msg =
     index 0 string
         |> andThen
             (\tag ->
@@ -18,7 +18,7 @@ msgDecoder =
                         map A.ChangedDraft (index 1 string)
 
                     "ReceivedMessages" ->
-                        map A.ReceivedMessages (index 1 (list (map2 (\a b -> { user = a, message = b }) (field "user" userDecoder) (maybeField "message" (nullable string)))))
+                        map A.ReceivedMessages (index 1 (list (map2 (\a b -> { user = a, message = b }) (field "user" user) (maybeField "message" (nullable string)))))
 
                     "ClickedExit" ->
                         succeed A.ClickedExit
@@ -28,8 +28,8 @@ msgDecoder =
             )
 
 
-userDecoder : Decoder A.User
-userDecoder =
+user : Decoder A.User
+user =
     index 0 string
         |> andThen
             (\tag ->
