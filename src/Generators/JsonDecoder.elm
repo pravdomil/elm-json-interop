@@ -61,13 +61,13 @@ fromTypeAlias a =
 fromCustomType : File -> Type -> String
 fromCustomType file a =
     let
-        constructors : Maybe (List ( String, Node ValueConstructor ))
-        constructors =
+        customTags : Maybe (List ( String, Node ValueConstructor ))
+        customTags =
             a |> maybeCustomTypeHasCustomTags file
 
         tagDecoder : String
         tagDecoder =
-            case constructors of
+            case customTags of
                 Just _ ->
                     "field \"_type\" string"
 
@@ -76,9 +76,9 @@ fromCustomType file a =
 
         cases : String
         cases =
-            constructors
+            customTags
                 |> Maybe.withDefault (a.constructors |> List.map (\v -> Tuple.pair (v |> Node.value |> .name |> Node.value) v))
-                |> List.map (fromCustomTypeConstructor constructors)
+                |> List.map (fromCustomTypeConstructor customTags)
                 |> join "\n    "
 
         fail : String
@@ -91,7 +91,7 @@ fromCustomType file a =
 {-| To get decoder from custom type constructor.
 -}
 fromCustomTypeConstructor : Maybe a -> ( String, Node ValueConstructor ) -> String
-fromCustomTypeConstructor constructors ( tag, Node _ a ) =
+fromCustomTypeConstructor customTags ( tag, Node _ a ) =
     let
         name : String
         name =
@@ -99,7 +99,7 @@ fromCustomTypeConstructor constructors ( tag, Node _ a ) =
 
         arguments : String
         arguments =
-            case constructors of
+            case customTags of
                 Just _ ->
                     a.arguments |> List.map fromTypeAnnotation |> join " "
 
