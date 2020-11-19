@@ -11,7 +11,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils.Utils exposing (encodeJsonString, moduleImports, denormalizeRecordFieldName)
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, moduleImports)
 
 
 {-| To get TypeScript declaration from file.
