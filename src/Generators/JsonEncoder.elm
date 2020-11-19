@@ -195,6 +195,18 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
                 "Decode.Value" ->
                     "identity"
 
+                "Char" ->
+                    "BE.char"
+
+                "Maybe" ->
+                    "BE.maybe"
+
+                "Dict" ->
+                    "BE.dict"
+
+                "Result" ->
+                    "BE.result"
+
                 _ ->
                     moduleName ++ [ encoderName name ] |> join "."
 
