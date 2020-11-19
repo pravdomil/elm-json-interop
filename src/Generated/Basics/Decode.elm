@@ -1,75 +1,75 @@
 module Generated.Basics.Decode exposing (..)
 
 import Dict exposing (Dict)
-import Json.Decode exposing (..)
+import Json.Decode as D exposing (Decoder)
 import Set exposing (Set)
 
 
 {-| To decode char.
 -}
-charDecoder : Decoder Char
-charDecoder =
-    string
-        |> andThen
+char : Decoder Char
+char =
+    D.string
+        |> D.andThen
             (\a ->
                 case a |> String.toList of
                     b :: [] ->
-                        succeed b
+                        D.succeed b
 
                     _ ->
-                        fail "I was expecting exactly one char."
+                        D.fail "I was expecting exactly one char."
             )
 
 
 {-| To decode set.
 -}
-setDecoder : Decoder comparable -> Decoder (Set comparable)
-setDecoder a =
-    map Set.fromList (list a)
+set : Decoder comparable -> Decoder (Set comparable)
+set a =
+    D.map Set.fromList (D.list a)
 
 
 {-| To decode dictionary.
 -}
-dictDecoder : k -> Decoder v -> Decoder (Dict String v)
-dictDecoder _ a =
-    dict a
+dict : k -> Decoder v -> Decoder (Dict String v)
+dict _ a =
+    D.dict a
 
 
 {-| To maybe decode field.
 -}
 maybeField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
 maybeField name a =
-    oneOf
-        [ map Just (field name value)
-        , succeed Nothing
+    D.oneOf
+        [ D.map Just (D.field name D.value)
+        , D.succeed Nothing
         ]
-        |> andThen
+        |> D.andThen
             (\v ->
                 case v of
                     Just _ ->
-                        field name a
+                        D.field name a
 
                     Nothing ->
-                        succeed Nothing
+                        D.succeed Nothing
             )
 
 
 {-| To decode result.
 -}
-resultDecoder : Decoder e -> Decoder v -> Decoder (Result e v)
-resultDecoder errorDecoder valueDecoder =
-    index 0 string
-        |> andThen
+result : Decoder e -> Decoder v -> Decoder (Result e v)
+result errorDecoder valueDecoder =
+    D.index 0 D.string
+        |> D.andThen
             (\tag ->
                 case tag of
                     "Ok" ->
-                        map Ok (index 1 valueDecoder)
+                        D.map Ok (D.index 1 valueDecoder)
 
                     "Err" ->
-                        map Err (index 1 errorDecoder)
+                        D.map Err (D.index 1 errorDecoder)
 
                     _ ->
-                        fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")
+                        D.fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")
             )
 
 
@@ -79,12 +79,12 @@ resultDecoder errorDecoder valueDecoder =
 
 duo : Decoder a -> Decoder b -> Decoder ( a, b )
 duo =
-    map2 Tuple.pair
+    D.map2 Tuple.pair
 
 
 trio : Decoder a -> Decoder b -> Decoder c -> Decoder ( a, b, c )
 trio =
-    map3 (\a b c -> ( a, b, c ))
+    D.map3 (\a b c -> ( a, b, c ))
 
 
 map9 :
@@ -100,7 +100,7 @@ map9 :
     -> Decoder i
     -> Decoder value
 map9 fn a b =
-    map8 (\( a_, b_ ) -> fn a_ b_)
+    D.map8 (\( a_, b_ ) -> fn a_ b_)
         (duo a b)
 
 
@@ -118,7 +118,7 @@ map10 :
     -> Decoder j
     -> Decoder value
 map10 fn a b c =
-    map8 (\( a_, b_, c_ ) -> fn a_ b_ c_)
+    D.map8 (\( a_, b_, c_ ) -> fn a_ b_ c_)
         (trio a b c)
 
 
@@ -137,7 +137,7 @@ map11 :
     -> Decoder k
     -> Decoder value
 map11 fn a b c d e =
-    map8 (\( a_, b_, c_ ) ( d_, e_ ) -> fn a_ b_ c_ d_ e_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_ ) -> fn a_ b_ c_ d_ e_)
         (trio a b c)
         (duo d e)
 
@@ -158,7 +158,7 @@ map12 :
     -> Decoder l
     -> Decoder value
 map12 fn a b c d e f =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) -> fn a_ b_ c_ d_ e_ f_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) -> fn a_ b_ c_ d_ e_ f_)
         (trio a b c)
         (trio d e f)
 
@@ -180,7 +180,7 @@ map13 :
     -> Decoder m
     -> Decoder value
 map13 fn a b c d e f g h =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_)
         (trio a b c)
         (trio d e f)
         (duo g h)
@@ -204,7 +204,7 @@ map14 :
     -> Decoder n
     -> Decoder value
 map14 fn a b c d e f g h i =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_)
         (trio a b c)
         (trio d e f)
         (trio g h i)
@@ -229,7 +229,7 @@ map15 :
     -> Decoder o
     -> Decoder value
 map15 fn a b c d e f g h i j k =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_)
         (trio a b c)
         (trio d e f)
         (trio g h i)
@@ -256,7 +256,7 @@ map16 :
     -> Decoder p
     -> Decoder value
 map16 fn a b c d e f g h i j k l =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_)
         (trio a b c)
         (trio d e f)
         (trio g h i)
@@ -284,7 +284,7 @@ map17 :
     -> Decoder q
     -> Decoder value
 map17 fn a b c d e f g h i j k l m n =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) ( m_, n_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_ m_ n_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) ( m_, n_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_ m_ n_)
         (trio a b c)
         (trio d e f)
         (trio g h i)
@@ -314,7 +314,7 @@ map18 :
     -> Decoder r
     -> Decoder value
 map18 fn a b c d e f g h i j k l m n o =
-    map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) ( m_, n_, o_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_ m_ n_ o_)
+    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) ( m_, n_, o_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_ m_ n_ o_)
         (trio a b c)
         (trio d e f)
         (trio g h i)

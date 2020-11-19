@@ -1,29 +1,29 @@
 module Generated.Msg.Decode exposing (..)
 
-import Generated.Basics.Decode exposing (..)
+import Generated.Basics.Decode as BD
 import Generated.User.Decode exposing (user)
-import Json.Decode exposing (..)
+import Json.Decode as D exposing (Decoder)
 import Msg as A
 
 
 msg : Decoder A.Msg
 msg =
-    index 0 string
-        |> andThen
+    D.index 0 D.string
+        |> D.andThen
             (\tag ->
                 case tag of
                     "PressedEnter" ->
-                        succeed A.PressedEnter
+                        D.succeed A.PressedEnter
 
                     "ChangedDraft" ->
-                        map A.ChangedDraft (index 1 string)
+                        D.map A.ChangedDraft (D.index 1 D.string)
 
                     "ReceivedMessages" ->
-                        map A.ReceivedMessages (index 1 (list (map2 (\a b -> { user = a, message = b }) (field "user" user) (maybeField "message" (nullable string)))))
+                        D.map A.ReceivedMessages (D.index 1 (D.list (D.map2 (\a b -> { user = a, message = b }) (D.field "user" user) (BD.maybeField "message" (D.nullable D.string)))))
 
                     "ClickedExit" ->
-                        succeed A.ClickedExit
+                        D.succeed A.ClickedExit
 
                     _ ->
-                        fail ("I can't decode " ++ "Msg" ++ ", unknown tag \"" ++ tag ++ "\".")
+                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown tag \"" ++ tag ++ "\".")
             )

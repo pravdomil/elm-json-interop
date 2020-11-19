@@ -19,8 +19,8 @@ fromFile a =
     [ "module Generated." ++ fileToModuleName a ++ ".Decode exposing (..)"
     , ""
     , "import " ++ fileToModuleName a ++ " as A"
-    , "import Generated.Basics.Decode exposing (..)"
-    , "import Json.Decode exposing (..)"
+    , "import Generated.Basics.Decode as BD"
+    , "import Json.Decode as D exposing (Decoder)"
     , a.imports
         |> moduleImports
             (\v vv ->
@@ -69,10 +69,10 @@ fromCustomType file a =
         tagDecoder =
             case customTags of
                 Just _ ->
-                    "field \"_type\" string"
+                    "D.field \"_type\" D.string"
 
                 Nothing ->
-                    "index 0 string"
+                    "D.index 0 D.string"
 
         cases : String
         cases =
@@ -83,9 +83,9 @@ fromCustomType file a =
 
         fail : String
         fail =
-            "\n    _ -> fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
+            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
     in
-    a |> fromType ("\n  " ++ tagDecoder ++ " |> andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  " ++ tagDecoder ++ " |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
@@ -110,7 +110,7 @@ fromCustomTypeConstructor customTags ( tag, Node _ a ) =
         decoder =
             case a.arguments of
                 [] ->
-                    "succeed A." ++ name
+                    "D.succeed A." ++ name
 
                 _ ->
                     mapFn (List.length a.arguments) ++ " A." ++ name ++ " " ++ arguments
@@ -137,7 +137,7 @@ fromType body a =
         maybeWrapInLazy b =
             case lazyDecoded of
                 True ->
-                    " lazy (\\_ ->" ++ b ++ "\n  )"
+                    " D.lazy (\\_ ->" ++ b ++ "\n  )"
 
                 False ->
                     b
@@ -179,7 +179,7 @@ fromTypeAnnotation a =
             fromTyped b c
 
         Unit ->
-            "succeed ()"
+            "D.succeed ()"
 
         Tupled nodes ->
             fromTuple nodes
@@ -205,31 +205,31 @@ fromTyped (Node _ ( moduleName, name )) arguments =
         fn =
             case moduleName ++ [ name ] |> join "." of
                 "Int" ->
-                    "int"
+                    "D.int"
 
                 "Float" ->
-                    "float"
+                    "D.float"
 
                 "Bool" ->
-                    "bool"
+                    "D.bool"
 
                 "String" ->
-                    "string"
+                    "D.string"
 
                 "List" ->
-                    "list"
+                    "D.list"
 
                 "Array" ->
-                    "array"
+                    "D.array"
 
                 "Maybe" ->
-                    "nullable"
+                    "D.nullable"
 
                 "Encode.Value" ->
-                    "value"
+                    "D.value"
 
                 "Decode.Value" ->
-                    "value"
+                    "D.value"
 
                 _ ->
                     moduleName ++ [ decoderName name ] |> join "."
@@ -262,7 +262,7 @@ fromTuple a =
 -}
 fromElementAt : Int -> Node TypeAnnotation -> String
 fromElementAt i a =
-    "(index " ++ String.fromInt i ++ " " ++ fromTypeAnnotation a ++ ")"
+    "(D.index " ++ String.fromInt i ++ " " ++ fromTypeAnnotation a ++ ")"
 
 
 {-| To get decoder from record.
@@ -298,10 +298,10 @@ fromRecordField (Node _ ( Node _ a, b )) =
         decoder =
             case Node.value b of
                 Typed (Node _ ( _, "Maybe" )) _ ->
-                    "maybeField"
+                    "BD.maybeField"
 
                 _ ->
-                    "field"
+                    "D.field"
     in
     "(" ++ decoder ++ " " ++ encodeJsonString (denormalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
 
@@ -338,7 +338,7 @@ mapFn : Int -> String
 mapFn a =
     case a of
         1 ->
-            "map"
+            "D.map"
 
         b ->
-            "map" ++ String.fromInt b
+            "D.map" ++ String.fromInt b

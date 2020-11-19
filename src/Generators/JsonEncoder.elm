@@ -19,8 +19,8 @@ fromFile a =
     [ "module Generated." ++ fileToModuleName a ++ ".Encode exposing (..)"
     , ""
     , "import " ++ fileToModuleName a ++ " as A"
-    , "import Generated.Basics.Encode exposing (..)"
-    , "import Json.Encode exposing (..)"
+    , "import Generated.Basics.Encode as BE"
+    , "import Json.Encode as E"
     , a.imports
         |> moduleImports
             (\v vv ->
@@ -88,13 +88,13 @@ fromCustomTypeConstructor (Node _ a) =
 
         encoder : String
         encoder =
-            ("string " ++ encodeJsonString name) :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
+            ("E.string " ++ encodeJsonString name) :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i b =
             b |> fromTypeAnnotation (letterByInt (1 + i))
     in
-    "A." ++ name ++ arguments ++ " -> list identity [ " ++ encoder ++ " ]"
+    "A." ++ name ++ arguments ++ " -> E.list identity [ " ++ encoder ++ " ]"
 
 
 {-| To get encoder from type.
@@ -110,7 +110,7 @@ fromType a =
         signature =
             case a.generics of
                 [] ->
-                    encoderName name ++ " : A." ++ name ++ " -> Value\n"
+                    encoderName name ++ " : A." ++ name ++ " -> E.Value\n"
 
                 _ ->
                     ""
@@ -143,7 +143,7 @@ fromTypeAnnotation parameter a =
             fromTyped parameter b c
 
         Unit ->
-            "(\\_ -> list identity [])" ++ parameterToString parameter
+            "(\\_ -> E.list identity [])" ++ parameterToString parameter
 
         Tupled b ->
             fromTuple parameter b
@@ -169,25 +169,25 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
         fn =
             case moduleName ++ [ name ] |> join "." of
                 "Int" ->
-                    "int"
+                    "E.int"
 
                 "Float" ->
-                    "float"
+                    "E.float"
 
                 "Bool" ->
-                    "bool"
+                    "E.bool"
 
                 "String" ->
-                    "string"
+                    "E.string"
 
                 "List" ->
-                    "list"
+                    "E.list"
 
                 "Array" ->
-                    "array"
+                    "E.array"
 
                 "Set" ->
-                    "set"
+                    "E.set"
 
                 "Encode.Value" ->
                     "identity"
@@ -238,14 +238,14 @@ fromTuple parameter a =
         parameterFromInt i =
             parameter ++ "_" ++ letterByInt i
     in
-    "(\\( " ++ parameters ++ " ) -> list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
+    "(\\( " ++ parameters ++ " ) -> E.list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
 
 
 {-| To get encoder from record.
 -}
 fromRecord : String -> RecordDefinition -> String
 fromRecord parameter a =
-    "object [ " ++ (a |> List.map (fromRecordField parameter) |> join ", ") ++ " ]"
+    "E.object [ " ++ (a |> List.map (fromRecordField parameter) |> join ", ") ++ " ]"
 
 
 {-| To get encoder from record field.

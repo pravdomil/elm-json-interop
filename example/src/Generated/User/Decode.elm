@@ -1,25 +1,25 @@
 module Generated.User.Decode exposing (..)
 
-import Generated.Basics.Decode exposing (..)
-import Json.Decode exposing (..)
+import Generated.Basics.Decode as BD
+import Json.Decode as D exposing (Decoder)
 import User as A
 
 
 user : Decoder A.User
 user =
-    index 0 string
-        |> andThen
+    D.index 0 D.string
+        |> D.andThen
             (\tag ->
                 case tag of
                     "Regular" ->
-                        map2 A.Regular (index 1 string) (index 2 int)
+                        D.map2 A.Regular (D.index 1 D.string) (D.index 2 D.int)
 
                     "Visitor" ->
-                        map A.Visitor (index 1 string)
+                        D.map A.Visitor (D.index 1 D.string)
 
                     "Anonymous" ->
-                        succeed A.Anonymous
+                        D.succeed A.Anonymous
 
                     _ ->
-                        fail ("I can't decode " ++ "User" ++ ", unknown tag \"" ++ tag ++ "\".")
+                        D.fail ("I can't decode " ++ "User" ++ ", unknown tag \"" ++ tag ++ "\".")
             )

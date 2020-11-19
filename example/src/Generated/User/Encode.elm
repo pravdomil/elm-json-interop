@@ -1,18 +1,18 @@
 module Generated.User.Encode exposing (..)
 
-import Generated.Basics.Encode exposing (..)
-import Json.Encode exposing (..)
+import Generated.Basics.Encode as BE
+import Json.Encode as E
 import User as A
 
 
-user : A.User -> Value
+user : A.User -> E.Value
 user a =
     case a of
         A.Regular b c ->
-            list identity [ string "Regular", string b, int c ]
+            E.list identity [ E.string "Regular", E.string b, E.int c ]
 
         A.Visitor b ->
-            list identity [ string "Visitor", string b ]
+            E.list identity [ E.string "Visitor", E.string b ]
 
         A.Anonymous ->
-            list identity [ string "Anonymous" ]
+            E.list identity [ E.string "Anonymous" ]

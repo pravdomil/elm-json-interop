@@ -1,42 +1,42 @@
 module Generated.Basics.Encode exposing (..)
 
 import Dict exposing (Dict)
-import Json.Encode exposing (..)
+import Json.Encode as E
 
 
 {-| To encode char.
 -}
-encodeChar : Char -> Value
-encodeChar a =
-    String.fromChar a |> string
+char : Char -> E.Value
+char a =
+    String.fromChar a |> E.string
 
 
 {-| To encode maybe.
 -}
-encodeMaybe : (a -> Value) -> Maybe a -> Value
-encodeMaybe a b =
+maybe : (a -> E.Value) -> Maybe a -> E.Value
+maybe a b =
     case b of
         Just c ->
             a c
 
         Nothing ->
-            null
+            E.null
 
 
 {-| To encode dictionary.
 -}
-encodeDict : (k -> Value) -> (v -> Value) -> Dict String v -> Value
-encodeDict _ b c =
+dict : (k -> E.Value) -> (v -> E.Value) -> Dict String v -> E.Value
+dict _ b c =
     dict identity b c
 
 
 {-| To encode result.
 -}
-encodeResult : (e -> Value) -> (v -> Value) -> Result e v -> Value
-encodeResult encodeError encodeValue a =
+result : (e -> E.Value) -> (v -> E.Value) -> Result e v -> E.Value
+result encodeError encodeValue a =
     case a of
         Ok b ->
-            list identity [ string "Ok", encodeValue b ]
+            E.list identity [ E.string "Ok", encodeValue b ]
 
         Err b ->
-            list identity [ string "Err", encodeError b ]
+            E.list identity [ E.string "Err", encodeError b ]
