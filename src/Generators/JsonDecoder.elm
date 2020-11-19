@@ -78,7 +78,7 @@ fromCustomType file a =
         cases =
             constructors
                 |> Maybe.withDefault (a.constructors |> List.map (\v -> Tuple.pair (v |> Node.value |> .name |> Node.value) v))
-                |> List.map fromCustomTypeConstructor
+                |> List.map (fromCustomTypeConstructor constructors)
                 |> join "\n    "
 
         fail : String
@@ -90,8 +90,8 @@ fromCustomType file a =
 
 {-| To get decoder from custom type constructor.
 -}
-fromCustomTypeConstructor : ( String, Node ValueConstructor ) -> String
-fromCustomTypeConstructor ( tag, Node _ a ) =
+fromCustomTypeConstructor : Maybe a -> ( String, Node ValueConstructor ) -> String
+fromCustomTypeConstructor constructors ( tag, Node _ a ) =
     let
         name : String
         name =
@@ -99,7 +99,12 @@ fromCustomTypeConstructor ( tag, Node _ a ) =
 
         arguments : String
         arguments =
-            a.arguments |> List.indexedMap (\i v -> fromElementAt (1 + i) v) |> join " "
+            case constructors of
+                Just _ ->
+                    a.arguments |> List.map fromTypeAnnotation |> join " "
+
+                Nothing ->
+                    a.arguments |> List.indexedMap (\i v -> fromElementAt (1 + i) v) |> join " "
 
         decoder : String
         decoder =
