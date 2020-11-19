@@ -3464,7 +3464,7 @@ var $elm$core$String$toList = function (string) {
 	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
 };
 var $elm$core$Char$toLower = _Char_toLower;
-var $author$project$Generators$JsonDecoder$firstToLowerCase = function (a) {
+var $author$project$Utils$Utils$firstToLowerCase = function (a) {
 	var _v0 = $elm$core$String$toList(a);
 	if (_v0.b) {
 		var first = _v0.a;
@@ -3479,7 +3479,7 @@ var $author$project$Generators$JsonDecoder$firstToLowerCase = function (a) {
 	}
 };
 var $author$project$Generators$JsonDecoder$decoderName = function (a) {
-	return $author$project$Generators$JsonDecoder$firstToLowerCase(a) + 'Decoder';
+	return $author$project$Utils$Utils$firstToLowerCase(a);
 };
 var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
 	var v = _v0.b;
@@ -3585,12 +3585,7 @@ var $author$project$Utils$Utils$letterByInt = function (a) {
 		$elm$core$Char$fromCode(a + 97));
 };
 var $author$project$Generators$JsonDecoder$mapFn = function (a) {
-	if (a === 1) {
-		return 'map';
-	} else {
-		var b = a;
-		return 'map' + $elm$core$String$fromInt(b);
-	}
+	return (a === 1) ? 'D.map' : ((a <= 8) ? ('D.map' + $elm$core$String$fromInt(a)) : ('BD.map' + $elm$core$String$fromInt(a)));
 };
 var $author$project$Generators$JsonDecoder$tupleFn = function (len) {
 	switch (len) {
@@ -3607,7 +3602,7 @@ var $author$project$Utils$Utils$wrapInParentheses = function (a) {
 };
 var $author$project$Generators$JsonDecoder$fromElementAt = F2(
 	function (i, a) {
-		return '(index ' + ($elm$core$String$fromInt(i) + (' ' + ($author$project$Generators$JsonDecoder$fromTypeAnnotation(a) + ')')));
+		return '(D.index ' + ($elm$core$String$fromInt(i) + (' ' + ($author$project$Generators$JsonDecoder$fromTypeAnnotation(a) + ')')));
 	});
 var $author$project$Generators$JsonDecoder$fromRecord = function (a) {
 	var parameters = A2(
@@ -3648,9 +3643,9 @@ var $author$project$Generators$JsonDecoder$fromRecordField = function (_v6) {
 		if ((_v9.$ === 1) && (_v9.a.b.b === 'Maybe')) {
 			var _v10 = _v9.a;
 			var _v11 = _v10.b;
-			return 'maybeField';
+			return 'BD.maybeField';
 		} else {
-			return 'field';
+			return 'D.field';
 		}
 	}();
 	return '(' + (decoder + (' ' + ($author$project$Utils$Utils$encodeJsonString(
@@ -3678,7 +3673,7 @@ var $author$project$Generators$JsonDecoder$fromTypeAnnotation = function (a) {
 					var c = _v4.b;
 					return A2($author$project$Generators$JsonDecoder$fromTyped, b, c);
 				case 2:
-					return 'succeed ()';
+					return 'D.succeed ()';
 				case 3:
 					var nodes = _v4.a;
 					return $author$project$Generators$JsonDecoder$fromTuple(nodes);
@@ -3708,24 +3703,32 @@ var $author$project$Generators$JsonDecoder$fromTyped = F2(
 					_List_fromArray(
 						[name])));
 			switch (_v3) {
-				case 'Int':
-					return 'int';
-				case 'Float':
-					return 'float';
 				case 'Bool':
-					return 'bool';
+					return 'D.bool';
+				case 'Int':
+					return 'D.int';
+				case 'Float':
+					return 'D.float';
 				case 'String':
-					return 'string';
-				case 'List':
-					return 'list';
-				case 'Array':
-					return 'array';
+					return 'D.string';
 				case 'Maybe':
-					return 'nullable';
+					return 'D.nullable';
+				case 'List':
+					return 'D.list';
+				case 'Array':
+					return 'D.array';
+				case 'Char':
+					return 'BD.char';
+				case 'Result':
+					return 'BD.result';
+				case 'Set':
+					return 'BD.set';
+				case 'Dict':
+					return 'BD.dict';
 				case 'Encode.Value':
-					return 'value';
+					return 'D.value';
 				case 'Decode.Value':
-					return 'value';
+					return 'D.value';
 				default:
 					return A2(
 						$elm$core$String$join,
@@ -3750,32 +3753,42 @@ var $author$project$Generators$JsonDecoder$fromTyped = F2(
 		}();
 		return _Utils_ap(fn, arguments_);
 	});
-var $author$project$Generators$JsonDecoder$fromCustomTypeConstructor = function (_v0) {
-	var tag = _v0.a;
-	var _v1 = _v0.b;
-	var a = _v1.b;
-	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.O);
-	var _arguments = A2(
-		$elm$core$String$join,
-		' ',
-		A2(
-			$elm$core$List$indexedMap,
-			F2(
-				function (i, v) {
-					return A2($author$project$Generators$JsonDecoder$fromElementAt, 1 + i, v);
-				}),
-			a.P));
-	var decoder = function () {
-		var _v2 = a.P;
-		if (!_v2.b) {
-			return 'succeed A.' + name;
-		} else {
-			return $author$project$Generators$JsonDecoder$mapFn(
-				$elm$core$List$length(a.P)) + (' A.' + (name + (' ' + _arguments)));
-		}
-	}();
-	return $author$project$Utils$Utils$encodeJsonString(tag) + (' -> ' + decoder);
-};
+var $author$project$Generators$JsonDecoder$fromCustomTypeConstructor = F2(
+	function (customTags, _v0) {
+		var tag = _v0.a;
+		var _v1 = _v0.b;
+		var a = _v1.b;
+		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.P);
+		var _arguments = function () {
+			if (!customTags.$) {
+				return A2(
+					$elm$core$String$join,
+					' ',
+					A2($elm$core$List$map, $author$project$Generators$JsonDecoder$fromTypeAnnotation, a.N));
+			} else {
+				return A2(
+					$elm$core$String$join,
+					' ',
+					A2(
+						$elm$core$List$indexedMap,
+						F2(
+							function (i, v) {
+								return A2($author$project$Generators$JsonDecoder$fromElementAt, 1 + i, v);
+							}),
+						a.N));
+			}
+		}();
+		var decoder = function () {
+			var _v2 = a.N;
+			if (!_v2.b) {
+				return 'D.succeed A.' + name;
+			} else {
+				return $author$project$Generators$JsonDecoder$mapFn(
+					$elm$core$List$length(a.N)) + (' A.' + (name + (' ' + _arguments)));
+			}
+		}();
+		return $author$project$Utils$Utils$encodeJsonString(tag) + (' -> ' + decoder);
+	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$Maybe$map = F2(
 	function (f, maybe) {
@@ -3790,7 +3803,7 @@ var $elm$core$Maybe$map = F2(
 var $elm$core$String$toLower = _String_toLower;
 var $author$project$Generators$JsonDecoder$fromType = F2(
 	function (body, a) {
-		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.O);
+		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.P);
 		var signature = function () {
 			var _v2 = a.R;
 			if (!_v2.b) {
@@ -3814,7 +3827,7 @@ var $author$project$Generators$JsonDecoder$fromType = F2(
 				a.bi));
 		var maybeWrapInLazy = function (b) {
 			if (lazyDecoded) {
-				return ' lazy (\\_ ->' + (b + '\n  )');
+				return ' D.lazy (\\_ ->' + (b + '\n  )');
 			} else {
 				return b;
 			}
@@ -3888,9 +3901,9 @@ var $stil4m$elm_syntax$Elm$Syntax$Node$range = function (_v0) {
 };
 var $author$project$Utils$Utils$maybeCustomTypeHasCustomTags = F2(
 	function (file, a) {
-		var zeroOrOneArguments = function (b) {
+		var oneArgument = function (b) {
 			return ($elm$core$List$length(
-				$stil4m$elm_syntax$Elm$Syntax$Node$value(b).P) <= 1) ? $elm$core$Maybe$Just(0) : $elm$core$Maybe$Nothing;
+				$stil4m$elm_syntax$Elm$Syntax$Node$value(b).N) === 1) ? $elm$core$Maybe$Just(0) : $elm$core$Maybe$Nothing;
 		};
 		var commentAtSameLine = function (b) {
 			return A2(
@@ -3930,7 +3943,7 @@ var $author$project$Utils$Utils$maybeCustomTypeHasCustomTags = F2(
 													_Utils_Tuple2(e, b)
 												]));
 									}),
-								zeroOrOneArguments(b),
+								oneArgument(b),
 								commentAtSameLine(b));
 						},
 						acc);
@@ -3944,14 +3957,14 @@ var $elm$core$Tuple$pair = F2(
 	});
 var $author$project$Generators$JsonDecoder$fromCustomType = F2(
 	function (file, a) {
-		var fail = '\n    _ -> fail (\"I can\'t decode \" ++ ' + ($author$project$Utils$Utils$encodeJsonString(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.O)) + ' ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")');
-		var constructors = A2($author$project$Utils$Utils$maybeCustomTypeHasCustomTags, file, a);
+		var fail = '\n    _ -> D.fail (\"I can\'t decode \" ++ ' + ($author$project$Utils$Utils$encodeJsonString(
+			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.P)) + ' ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")');
+		var customTags = A2($author$project$Utils$Utils$maybeCustomTypeHasCustomTags, file, a);
 		var tagDecoder = function () {
-			if (!constructors.$) {
-				return 'field \"_type\" string';
+			if (!customTags.$) {
+				return 'D.field \"_type\" D.string';
 			} else {
-				return 'index 0 string';
+				return 'D.index 0 D.string';
 			}
 		}();
 		var cases = A2(
@@ -3959,7 +3972,7 @@ var $author$project$Generators$JsonDecoder$fromCustomType = F2(
 			'\n    ',
 			A2(
 				$elm$core$List$map,
-				$author$project$Generators$JsonDecoder$fromCustomTypeConstructor,
+				$author$project$Generators$JsonDecoder$fromCustomTypeConstructor(customTags),
 				A2(
 					$elm$core$Maybe$withDefault,
 					A2(
@@ -3968,12 +3981,12 @@ var $author$project$Generators$JsonDecoder$fromCustomType = F2(
 							return A2(
 								$elm$core$Tuple$pair,
 								$stil4m$elm_syntax$Elm$Syntax$Node$value(
-									$stil4m$elm_syntax$Elm$Syntax$Node$value(v).O),
+									$stil4m$elm_syntax$Elm$Syntax$Node$value(v).P),
 								v);
 						},
 						a.bd),
-					constructors)));
-		return A2($author$project$Generators$JsonDecoder$fromType, '\n  ' + (tagDecoder + (' |> andThen (\\tag -> case tag of\n    ' + (cases + (fail + '\n  )')))), a);
+					customTags)));
+		return A2($author$project$Generators$JsonDecoder$fromType, '\n  ' + (tagDecoder + (' |> D.andThen (\\tag -> case tag of\n    ' + (cases + (fail + '\n  )')))), a);
 	});
 var $author$project$Generators$JsonDecoder$fromTypeAlias = function (a) {
 	return A2(
@@ -4039,7 +4052,7 @@ var $author$project$Utils$Utils$moduleImports = F2(
 					var name = _v3.a;
 					return $elm$core$Maybe$Just(name);
 				case 3:
-					var name = _v3.a.O;
+					var name = _v3.a.P;
 					return $elm$core$Maybe$Just(name);
 				default:
 					return $elm$core$Maybe$Nothing;
@@ -4080,11 +4093,11 @@ var $author$project$Generators$JsonDecoder$fromFile = function (a) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + 'Decode exposing (..)'),
+				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + '.Decode exposing (..)'),
 				'',
 				'import ' + ($author$project$Utils$Utils$fileToModuleName(a) + ' as A'),
-				'import Generated.Basics.BasicsDecode exposing (..)',
-				'import Json.Decode exposing (..)',
+				'import Generated.Basics.Decode as BD',
+				'import Json.Decode as D exposing (Decoder)',
 				A2(
 				$elm$core$String$join,
 				'\n',
@@ -4092,7 +4105,7 @@ var $author$project$Generators$JsonDecoder$fromFile = function (a) {
 					$author$project$Utils$Utils$moduleImports,
 					F2(
 						function (v, vv) {
-							return 'import Generated.' + ($author$project$Utils$Utils$moduleNameToString(v) + ('Decode exposing (' + (A2(
+							return 'import Generated.' + ($author$project$Utils$Utils$moduleNameToString(v) + ('.Decode exposing (' + (A2(
 								$elm$core$String$join,
 								', ',
 								A2($elm$core$List$map, $author$project$Generators$JsonDecoder$decoderName, vv)) + ')')));
@@ -4110,7 +4123,7 @@ var $author$project$Generators$JsonDecoder$fromFile = function (a) {
 			]));
 };
 var $author$project$Generators$JsonEncoder$encoderName = function (a) {
-	return 'encode' + a;
+	return $author$project$Utils$Utils$firstToLowerCase(a);
 };
 var $author$project$Generators$JsonEncoder$parameterToString = function (a) {
 	return ' ' + $author$project$Utils$Utils$wrapInParentheses(a);
@@ -4124,7 +4137,7 @@ var $elm$core$String$replace = F3(
 	});
 var $author$project$Generators$JsonEncoder$fromRecord = F2(
 	function (parameter, a) {
-		return 'object [ ' + (A2(
+		return 'E.object [ ' + (A2(
 			$elm$core$String$join,
 			', ',
 			A2(
@@ -4163,7 +4176,7 @@ var $author$project$Generators$JsonEncoder$fromTuple = F2(
 					parameterFromInt(i),
 					b);
 			});
-		return '(\\( ' + (parameters + (' ) -> list identity [ ' + (A2(
+		return '(\\( ' + (parameters + (' ) -> E.list identity [ ' + (A2(
 			$elm$core$String$join,
 			', ',
 			A2($elm$core$List$indexedMap, toEncoder, a)) + (' ])' + $author$project$Generators$JsonEncoder$parameterToString(parameter)))));
@@ -4182,7 +4195,7 @@ var $author$project$Generators$JsonEncoder$fromTypeAnnotation = F2(
 						var c = _v4.b;
 						return A3($author$project$Generators$JsonEncoder$fromTyped, parameter, b, c);
 					case 2:
-						return '(\\_ -> list identity [])' + $author$project$Generators$JsonEncoder$parameterToString(parameter);
+						return '(\\_ -> E.list identity [])' + $author$project$Generators$JsonEncoder$parameterToString(parameter);
 					case 3:
 						var b = _v4.a;
 						return A2($author$project$Generators$JsonEncoder$fromTuple, parameter, b);
@@ -4212,20 +4225,28 @@ var $author$project$Generators$JsonEncoder$fromTyped = F3(
 					_List_fromArray(
 						[name])));
 			switch (_v3) {
-				case 'Int':
-					return 'int';
-				case 'Float':
-					return 'float';
 				case 'Bool':
-					return 'bool';
+					return 'E.bool';
+				case 'Int':
+					return 'E.int';
+				case 'Float':
+					return 'E.float';
 				case 'String':
-					return 'string';
+					return 'E.string';
+				case 'Maybe':
+					return 'BE.maybe';
 				case 'List':
-					return 'list';
+					return 'E.list';
 				case 'Array':
-					return 'array';
+					return 'E.array';
+				case 'Char':
+					return 'BE.char';
+				case 'Result':
+					return 'BE.result';
 				case 'Set':
-					return 'set';
+					return 'E.set';
+				case 'Dict':
+					return 'BE.dict';
 				case 'Encode.Value':
 					return 'identity';
 				case 'Decode.Value':
@@ -4269,9 +4290,9 @@ var $author$project$Generators$JsonEncoder$fromTyped = F3(
 	});
 var $author$project$Generators$JsonEncoder$fromCustomTypeConstructor = function (_v0) {
 	var a = _v0.b;
-	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.O);
+	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.P);
 	var _arguments = function () {
-		var _v1 = a.P;
+		var _v1 = a.N;
 		if (!_v1.b) {
 			return '';
 		} else {
@@ -4284,7 +4305,7 @@ var $author$project$Generators$JsonEncoder$fromCustomTypeConstructor = function 
 						function (i, _v2) {
 							return $author$project$Utils$Utils$letterByInt(i + 1);
 						}),
-					a.P));
+					a.N));
 		}
 	}();
 	var argToEncoder = F2(
@@ -4299,16 +4320,16 @@ var $author$project$Generators$JsonEncoder$fromCustomTypeConstructor = function 
 		', ',
 		A2(
 			$elm$core$List$cons,
-			'string ' + $author$project$Utils$Utils$encodeJsonString(name),
-			A2($elm$core$List$indexedMap, argToEncoder, a.P)));
-	return 'A.' + (name + (_arguments + (' -> list identity [ ' + (encoder + ' ]'))));
+			'E.string ' + $author$project$Utils$Utils$encodeJsonString(name),
+			A2($elm$core$List$indexedMap, argToEncoder, a.N)));
+	return 'A.' + (name + (_arguments + (' -> E.list identity [ ' + (encoder + ' ]'))));
 };
 var $author$project$Generators$JsonEncoder$fromType = function (a) {
-	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.O);
+	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.P);
 	var signature = function () {
 		var _v1 = a.R;
 		if (!_v1.b) {
-			return $author$project$Generators$JsonEncoder$encoderName(name) + (' : A.' + (name + ' -> Value\n'));
+			return $author$project$Generators$JsonEncoder$encoderName(name) + (' : A.' + (name + ' -> E.Value\n'));
 		} else {
 			return '';
 		}
@@ -4366,11 +4387,11 @@ var $author$project$Generators$JsonEncoder$fromFile = function (a) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + 'Encode exposing (..)'),
+				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + '.Encode exposing (..)'),
 				'',
 				'import ' + ($author$project$Utils$Utils$fileToModuleName(a) + ' as A'),
-				'import Generated.Basics.BasicsEncode exposing (..)',
-				'import Json.Encode exposing (..)',
+				'import Generated.Basics.Encode as BE',
+				'import Json.Encode as E',
 				A2(
 				$elm$core$String$join,
 				'\n',
@@ -4378,7 +4399,7 @@ var $author$project$Generators$JsonEncoder$fromFile = function (a) {
 					$author$project$Utils$Utils$moduleImports,
 					F2(
 						function (v, vv) {
-							return 'import Generated.' + ($author$project$Utils$Utils$moduleNameToString(v) + ('Encode exposing (' + (A2(
+							return 'import Generated.' + ($author$project$Utils$Utils$moduleNameToString(v) + ('.Encode exposing (' + (A2(
 								$elm$core$String$join,
 								', ',
 								A2($elm$core$List$map, $author$project$Generators$JsonEncoder$encoderName, vv)) + ')')));
@@ -4402,7 +4423,7 @@ var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed = F2(
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Type$ValueConstructor = F2(
 	function (name, _arguments) {
-		return {P: _arguments, O: name};
+		return {N: _arguments, P: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$GenericType = function (a) {
 	return {$: 0, a: a};
@@ -4526,13 +4547,13 @@ var $author$project$Generators$TypeScriptDeclaration$customTypeConstructorToTs =
 				$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 				$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 				$stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$GenericType(
-					'typeof ' + $stil4m$elm_syntax$Elm$Syntax$Node$value(a.O))),
-			a.P));
+					'typeof ' + $stil4m$elm_syntax$Elm$Syntax$Node$value(a.P))),
+			a.N));
 };
 var $author$project$Generators$TypeScriptDeclaration$customTypeTagToTs = function (a) {
 	var toTagNameConstant = function (b) {
 		var tag = $stil4m$elm_syntax$Elm$Syntax$Node$value(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(b).O);
+			$stil4m$elm_syntax$Elm$Syntax$Node$value(b).P);
 		return 'export const ' + (tag + (' = ' + $author$project$Utils$Utils$encodeJsonString(tag)));
 	};
 	return A2(
@@ -4562,7 +4583,7 @@ var $author$project$Generators$TypeScriptDeclaration$typeToTs = function (a) {
 			return '';
 		}
 	}();
-	var declaration = 'export type ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.O) + (generics + ' ='));
+	var declaration = 'export type ' + ($stil4m$elm_syntax$Elm$Syntax$Node$value(a.P) + (generics + ' ='));
 	return _Utils_ap(documentation, declaration);
 };
 var $author$project$Generators$TypeScriptDeclaration$customTypeToTs = function (a) {
@@ -4570,7 +4591,7 @@ var $author$project$Generators$TypeScriptDeclaration$customTypeToTs = function (
 		var _v3 = a.bd;
 		if (_v3.b && (!_v3.b.b)) {
 			var _v4 = _v3.a;
-			var name = _v4.b.O;
+			var name = _v4.b.P;
 			return $elm$core$Maybe$Just(name);
 		} else {
 			return $elm$core$Maybe$Nothing;
@@ -4602,7 +4623,7 @@ var $author$project$Generators$TypeScriptDeclaration$customTypeToTs = function (
 		var _v1 = A2(
 			$elm$core$String$split,
 			'JsRef',
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.O));
+			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.P));
 		if ((_v1.b && _v1.b.b) && (!_v1.b.b.b)) {
 			var _v2 = _v1.b;
 			var b = _v2.a;
@@ -4671,14 +4692,32 @@ var $author$project$Generators$TypeScriptDeclaration$fromFile = function (a) {
 		$elm$core$String$repeat,
 		$elm$core$List$length(
 			$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
-				$stil4m$elm_syntax$Elm$Syntax$Node$value(a.bx))) - 1,
+				$stil4m$elm_syntax$Elm$Syntax$Node$value(a.bx))),
 		'../');
+	var listLast = function (b) {
+		listLast:
+		while (true) {
+			if (!b.b) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				if (!b.b.b) {
+					var x = b.a;
+					return $elm$core$Maybe$Just(x);
+				} else {
+					var xs = b.b;
+					var $temp$b = xs;
+					b = $temp$b;
+					continue listLast;
+				}
+			}
+		}
+	};
 	return A2(
 		$elm$core$String$join,
 		'\n',
 		_List_fromArray(
 			[
-				'import { Maybe, Result } from \"./' + (root + 'Basics/Basics\"'),
+				'import { Maybe, Result } from \"' + (root + 'Basics/Basics\"'),
 				A2(
 				$elm$core$String$join,
 				'\n',
@@ -4686,7 +4725,10 @@ var $author$project$Generators$TypeScriptDeclaration$fromFile = function (a) {
 					$author$project$Utils$Utils$moduleImports,
 					F2(
 						function (v, vv) {
-							return 'import { ' + (A2($elm$core$String$join, ', ', vv) + (' } from \"' + (root + (A2($elm$core$String$join, '/', v) + '\"'))));
+							return 'import { ' + (A2($elm$core$String$join, ', ', vv) + (' } from \"' + (root + (A2($elm$core$String$join, '/', v) + ('/' + (A2(
+								$elm$core$Maybe$withDefault,
+								'',
+								listLast(v)) + '\"'))))));
 						}),
 					a.bq)),
 				'',
@@ -5248,7 +5290,7 @@ var $stil4m$elm_syntax$Elm$Inspector$inspectFunction = F3(
 				A2(
 					$stil4m$elm_syntax$Elm$Inspector$inspectExpression,
 					config,
-					$stil4m$elm_syntax$Elm$Syntax$Node$value(_function.bf).N),
+					$stil4m$elm_syntax$Elm$Syntax$Node$value(_function.bf).O),
 				A2(
 					$elm$core$Maybe$withDefault,
 					$elm$core$Basics$identity,
@@ -5353,11 +5395,11 @@ var $stil4m$elm_syntax$Elm$Inspector$inspectInnerExpression = F3(
 				var next = A2(
 					$elm$core$Basics$composeR,
 					A2($stil4m$elm_syntax$Elm$Inspector$inspectLetDeclarations, config, letBlock.bg),
-					A2($stil4m$elm_syntax$Elm$Inspector$inspectExpression, config, letBlock.N));
+					A2($stil4m$elm_syntax$Elm$Inspector$inspectExpression, config, letBlock.O));
 				return A4($stil4m$elm_syntax$Elm$Inspector$actionLambda, config.ac, next, letBlock, context);
 			case 16:
 				var caseBlock = expression.a;
-				var context2 = A3($stil4m$elm_syntax$Elm$Inspector$inspectExpression, config, caseBlock.N, context);
+				var context2 = A3($stil4m$elm_syntax$Elm$Inspector$inspectExpression, config, caseBlock.O, context);
 				var context3 = A3(
 					$elm$core$List$foldl,
 					F2(
@@ -5372,7 +5414,7 @@ var $stil4m$elm_syntax$Elm$Inspector$inspectInnerExpression = F3(
 				return A4(
 					$stil4m$elm_syntax$Elm$Inspector$actionLambda,
 					config.ab,
-					A2($stil4m$elm_syntax$Elm$Inspector$inspectExpression, config, lambda.N),
+					A2($stil4m$elm_syntax$Elm$Inspector$inspectExpression, config, lambda.O),
 					lambda,
 					context);
 			case 19:
@@ -5468,7 +5510,7 @@ var $stil4m$elm_syntax$Elm$Inspector$inspectValueConstructor = F3(
 			$elm$core$List$foldl,
 			$stil4m$elm_syntax$Elm$Inspector$inspectTypeAnnotation(config),
 			context,
-			valueConstructor.P);
+			valueConstructor.N);
 	});
 var $stil4m$elm_syntax$Elm$Inspector$inspectTypeInner = F3(
 	function (config, typeDecl, context) {
@@ -5877,7 +5919,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Exposing$Explicit = function (a) {
 };
 var $stil4m$elm_syntax$Elm$Syntax$Exposing$ExposedType = F2(
 	function (name, open) {
-		return {O: name, bC: open};
+		return {P: name, bC: open};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Exposing$InfixExpose = function (a) {
 	return {$: 0, a: a};
@@ -6200,7 +6242,7 @@ var $stil4m$elm_syntax$Elm$Processing$visitExpressionInner = F3(
 						return $stil4m$elm_syntax$Elm$Syntax$Expression$LetExpression(
 							{
 								bg: A3($stil4m$elm_syntax$Elm$Processing$visitLetDeclarations, visitor, context, letBlock.bg),
-								N: subVisit(letBlock.N)
+								O: subVisit(letBlock.O)
 							});
 					case 16:
 						var caseBlock = expression.a;
@@ -6210,7 +6252,7 @@ var $stil4m$elm_syntax$Elm$Processing$visitExpressionInner = F3(
 									$elm$core$List$map,
 									$elm$core$Tuple$mapSecond(subVisit),
 									caseBlock.ba),
-								N: subVisit(caseBlock.N)
+								O: subVisit(caseBlock.O)
 							});
 					case 17:
 						var lambda = expression.a;
@@ -6218,7 +6260,7 @@ var $stil4m$elm_syntax$Elm$Processing$visitExpressionInner = F3(
 							_Utils_update(
 								lambda,
 								{
-									N: subVisit(lambda.N)
+									O: subVisit(lambda.O)
 								}));
 					case 18:
 						var expressionStringList = expression.a;
@@ -6260,10 +6302,10 @@ var $stil4m$elm_syntax$Elm$Processing$visitFunctionDecl = F3(
 	});
 var $stil4m$elm_syntax$Elm$Processing$visitFunctionDeclaration = F3(
 	function (visitor, context, functionDeclaration) {
-		var newExpression = A3($stil4m$elm_syntax$Elm$Processing$visitExpression, visitor, context, functionDeclaration.N);
+		var newExpression = A3($stil4m$elm_syntax$Elm$Processing$visitExpression, visitor, context, functionDeclaration.O);
 		return _Utils_update(
 			functionDeclaration,
-			{N: newExpression});
+			{O: newExpression});
 	});
 var $stil4m$elm_syntax$Elm$Processing$visitLetDeclaration = F3(
 	function (visitor, context, _v0) {
@@ -6541,7 +6583,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Node$combine = F3(
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Expression$CaseBlock = F2(
 	function (expression, cases) {
-		return {ba: cases, N: expression};
+		return {ba: cases, O: expression};
 	});
 var $stil4m$elm_syntax$Combine$Done = function (a) {
 	return {$: 1, a: a};
@@ -6552,15 +6594,15 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$Function = F3(
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Expression$FunctionImplementation = F3(
 	function (name, _arguments, expression) {
-		return {P: _arguments, N: expression, O: name};
+		return {N: _arguments, O: expression, P: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Expression$Lambda = F2(
 	function (args, expression) {
-		return {u: args, N: expression};
+		return {u: args, O: expression};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Expression$LetBlock = F2(
 	function (declarations, expression) {
-		return {bg: declarations, N: expression};
+		return {bg: declarations, O: expression};
 	});
 var $stil4m$elm_syntax$Combine$Loop = function (a) {
 	return {$: 0, a: a};
@@ -7373,7 +7415,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Pattern$ParenthesizedPattern = function (a) {
 };
 var $stil4m$elm_syntax$Elm$Syntax$Pattern$QualifiedNameRef = F2(
 	function (moduleName, name) {
-		return {aH: moduleName, O: name};
+		return {aH: moduleName, P: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Pattern$StringPattern = function (a) {
 	return {$: 3, a: a};
@@ -8524,7 +8566,7 @@ $stil4m$elm_syntax$Elm$Parser$Patterns$cyclic$parensPattern = function () {
 var $stil4m$elm_syntax$Elm$Parser$Declarations$functionArgument = $stil4m$elm_syntax$Elm$Parser$Patterns$pattern;
 var $stil4m$elm_syntax$Elm$Syntax$Signature$Signature = F2(
 	function (name, typeAnnotation) {
-		return {O: name, bL: typeAnnotation};
+		return {P: name, bL: typeAnnotation};
 	});
 var $stil4m$elm_syntax$Elm$Parser$TypeAnnotation$Eager = 0;
 var $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$FunctionTypeAnnotation = F2(
@@ -10144,12 +10186,12 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$functionRange = function (_function
 							var r = _v3.a;
 							return r;
 						}(
-							$stil4m$elm_syntax$Elm$Syntax$Node$value(_function.bf).O),
+							$stil4m$elm_syntax$Elm$Syntax$Node$value(_function.bf).P),
 						A2(
 							$elm$core$Maybe$map,
 							function (_v1) {
 								var value = _v1.b;
-								var _v2 = value.O;
+								var _v2 = value.P;
 								var r = _v2.a;
 								return r;
 							},
@@ -10160,7 +10202,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$functionRange = function (_function
 				var r = _v4.a;
 				return r;
 			}(
-				$stil4m$elm_syntax$Elm$Syntax$Node$value(_function.bf).N)
+				$stil4m$elm_syntax$Elm$Syntax$Node$value(_function.bf).O)
 			]));
 };
 var $stil4m$elm_syntax$Elm$Parser$Declarations$function = $stil4m$elm_syntax$Combine$lazy(
@@ -10338,11 +10380,11 @@ var $stil4m$elm_syntax$Elm$Parser$Typings$DefinedType = F2(
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Type$Type = F4(
 	function (documentation, name, generics, constructors) {
-		return {bd: constructors, bi: documentation, R: generics, O: name};
+		return {bd: constructors, bi: documentation, R: generics, P: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$TypeAlias$TypeAlias = F4(
 	function (documentation, name, generics, typeAnnotation) {
-		return {bi: documentation, R: generics, O: name, bL: typeAnnotation};
+		return {bi: documentation, R: generics, P: name, bL: typeAnnotation};
 	});
 var $stil4m$elm_syntax$Elm$Parser$Typings$genericList = $stil4m$elm_syntax$Combine$many(
 	A2(
@@ -11128,7 +11170,7 @@ var $author$project$Main$processFile = function (path) {
 		function (binPath, fullPath, srcFolder, rawFile) {
 			var moduleName = A2($author$project$Main$basename, '.elm', fullPath);
 			var generatedFolder = $author$project$Main$dirname(
-				A3($elm$core$String$replace, srcFolder, srcFolder + 'Generated/', fullPath));
+				A3($elm$core$String$replace, srcFolder, srcFolder + 'Generated/', fullPath)) + ('/' + moduleName);
 			var file = A2($stil4m$elm_syntax$Elm$Processing$process, $stil4m$elm_syntax$Elm$Processing$init, rawFile);
 			return A2(
 				$elm$core$Task$map,
@@ -11139,17 +11181,17 @@ var $author$project$Main$processFile = function (path) {
 					_List_fromArray(
 						[
 							$author$project$Interop$JsCode$mkDir(srcFolder + 'Generated/Basics'),
-							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsEncode.elm', srcFolder + 'Generated/Basics/BasicsEncode.elm'),
-							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/BasicsDecode.elm', srcFolder + 'Generated/Basics/BasicsDecode.elm'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/Encode.elm', srcFolder + 'Generated/Basics/Encode.elm'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/Decode.elm', srcFolder + 'Generated/Basics/Decode.elm'),
 							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/Basics.ts', srcFolder + 'Generated/Basics/Basics.ts'),
 							$author$project$Interop$JsCode$mkDir(generatedFolder),
 							A2(
 							$author$project$Interop$JsCode$writeFile,
-							generatedFolder + ('/' + (moduleName + 'Encode.elm')),
+							generatedFolder + '/Encode.elm',
 							$author$project$Generators$JsonEncoder$fromFile(file)),
 							A2(
 							$author$project$Interop$JsCode$writeFile,
-							generatedFolder + ('/' + (moduleName + 'Decode.elm')),
+							generatedFolder + '/Decode.elm',
 							$author$project$Generators$JsonDecoder$fromFile(file)),
 							A2(
 							$author$project$Interop$JsCode$writeFile,
