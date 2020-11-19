@@ -1,5 +1,5 @@
 import { Maybe, Result } from "../Basics/Basics"
-import { User } from "User"
+import { User } from "../User/User"
 
 /** To define what can happen.
  */

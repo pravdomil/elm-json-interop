@@ -19,15 +19,27 @@ import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, modul
 fromFile : File -> String
 fromFile a =
     let
+        listLast : List a -> Maybe a
+        listLast b =
+            case b of
+                [] ->
+                    Nothing
+
+                [ x ] ->
+                    Just x
+
+                _ :: xs ->
+                    listLast xs
+
         root : String
         root =
-            "../" |> String.repeat ((Node.value a.moduleDefinition |> Module.moduleName |> List.length) - 1)
+            "../" |> String.repeat (Node.value a.moduleDefinition |> Module.moduleName |> List.length)
     in
-    [ "import { Maybe, Result } from \"../" ++ root ++ "Basics/Basics\""
+    [ "import { Maybe, Result } from \"" ++ root ++ "Basics/Basics\""
     , a.imports
         |> moduleImports
             (\v vv ->
-                "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "\""
+                "import { " ++ (vv |> join ", ") ++ " } from \"" ++ root ++ (v |> join "/") ++ "/" ++ (v |> listLast |> Maybe.withDefault "") ++ "\""
             )
         |> join "\n"
     , ""
