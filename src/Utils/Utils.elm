@@ -187,15 +187,15 @@ maybeCustomTypeHasCustomTags file a =
     a.constructors
         |> List.foldl
             (\b acc ->
-                acc
-                    |> Maybe.andThen
-                        (\c ->
-                            Maybe.map2
-                                (\_ e ->
-                                    c ++ [ ( e, b ) ]
-                                )
-                                (oneArgument b)
-                                (commentAtSameLine b)
-                        )
+                Maybe.andThen
+                    (\c ->
+                        Maybe.map2
+                            (\_ e ->
+                                c ++ [ ( e, b ) ]
+                            )
+                            (oneArgument b)
+                            (commentAtSameLine b)
+                    )
+                    acc
             )
             (Just [])
