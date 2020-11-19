@@ -166,9 +166,9 @@ regexReplace regex replacement a =
 maybeCustomTypeHasCustomTags : File -> Type -> Maybe (List ( String, Node ValueConstructor ))
 maybeCustomTypeHasCustomTags file a =
     let
-        zeroOrOneArguments : Node ValueConstructor -> Maybe ()
-        zeroOrOneArguments b =
-            if (b |> Node.value |> .arguments |> List.length) <= 1 then
+        oneArgument : Node ValueConstructor -> Maybe ()
+        oneArgument b =
+            if (b |> Node.value |> .arguments |> List.length) == 1 then
                 Just ()
 
             else
@@ -194,7 +194,7 @@ maybeCustomTypeHasCustomTags file a =
                                 (\_ e ->
                                     c ++ [ ( e, b ) ]
                                 )
-                                (zeroOrOneArguments b)
+                                (oneArgument b)
                                 (commentAtSameLine b)
                         )
             )
