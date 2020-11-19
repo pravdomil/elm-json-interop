@@ -63,10 +63,10 @@ resultDecoder errorDecoder valueDecoder =
             (\tag ->
                 case tag of
                     "Ok" ->
-                        map Ok valueDecoder
+                        map Ok (index 1 valueDecoder)
 
                     "Err" ->
-                        map Err errorDecoder
+                        map Err (index 1 errorDecoder)
 
                     _ ->
                         fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")
