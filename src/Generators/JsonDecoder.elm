@@ -348,9 +348,11 @@ tupleFn len =
 -}
 mapFn : Int -> String
 mapFn a =
-    case a of
-        1 ->
-            "D.map"
+    if a == 1 then
+        "D.map"
 
-        b ->
-            "D.map" ++ String.fromInt b
+    else if a <= 8 then
+        "D.map" ++ String.fromInt a
+
+    else
+        "BD.map" ++ String.fromInt a
