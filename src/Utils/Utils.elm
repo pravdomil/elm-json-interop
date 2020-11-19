@@ -199,3 +199,15 @@ maybeCustomTypeHasCustomTags file a =
                     acc
             )
             (Just [])
+
+
+{-| To convert first letter of string to lower case.
+-}
+firstToLowerCase : String -> String
+firstToLowerCase a =
+    case String.toList a of
+        first :: rest ->
+            String.fromList (Char.toLower first :: rest)
+
+        _ ->
+            a

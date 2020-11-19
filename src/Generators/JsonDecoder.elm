@@ -317,18 +317,6 @@ decoderName a =
     firstToLowerCase a ++ "Decoder"
 
 
-{-| To convert first letter of string to lower case.
--}
-firstToLowerCase : String -> String
-firstToLowerCase a =
-    case String.toList a of
-        first :: rest ->
-            String.fromList (Char.toLower first :: rest)
-
-        _ ->
-            a
-
-
 {-| To get function for constructing tuples by number.
 -}
 tupleFn : Int -> String
