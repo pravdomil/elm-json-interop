@@ -9,7 +9,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
-import Utils.Utils exposing (encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, denormalizeRecordFieldName, wrapInParentheses)
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, letterByInt, moduleImports, moduleNameToString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
