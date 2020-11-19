@@ -27,7 +27,7 @@ maybe a b =
 -}
 dict : (k -> E.Value) -> (v -> E.Value) -> Dict String v -> E.Value
 dict _ b c =
-    dict identity b c
+    E.dict identity b c
 
 
 {-| To encode result.
