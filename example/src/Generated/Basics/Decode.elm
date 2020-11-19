@@ -77,14 +77,10 @@ result errorDecoder valueDecoder =
 --
 
 
-duo : Decoder a -> Decoder b -> Decoder ( a, b )
-duo =
-    D.map2 Tuple.pair
-
-
-trio : Decoder a -> Decoder b -> Decoder c -> Decoder ( a, b, c )
-trio =
-    D.map3 (\a b c -> ( a, b, c ))
+{-| -}
+apply : Decoder a -> Decoder (a -> b) -> Decoder b
+apply decoder a =
+    D.map2 (\fn v -> fn v) a decoder
 
 
 map9 :
@@ -99,9 +95,9 @@ map9 :
     -> Decoder h
     -> Decoder i
     -> Decoder value
-map9 fn a b =
-    D.map8 (\( a_, b_ ) -> fn a_ b_)
-        (duo a b)
+map9 fn a b c d e f g h i =
+    D.map8 fn a b c d e f g h
+        |> apply i
 
 
 map10 :
@@ -117,9 +113,10 @@ map10 :
     -> Decoder i
     -> Decoder j
     -> Decoder value
-map10 fn a b c =
-    D.map8 (\( a_, b_, c_ ) -> fn a_ b_ c_)
-        (trio a b c)
+map10 fn a b c d e f g h i j =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
 
 
 map11 :
@@ -136,10 +133,11 @@ map11 :
     -> Decoder j
     -> Decoder k
     -> Decoder value
-map11 fn a b c d e =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_ ) -> fn a_ b_ c_ d_ e_)
-        (trio a b c)
-        (duo d e)
+map11 fn a b c d e f g h i j k =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
 
 
 map12 :
@@ -157,10 +155,12 @@ map12 :
     -> Decoder k
     -> Decoder l
     -> Decoder value
-map12 fn a b c d e f =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) -> fn a_ b_ c_ d_ e_ f_)
-        (trio a b c)
-        (trio d e f)
+map12 fn a b c d e f g h i j k l =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
 
 
 map13 :
@@ -179,11 +179,13 @@ map13 :
     -> Decoder l
     -> Decoder m
     -> Decoder value
-map13 fn a b c d e f g h =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_)
-        (trio a b c)
-        (trio d e f)
-        (duo g h)
+map13 fn a b c d e f g h i j k l m =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
+        |> apply m
 
 
 map14 :
@@ -203,11 +205,14 @@ map14 :
     -> Decoder m
     -> Decoder n
     -> Decoder value
-map14 fn a b c d e f g h i =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_)
-        (trio a b c)
-        (trio d e f)
-        (trio g h i)
+map14 fn a b c d e f g h i j k l m n =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
+        |> apply m
+        |> apply n
 
 
 map15 :
@@ -228,12 +233,15 @@ map15 :
     -> Decoder n
     -> Decoder o
     -> Decoder value
-map15 fn a b c d e f g h i j k =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_)
-        (trio a b c)
-        (trio d e f)
-        (trio g h i)
-        (duo j k)
+map15 fn a b c d e f g h i j k l m n o =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
+        |> apply m
+        |> apply n
+        |> apply o
 
 
 map16 :
@@ -255,12 +263,16 @@ map16 :
     -> Decoder o
     -> Decoder p
     -> Decoder value
-map16 fn a b c d e f g h i j k l =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_)
-        (trio a b c)
-        (trio d e f)
-        (trio g h i)
-        (trio j k l)
+map16 fn a b c d e f g h i j k l m n o p =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
+        |> apply m
+        |> apply n
+        |> apply o
+        |> apply p
 
 
 map17 :
@@ -283,13 +295,17 @@ map17 :
     -> Decoder p
     -> Decoder q
     -> Decoder value
-map17 fn a b c d e f g h i j k l m n =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) ( m_, n_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_ m_ n_)
-        (trio a b c)
-        (trio d e f)
-        (trio g h i)
-        (trio j k l)
-        (duo m n)
+map17 fn a b c d e f g h i j k l m n o p q =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
+        |> apply m
+        |> apply n
+        |> apply o
+        |> apply p
+        |> apply q
 
 
 map18 :
@@ -313,10 +329,15 @@ map18 :
     -> Decoder q
     -> Decoder r
     -> Decoder value
-map18 fn a b c d e f g h i j k l m n o =
-    D.map8 (\( a_, b_, c_ ) ( d_, e_, f_ ) ( g_, h_, i_ ) ( j_, k_, l_ ) ( m_, n_, o_ ) -> fn a_ b_ c_ d_ e_ f_ g_ h_ i_ j_ k_ l_ m_ n_ o_)
-        (trio a b c)
-        (trio d e f)
-        (trio g h i)
-        (trio j k l)
-        (trio m n o)
+map18 fn a b c d e f g h i j k l m n o p q r =
+    D.map8 fn a b c d e f g h
+        |> apply i
+        |> apply j
+        |> apply k
+        |> apply l
+        |> apply m
+        |> apply n
+        |> apply o
+        |> apply p
+        |> apply q
+        |> apply r
