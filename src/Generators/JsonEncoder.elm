@@ -168,17 +168,20 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
         fn : String
         fn =
             case moduleName ++ [ name ] |> join "." of
+                "Bool" ->
+                    "E.bool"
+
                 "Int" ->
                     "E.int"
 
                 "Float" ->
                     "E.float"
 
-                "Bool" ->
-                    "E.bool"
-
                 "String" ->
                     "E.string"
+
+                "Maybe" ->
+                    "BE.maybe"
 
                 "List" ->
                     "E.list"
@@ -186,26 +189,23 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
                 "Array" ->
                     "E.array"
 
+                "Char" ->
+                    "BE.char"
+
+                "Result" ->
+                    "BE.result"
+
                 "Set" ->
                     "E.set"
+
+                "Dict" ->
+                    "BE.dict"
 
                 "Encode.Value" ->
                     "identity"
 
                 "Decode.Value" ->
                     "identity"
-
-                "Char" ->
-                    "BE.char"
-
-                "Maybe" ->
-                    "BE.maybe"
-
-                "Dict" ->
-                    "BE.dict"
-
-                "Result" ->
-                    "BE.result"
 
                 _ ->
                     moduleName ++ [ encoderName name ] |> join "."

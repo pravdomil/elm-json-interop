@@ -204,17 +204,20 @@ fromTyped (Node _ ( moduleName, name )) arguments =
         fn : String
         fn =
             case moduleName ++ [ name ] |> join "." of
+                "Bool" ->
+                    "D.bool"
+
                 "Int" ->
                     "D.int"
 
                 "Float" ->
                     "D.float"
 
-                "Bool" ->
-                    "D.bool"
-
                 "String" ->
                     "D.string"
+
+                "Maybe" ->
+                    "D.nullable"
 
                 "List" ->
                     "D.list"
@@ -222,17 +225,11 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                 "Array" ->
                     "D.array"
 
-                "Maybe" ->
-                    "D.nullable"
-
-                "Encode.Value" ->
-                    "D.value"
-
-                "Decode.Value" ->
-                    "D.value"
-
                 "Char" ->
                     "BD.char"
+
+                "Result" ->
+                    "BD.result"
 
                 "Set" ->
                     "BD.set"
@@ -240,8 +237,11 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                 "Dict" ->
                     "BD.dict"
 
-                "Result" ->
-                    "BD.result"
+                "Encode.Value" ->
+                    "D.value"
+
+                "Decode.Value" ->
+                    "D.value"
 
                 _ ->
                     moduleName ++ [ decoderName name ] |> join "."
