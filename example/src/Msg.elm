@@ -1,7 +1,6 @@
-module Example exposing (..)
+module Msg exposing (..)
 
-{-| Example module.
--}
+import User exposing (User)
 
 
 {-| To define what can happen.
@@ -11,11 +10,3 @@ type Msg
     | ChangedDraft String
     | ReceivedMessages (List { user : User, message : Maybe String })
     | ClickedExit
-
-
-{-| To distinguish between users.
--}
-type User
-    = Regular String Int
-    | Visitor String
-    | Anonymous

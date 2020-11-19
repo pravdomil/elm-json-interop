@@ -1,8 +1,9 @@
-module Generated.Example.Encode exposing (..)
+module Generated.Msg.Encode exposing (..)
 
-import Example as A
 import Generated.Basics.Encode exposing (..)
+import Generated.UserEncode exposing (user)
 import Json.Encode exposing (..)
+import Msg as A
 
 
 msg : A.Msg -> Value
@@ -19,16 +20,3 @@ msg a =
 
         A.ClickedExit ->
             list identity [ string "ClickedExit" ]
-
-
-user : A.User -> Value
-user a =
-    case a of
-        A.Regular b c ->
-            list identity [ string "Regular", string b, int c ]
-
-        A.Visitor b ->
-            list identity [ string "Visitor", string b ]
-
-        A.Anonymous ->
-            list identity [ string "Anonymous" ]
