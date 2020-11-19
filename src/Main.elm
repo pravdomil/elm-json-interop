@@ -76,8 +76,8 @@ processFile path =
                     rawFile |> Processing.process Processing.init
             in
             [ mkDir (srcFolder ++ "Generated/Basics")
-            , copyFile (binPath ++ "/../src/Generated/Basics/BasicsEncode.elm") (srcFolder ++ "Generated/Basics/BasicsEncode.elm")
-            , copyFile (binPath ++ "/../src/Generated/Basics/BasicsDecode.elm") (srcFolder ++ "Generated/Basics/BasicsDecode.elm")
+            , copyFile (binPath ++ "/../src/Generated/Basics/Encode.elm") (srcFolder ++ "Generated/Basics/Encode.elm")
+            , copyFile (binPath ++ "/../src/Generated/Basics/Decode.elm") (srcFolder ++ "Generated/Basics/Decode.elm")
             , copyFile (binPath ++ "/../src/Generated/Basics/Basics.ts") (srcFolder ++ "Generated/Basics/Basics.ts")
             , mkDir generatedFolder
             , writeFile (generatedFolder ++ "/" ++ moduleName ++ "Encode.elm") (JsonEncoder.fromFile file)

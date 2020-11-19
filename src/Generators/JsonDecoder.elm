@@ -19,7 +19,7 @@ fromFile a =
     [ "module Generated." ++ fileToModuleName a ++ "Decode exposing (..)"
     , ""
     , "import " ++ fileToModuleName a ++ " as A"
-    , "import Generated.Basics.BasicsDecode exposing (..)"
+    , "import Generated.Basics.Decode exposing (..)"
     , "import Json.Decode exposing (..)"
     , a.imports
         |> moduleImports

@@ -1,7 +1,7 @@
 module Generated.ExampleEncode exposing (..)
 
 import Example as A
-import Generated.Basics.BasicsEncode exposing (..)
+import Generated.Basics.Encode exposing (..)
 import Json.Encode exposing (..)
 
 
