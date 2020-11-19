@@ -231,6 +231,18 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                 "Decode.Value" ->
                     "D.value"
 
+                "Char" ->
+                    "BD.char"
+
+                "Set" ->
+                    "BD.set"
+
+                "Dict" ->
+                    "BD.dict"
+
+                "Result" ->
+                    "BD.result"
+
                 _ ->
                     moduleName ++ [ decoderName name ] |> join "."
 
