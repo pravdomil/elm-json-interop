@@ -1,8 +1,6 @@
 module Utils.Utils exposing (..)
 
-import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.File exposing (File)
-import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
@@ -38,66 +36,6 @@ fileToModuleName a =
 moduleNameToString : ModuleName -> String
 moduleNameToString a =
     a |> join "."
-
-
-{-| To get list modules that needs to be imported.
--}
-moduleImports : (ModuleName -> List String -> String) -> List (Node Import) -> List String
-moduleImports toImport_ a =
-    let
-        filterModules : Node Import -> Maybe (Node Import)
-        filterModules b =
-            case b |> Node.value |> .moduleName |> Node.value of
-                [ "Array" ] ->
-                    Nothing
-
-                [ "Set" ] ->
-                    Nothing
-
-                [ "Dict" ] ->
-                    Nothing
-
-                _ ->
-                    Just b
-
-        onlyExplicitImports : Node Import -> Maybe ( Node Import, List (Node TopLevelExpose) )
-        onlyExplicitImports b =
-            case b |> Node.value |> .exposingList of
-                Just (Node _ (Explicit c)) ->
-                    Just ( b, c )
-
-                _ ->
-                    Nothing
-
-        toImport : ( Node Import, List (Node TopLevelExpose) ) -> Maybe String
-        toImport ( Node _ b, c ) =
-            case c |> List.filterMap filterExpose of
-                [] ->
-                    Nothing
-
-                d ->
-                    Just (toImport_ (Node.value b.moduleName) d)
-
-        filterExpose : Node TopLevelExpose -> Maybe String
-        filterExpose b =
-            case b |> Node.value of
-                TypeOrAliasExpose name ->
-                    Just name
-
-                TypeExpose { name } ->
-                    Just name
-
-                _ ->
-                    Nothing
-    in
-    a
-        |> List.filterMap
-            (\v ->
-                v
-                    |> filterModules
-                    |> Maybe.andThen onlyExplicitImports
-                    |> Maybe.andThen toImport
-            )
 
 
 {-| To denormalize record field name.

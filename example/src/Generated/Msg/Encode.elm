@@ -1,7 +1,7 @@
 module Generated.Msg.Encode exposing (..)
 
 import Generated.Basics.Encode as BE
-import Generated.User.Encode exposing (user)
+import Generated.User.Encode as User exposing (user)
 import Json.Encode as E
 import Msg as A
 

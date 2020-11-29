@@ -9,7 +9,8 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
-import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, moduleImports, moduleNameToString, wrapInParentheses)
+import Utils.Imports as Imports
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -21,12 +22,7 @@ fromFile a =
     , "import " ++ fileToModuleName a ++ " as A"
     , "import Generated.Basics.Encode as BE"
     , "import Json.Encode as E"
-    , a.imports
-        |> moduleImports
-            (\v vv ->
-                "import Generated." ++ moduleNameToString v ++ ".Encode exposing (" ++ (vv |> List.map encoderName |> join ", ") ++ ")"
-            )
-        |> join "\n"
+    , a.imports |> Imports.fromList "Encode"
     , ""
     , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
     , ""
@@ -208,7 +204,13 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
                     "identity"
 
                 _ ->
-                    moduleName ++ [ encoderName name ] |> join "."
+                    (if moduleName |> List.isEmpty then
+                        ""
+
+                     else
+                        (moduleName |> join "_") ++ "."
+                    )
+                        ++ encoderName name
 
         arguments_ : String
         arguments_ =

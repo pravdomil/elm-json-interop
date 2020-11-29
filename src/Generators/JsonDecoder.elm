@@ -9,7 +9,8 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
-import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, maybeCustomTypeHasCustomTags, moduleImports, moduleNameToString, wrapInParentheses)
+import Utils.Imports as Imports
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, maybeCustomTypeHasCustomTags, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -21,12 +22,7 @@ fromFile a =
     , "import " ++ fileToModuleName a ++ " as A"
     , "import Generated.Basics.Decode as BD"
     , "import Json.Decode as D exposing (Decoder)"
-    , a.imports
-        |> moduleImports
-            (\v vv ->
-                "import Generated." ++ moduleNameToString v ++ ".Decode exposing (" ++ (vv |> List.map decoderName |> join ", ") ++ ")"
-            )
-        |> join "\n"
+    , a.imports |> Imports.fromList "Decode"
     , ""
     , a.declarations |> List.filterMap (fromDeclaration a) |> join "\n\n"
     , ""
@@ -244,7 +240,13 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                     "D.value"
 
                 _ ->
-                    moduleName ++ [ decoderName name ] |> join "."
+                    (if moduleName |> List.isEmpty then
+                        ""
+
+                     else
+                        (moduleName |> join "_") ++ "."
+                    )
+                        ++ decoderName name
 
         arguments_ : String
         arguments_ =
