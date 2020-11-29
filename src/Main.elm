@@ -47,7 +47,6 @@ run =
 
 
 {-| To get program usage.
-<https://stackoverflow.com/questions/9725675/is-there-a-standard-format-for-command-line-shell-help-text>
 -}
 usage : String
 usage =

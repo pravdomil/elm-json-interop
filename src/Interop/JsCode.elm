@@ -41,6 +41,7 @@ jsCode _ =
 
 
 {-| To get program arguments.
+<https://stackoverflow.com/questions/9725675/is-there-a-standard-format-for-command-line-shell-help-text>
 -}
 getArguments : Task Error (List String)
 getArguments =
