@@ -6,7 +6,6 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.JsonDecoder as JsonDecoder
 import Generators.JsonEncoder as JsonEncoder
-import Generators.TypeScriptDeclaration as TypeScriptDeclaration
 import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
@@ -78,11 +77,9 @@ processFile path =
             [ mkDir (srcFolder ++ "Generated/Basics")
             , copyFile (binPath ++ "/../src/Generated/Basics/Encode.elm") (srcFolder ++ "Generated/Basics/Encode.elm")
             , copyFile (binPath ++ "/../src/Generated/Basics/Decode.elm") (srcFolder ++ "Generated/Basics/Decode.elm")
-            , copyFile (binPath ++ "/../src/Generated/Basics/Basics.ts") (srcFolder ++ "Generated/Basics/Basics.ts")
             , mkDir generatedFolder
             , writeFile (generatedFolder ++ "/Encode.elm") (JsonEncoder.fromFile file)
             , writeFile (generatedFolder ++ "/Decode.elm") (JsonDecoder.fromFile file)
-            , writeFile (generatedFolder ++ "/" ++ moduleName ++ ".ts") (TypeScriptDeclaration.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map
