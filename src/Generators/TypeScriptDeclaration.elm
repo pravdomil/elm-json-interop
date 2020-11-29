@@ -43,7 +43,7 @@ fromFile a =
             )
         |> join "\n"
     , ""
-    , a.declarations |> List.filterMap declarationToTs |> join "\n\n\n"
+    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n\n"
     , ""
     ]
         |> join "\n"
@@ -51,14 +51,14 @@ fromFile a =
 
 {-| To get TypeScript from declaration.
 -}
-declarationToTs : Node Declaration -> Maybe String
-declarationToTs a =
+fromDeclaration : Node Declaration -> Maybe String
+fromDeclaration a =
     case a |> Node.value of
         AliasDeclaration b ->
-            Just (typeAliasToTs b)
+            Just (fromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just (customTypeToTs b)
+            Just (fromCustomType b)
 
         _ ->
             Nothing
@@ -66,15 +66,15 @@ declarationToTs a =
 
 {-| To get TypeScript from type alias.
 -}
-typeAliasToTs : TypeAlias -> String
-typeAliasToTs a =
-    typeToTs a ++ " " ++ typeAnnotationToTs a.typeAnnotation
+fromTypeAlias : TypeAlias -> String
+fromTypeAlias a =
+    fromType a ++ " " ++ fromTypeAnnotation a.typeAnnotation
 
 
 {-| To get TypeScript from custom type.
 -}
-customTypeToTs : Type -> String
-customTypeToTs a =
+fromCustomType : Type -> String
+fromCustomType a =
     let
         jsRef : Maybe String
         jsRef =
@@ -113,15 +113,15 @@ customTypeToTs a =
 
         constructors : String
         constructors =
-            type_.constructors |> List.map customTypeConstructorToTs |> join "\n  | "
+            type_.constructors |> List.map fromCustomTypeConstructor |> join "\n  | "
     in
-    typeToTs type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ customTypeTagToTs type_
+    fromType type_ ++ "\n  | " ++ constructors ++ "\n\n" ++ fromCustomTypeTag type_
 
 
 {-| To get TypeScript from custom type tag.
 -}
-customTypeTagToTs : Type -> String
-customTypeTagToTs a =
+fromCustomTypeTag : Type -> String
+fromCustomTypeTag a =
     let
         toTagNameConstant : Node ValueConstructor -> String
         toTagNameConstant b =
@@ -137,15 +137,15 @@ customTypeTagToTs a =
 
 {-| To get TypeScript from custom type constructor.
 -}
-customTypeConstructorToTs : Node ValueConstructor -> String
-customTypeConstructorToTs (Node _ a) =
-    Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments |> tupleToTs
+fromCustomTypeConstructor : Node ValueConstructor -> String
+fromCustomTypeConstructor (Node _ a) =
+    Node emptyRange (GenericType ("typeof " ++ Node.value a.name)) :: a.arguments |> fromTuple
 
 
 {-| To get TypeScript from type.
 -}
-typeToTs : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
-typeToTs a =
+fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
+fromType a =
     let
         documentation : String
         documentation =
@@ -174,26 +174,26 @@ typeToTs a =
 
 {-| To get TypeScript from type annotation.
 -}
-typeAnnotationToTs : Node TypeAnnotation -> String
-typeAnnotationToTs a =
+fromTypeAnnotation : Node TypeAnnotation -> String
+fromTypeAnnotation a =
     case a |> Node.value of
         GenericType b ->
             b
 
         Typed b c ->
-            typedToTs b c
+            fromTyped b c
 
         Unit ->
             "[]"
 
         Tupled nodes ->
-            tupleToTs nodes
+            fromTuple nodes
 
         Record b ->
-            recordToTs b
+            fromRecord b
 
         GenericRecord _ (Node _ b) ->
-            recordToTs b
+            fromRecord b
 
         FunctionTypeAnnotation _ _ ->
             "Function"
@@ -201,8 +201,8 @@ typeAnnotationToTs a =
 
 {-| To get TypeScript from typed.
 -}
-typedToTs : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-typedToTs (Node _ ( moduleName, name )) arguments =
+fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
+fromTyped (Node _ ( moduleName, name )) arguments =
     let
         fn : String
         fn =
@@ -247,29 +247,29 @@ typedToTs (Node _ ( moduleName, name )) arguments =
                     ""
 
                 _ ->
-                    "<" ++ (arguments |> List.map typeAnnotationToTs |> join ", ") ++ ">"
+                    "<" ++ (arguments |> List.map fromTypeAnnotation |> join ", ") ++ ">"
     in
     fn ++ generics
 
 
 {-| To get TypeScript from tuple.
 -}
-tupleToTs : List (Node TypeAnnotation) -> String
-tupleToTs a =
-    "[" ++ (a |> List.map typeAnnotationToTs |> join ", ") ++ "]"
+fromTuple : List (Node TypeAnnotation) -> String
+fromTuple a =
+    "[" ++ (a |> List.map fromTypeAnnotation |> join ", ") ++ "]"
 
 
 {-| To get TypeScript from record.
 -}
-recordToTs : List (Node RecordField) -> String
-recordToTs a =
-    "{ " ++ (a |> List.map recordFieldToTs |> join "; ") ++ " }"
+fromRecord : List (Node RecordField) -> String
+fromRecord a =
+    "{ " ++ (a |> List.map fromRecordField |> join "; ") ++ " }"
 
 
 {-| To get TypeScript from record field.
 -}
-recordFieldToTs : Node RecordField -> String
-recordFieldToTs (Node _ ( Node _ a, b )) =
+fromRecordField : Node RecordField -> String
+fromRecordField (Node _ ( Node _ a, b )) =
     let
         maybeField : String
         maybeField =
@@ -280,4 +280,4 @@ recordFieldToTs (Node _ ( Node _ a, b )) =
                 _ ->
                     ""
     in
-    denormalizeRecordFieldName a ++ maybeField ++ ": " ++ typeAnnotationToTs b
+    denormalizeRecordFieldName a ++ maybeField ++ ": " ++ fromTypeAnnotation b
