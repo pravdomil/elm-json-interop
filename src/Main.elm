@@ -51,7 +51,7 @@ run =
 -}
 usage : String
 usage =
-    "Usage: elm-to-json-and-ts <File.elm>..."
+    "Usage: elm-json-interop <File.elm>..."
 
 
 {-| To process file.
@@ -84,7 +84,7 @@ processFile path =
                 |> Task.sequence
                 |> Task.map
                     (\_ ->
-                        "I have create JSON encoders/decoders and TypeScript types in folder:\n" ++ generatedFolder
+                        "I have generated JSON encoders/decoders in folder:\n" ++ generatedFolder
                     )
     in
     taskAndThen2

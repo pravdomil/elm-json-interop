@@ -1,5 +1,5 @@
 {
-  "name": "elm-to-json-and-ts",
-  "version": "2.0.0",
-  "bin": "bin/elm-to-json-and-ts"
+  "name": "elm-json-interop",
+  "version": "3.0.0",
+  "bin": "bin/elm-json-interop"
 }
