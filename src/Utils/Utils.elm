@@ -2,7 +2,6 @@ module Utils.Utils exposing (..)
 
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Module as Module exposing (Module)
-import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Json.Encode as Encode
 import Regex
@@ -27,14 +26,7 @@ letterByInt a =
 -}
 fileToModuleName : File -> String
 fileToModuleName a =
-    Node.value a.moduleDefinition |> Module.moduleName |> moduleNameToString
-
-
-{-| To get string from module name.
--}
-moduleNameToString : ModuleName -> String
-moduleNameToString a =
-    a |> join "."
+    Node.value a.moduleDefinition |> Module.moduleName |> join "."
 
 
 {-| To wrap string in parentheses.
