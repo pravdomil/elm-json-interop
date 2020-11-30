@@ -4189,7 +4189,7 @@ var $author$project$Generators$Encoder$fromCustomTypeConstructor = function (_v0
 		', ',
 		A2(
 			$elm$core$List$cons,
-			'( \"type\", ' + ($author$project$Utils$Utils$toJsonString(name) + ' )'),
+			'( \"type\", E.string ' + ($author$project$Utils$Utils$toJsonString(name) + ' )'),
 			A2($elm$core$List$indexedMap, argToEncoder, a.P)));
 	return 'A.' + (name + (_arguments + (' -> E.object [ ' + (encoder + ' ]'))));
 };
