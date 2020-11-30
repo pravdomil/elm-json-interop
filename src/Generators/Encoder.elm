@@ -5,6 +5,7 @@ import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
+import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
@@ -84,13 +85,13 @@ fromCustomTypeConstructor (Node _ a) =
 
         encoder : String
         encoder =
-            ("E.string " ++ toJsonString name) :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
+            ("( \"type\", " ++ toJsonString name ++ " )") :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i b =
-            b |> fromTypeAnnotation (letterByInt (1 + i))
+            "( " ++ toJsonString (letterByInt i) ++ ", " ++ fromTypeAnnotation (letterByInt (i + 1)) b ++ " )"
     in
-    "A." ++ name ++ arguments ++ " -> E.list identity [ " ++ encoder ++ " ]"
+    "A." ++ name ++ arguments ++ " -> E.object [ " ++ encoder ++ " ]"
 
 
 {-| To get encoder from type.
