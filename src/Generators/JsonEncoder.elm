@@ -10,7 +10,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
 import Utils.Imports as Imports
-import Utils.Utils exposing (encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, wrapInParentheses)
+import Utils.Utils exposing (fileToModuleName, firstToLowerCase, letterByInt, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -84,7 +84,7 @@ fromCustomTypeConstructor (Node _ a) =
 
         encoder : String
         encoder =
-            ("E.string " ++ encodeJsonString name) :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
+            ("E.string " ++ toJsonString name) :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i b =
@@ -276,7 +276,7 @@ fromRecordField parameter (Node _ ( Node _ a, b )) =
                 _ ->
                     a
     in
-    "( " ++ encodeJsonString fieldName ++ ", " ++ fromTypeAnnotation (parameter ++ "." ++ a) b ++ " )"
+    "( " ++ toJsonString fieldName ++ ", " ++ fromTypeAnnotation (parameter ++ "." ++ a) b ++ " )"
 
 
 

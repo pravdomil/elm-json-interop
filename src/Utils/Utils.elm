@@ -11,8 +11,8 @@ import String exposing (join)
 
 {-| To encode string into JSON string.
 -}
-encodeJsonString : String -> String
-encodeJsonString a =
+toJsonString : String -> String
+toJsonString a =
     Encode.string a |> Encode.encode 0
 
 

@@ -10,7 +10,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
 import Utils.Imports as Imports
-import Utils.Utils exposing (encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, wrapInParentheses)
+import Utils.Utils exposing (fileToModuleName, firstToLowerCase, letterByInt, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -66,7 +66,7 @@ fromCustomType a =
 
         fail : String
         fail =
-            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
+            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
     in
     a |> fromType ("\n  D.index 0 D.string |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
@@ -93,7 +93,7 @@ fromCustomTypeConstructor ( tag, Node _ a ) =
                 _ ->
                     mapFn (List.length a.arguments) ++ " A." ++ name ++ " " ++ arguments
     in
-    encodeJsonString tag ++ " -> " ++ decoder
+    toJsonString tag ++ " -> " ++ decoder
 
 
 {-| To get decoder from type.
@@ -308,7 +308,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
                 _ ->
                     a
     in
-    "(" ++ decoder ++ " " ++ encodeJsonString fieldName ++ " " ++ fromTypeAnnotation b ++ ")"
+    "(" ++ decoder ++ " " ++ toJsonString fieldName ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
 
