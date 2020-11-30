@@ -8,20 +8,6 @@ import Regex
 import String exposing (join)
 
 
-{-| To encode string into JSON string.
--}
-toJsonString : String -> String
-toJsonString a =
-    Encode.string a |> Encode.encode 0
-
-
-{-| To get letter from alphabet by number.
--}
-letterByInt : Int -> String
-letterByInt a =
-    a + 97 |> Char.fromCode |> String.fromChar
-
-
 {-| To get module name from file.
 -}
 fileToModuleName : File -> String
@@ -36,18 +22,15 @@ wrapInParentheses a =
     "(" ++ a ++ ")"
 
 
-{-| To do simple regular expression replace.
--}
-regexReplace : String -> (String -> String) -> String -> String
-regexReplace regex replacement a =
-    a
-        |> Regex.replace
-            (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
-            (.match >> replacement)
-
-
 
 --
+
+
+{-| To get letter from alphabet by number.
+-}
+letterByInt : Int -> String
+letterByInt a =
+    a + 97 |> Char.fromCode |> String.fromChar
 
 
 {-| To convert first letter of string to lower case.
@@ -60,3 +43,28 @@ firstToLowerCase a =
 
         _ ->
             a
+
+
+
+--
+
+
+{-| To encode string into JSON string.
+-}
+toJsonString : String -> String
+toJsonString a =
+    Encode.string a |> Encode.encode 0
+
+
+
+--
+
+
+{-| To do simple regular expression replace.
+-}
+regexReplace : String -> (String -> String) -> String -> String
+regexReplace regex replacement a =
+    a
+        |> Regex.replace
+            (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
+            (.match >> replacement)
