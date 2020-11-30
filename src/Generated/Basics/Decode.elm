@@ -58,15 +58,15 @@ maybeField name a =
 -}
 result : Decoder e -> Decoder v -> Decoder (Result e v)
 result errorDecoder valueDecoder =
-    D.index 0 D.string
+    D.field "type" D.string
         |> D.andThen
             (\tag ->
                 case tag of
                     "Ok" ->
-                        D.map Ok (D.index 1 valueDecoder)
+                        D.map Ok (D.field "a" valueDecoder)
 
                     "Err" ->
-                        D.map Err (D.index 1 errorDecoder)
+                        D.map Err (D.field "a" errorDecoder)
 
                     _ ->
                         D.fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")
