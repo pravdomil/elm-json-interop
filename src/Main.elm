@@ -4,8 +4,8 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Generators.JsonDecoder as JsonDecoder
-import Generators.JsonEncoder as JsonEncoder
+import Generators.Decoder as Decoder
+import Generators.Encoder as Encoder
 import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
@@ -77,8 +77,8 @@ processFile path =
             , copyFile (binPath ++ "/../src/Generated/Basics/Encode.elm") (srcFolder ++ "Generated/Basics/Encode.elm")
             , copyFile (binPath ++ "/../src/Generated/Basics/Decode.elm") (srcFolder ++ "Generated/Basics/Decode.elm")
             , mkDir generatedFolder
-            , writeFile (generatedFolder ++ "/Encode.elm") (JsonEncoder.fromFile file)
-            , writeFile (generatedFolder ++ "/Decode.elm") (JsonDecoder.fromFile file)
+            , writeFile (generatedFolder ++ "/Encode.elm") (Encoder.fromFile file)
+            , writeFile (generatedFolder ++ "/Decode.elm") (Decoder.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map
