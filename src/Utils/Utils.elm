@@ -46,6 +46,10 @@ regexReplace regex replacement a =
             (.match >> replacement)
 
 
+
+--
+
+
 {-| To convert first letter of string to lower case.
 -}
 firstToLowerCase : String -> String
