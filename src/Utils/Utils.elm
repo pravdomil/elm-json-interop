@@ -4,7 +4,6 @@ import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Json.Encode as Encode
 import Regex
 import String exposing (join)
@@ -36,51 +35,6 @@ fileToModuleName a =
 moduleNameToString : ModuleName -> String
 moduleNameToString a =
     a |> join "."
-
-
-{-| To denormalize record field name.
--}
-denormalizeRecordFieldName : String -> String
-denormalizeRecordFieldName a =
-    let
-        putUnderscoresToStart : String -> String
-        putUnderscoresToStart b =
-            b
-                |> Regex.replace (Regex.fromString "^(.*?)(_*)$" |> Maybe.withDefault Regex.never)
-                    (\c ->
-                        case c.submatches of
-                            [ Just d, Just e ] ->
-                                e ++ d
-
-                            _ ->
-                                b
-                    )
-
-        unescapeKeywords : String -> String
-        unescapeKeywords b =
-            elmKeywords
-                |> List.foldl
-                    (\c acc -> acc |> swap (c ++ "_") c |> swap (c ++ "__") (c ++ "_"))
-                    b
-    in
-    a |> unescapeKeywords |> putUnderscoresToStart
-
-
-{-| -}
-swap : a -> a -> a -> a
-swap a b c =
-    if a == c then
-        b
-
-    else
-        c
-
-
-{-| To define what are reserved Elm keywords.
--}
-elmKeywords : List String
-elmKeywords =
-    [ "module", "where", "import", "as", "exposing", "if", "then", "else", "case", "of", "let", "in", "type", "port", "infix" ]
 
 
 {-| To wrap string in parentheses.

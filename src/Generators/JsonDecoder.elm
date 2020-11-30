@@ -10,7 +10,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
 import Utils.Imports as Imports
-import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, wrapInParentheses)
+import Utils.Utils exposing (encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -298,8 +298,17 @@ fromRecordField (Node _ ( Node _ a, b )) =
 
                 _ ->
                     "D.field"
+
+        fieldName : String
+        fieldName =
+            case ( a, Node.value b ) of
+                ( "id", Typed (Node _ ( _, "ObjectId" )) _ ) ->
+                    "_id"
+
+                _ ->
+                    a
     in
-    "(" ++ decoder ++ " " ++ encodeJsonString (denormalizeRecordFieldName a) ++ " " ++ fromTypeAnnotation b ++ ")"
+    "(" ++ decoder ++ " " ++ encodeJsonString fieldName ++ " " ++ fromTypeAnnotation b ++ ")"
 
 
 
