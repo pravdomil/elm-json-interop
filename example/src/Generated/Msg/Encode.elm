@@ -10,16 +10,16 @@ msg : A.Msg -> E.Value
 msg a =
     case a of
         A.PressedEnter ->
-            E.object [ ( "type", "PressedEnter" ) ]
+            E.object [ ( "type", E.string "PressedEnter" ) ]
 
         A.ChangedDraft b ->
-            E.object [ ( "type", "ChangedDraft" ), ( "a", E.string b ) ]
+            E.object [ ( "type", E.string "ChangedDraft" ), ( "a", E.string b ) ]
 
         A.ReceivedMessages b ->
-            E.object [ ( "type", "ReceivedMessages" ), ( "a", E.list (\b_ -> E.object [ ( "user", user b_.user ), ( "message", BE.maybe (\b__message_ -> E.string b__message_) b_.message ) ]) b ) ]
+            E.object [ ( "type", E.string "ReceivedMessages" ), ( "a", E.list (\b_ -> E.object [ ( "user", user b_.user ), ( "message", BE.maybe (\b__message_ -> E.string b__message_) b_.message ) ]) b ) ]
 
         A.ClickedExit ->
-            E.object [ ( "type", "ClickedExit" ) ]
+            E.object [ ( "type", E.string "ClickedExit" ) ]
 
 
 exampleBool : A.ExampleBool -> E.Value
