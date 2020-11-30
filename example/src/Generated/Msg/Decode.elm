@@ -8,7 +8,7 @@ import Msg as A
 
 msg : Decoder A.Msg
 msg =
-    D.index 0 D.string
+    D.field "type" D.string
         |> D.andThen
             (\tag ->
                 case tag of
@@ -16,10 +16,10 @@ msg =
                         D.succeed A.PressedEnter
 
                     "ChangedDraft" ->
-                        D.map A.ChangedDraft (D.index 1 D.string)
+                        D.map A.ChangedDraft (D.field "a" D.string)
 
                     "ReceivedMessages" ->
-                        D.map A.ReceivedMessages (D.index 1 (D.list (D.map2 (\a b -> { user = a, message = b }) (D.field "user" user) (BD.maybeField "message" (D.nullable D.string)))))
+                        D.map A.ReceivedMessages (D.field "a" (D.list (D.map2 (\a b -> { user = a, message = b }) (D.field "user" user) (BD.maybeField "message" (D.nullable D.string)))))
 
                     "ClickedExit" ->
                         D.succeed A.ClickedExit

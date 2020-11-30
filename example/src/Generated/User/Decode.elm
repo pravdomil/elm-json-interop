@@ -7,15 +7,15 @@ import User as A
 
 user : Decoder A.User
 user =
-    D.index 0 D.string
+    D.field "type" D.string
         |> D.andThen
             (\tag ->
                 case tag of
                     "Regular" ->
-                        D.map2 A.Regular (D.index 1 D.string) (D.index 2 D.int)
+                        D.map2 A.Regular (D.field "a" D.string) (D.field "b" D.int)
 
                     "Visitor" ->
-                        D.map A.Visitor (D.index 1 D.string)
+                        D.map A.Visitor (D.field "a" D.string)
 
                     "Anonymous" ->
                         D.succeed A.Anonymous

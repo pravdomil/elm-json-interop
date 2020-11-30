@@ -9,10 +9,10 @@ user : A.User -> E.Value
 user a =
     case a of
         A.Regular b c ->
-            E.list identity [ E.string "Regular", E.string b, E.int c ]
+            E.object [ ( "type", "Regular" ), ( "a", E.string b ), ( "b", E.int c ) ]
 
         A.Visitor b ->
-            E.list identity [ E.string "Visitor", E.string b ]
+            E.object [ ( "type", "Visitor" ), ( "a", E.string b ) ]
 
         A.Anonymous ->
-            E.list identity [ E.string "Anonymous" ]
+            E.object [ ( "type", "Anonymous" ) ]
