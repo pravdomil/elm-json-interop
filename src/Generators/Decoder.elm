@@ -5,6 +5,7 @@ import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
+import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
@@ -68,7 +69,7 @@ fromCustomType a =
         fail =
             "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
     in
-    a |> fromType ("\n  D.index 0 D.string |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  D.field \"type\" D.string |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
@@ -82,7 +83,12 @@ fromCustomTypeConstructor ( tag, Node _ a ) =
 
         arguments : String
         arguments =
-            a.arguments |> List.indexedMap (\i v -> fromElementAt (1 + i) v) |> join " "
+            a.arguments
+                |> List.indexedMap
+                    (\i v ->
+                        fromRecordField (Node emptyRange ( Node emptyRange (letterByInt i), v ))
+                    )
+                |> join " "
 
         decoder : String
         decoder =
