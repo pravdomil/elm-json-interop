@@ -100,45 +100,6 @@ regexReplace regex replacement a =
             (.match >> replacement)
 
 
-{-| -}
-maybeCustomTypeHasCustomTags : File -> Type -> Maybe (List ( String, Node ValueConstructor ))
-maybeCustomTypeHasCustomTags file a =
-    let
-        oneArgument : Node ValueConstructor -> Maybe ()
-        oneArgument b =
-            if (b |> Node.value |> .arguments |> List.length) == 1 then
-                Just ()
-
-            else
-                Nothing
-
-        commentAtSameLine : Node a -> Maybe String
-        commentAtSameLine b =
-            file.comments
-                |> List.filter
-                    (\c ->
-                        (c |> Node.range |> .start |> .row) == (b |> Node.range |> .start |> .row)
-                    )
-                |> List.head
-                |> Maybe.map (\v -> v |> Node.value |> String.slice 3 -3)
-    in
-    a.constructors
-        |> List.foldl
-            (\b acc ->
-                Maybe.andThen
-                    (\c ->
-                        Maybe.map2
-                            (\_ e ->
-                                c ++ [ ( e, b ) ]
-                            )
-                            (oneArgument b)
-                            (commentAtSameLine b)
-                    )
-                    acc
-            )
-            (Just [])
-
-
 {-| To convert first letter of string to lower case.
 -}
 firstToLowerCase : String -> String

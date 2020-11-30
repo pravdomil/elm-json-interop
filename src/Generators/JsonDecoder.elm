@@ -10,7 +10,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
 import Utils.Imports as Imports
-import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, maybeCustomTypeHasCustomTags, wrapInParentheses)
+import Utils.Utils exposing (denormalizeRecordFieldName, encodeJsonString, fileToModuleName, firstToLowerCase, letterByInt, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -24,7 +24,7 @@ fromFile a =
     , "import Json.Decode as D exposing (Decoder)"
     , a.imports |> Imports.fromList "Decode"
     , ""
-    , a.declarations |> List.filterMap (fromDeclaration a) |> join "\n\n"
+    , a.declarations |> List.filterMap fromDeclaration |> join "\n\n"
     , ""
     ]
         |> join "\n"
@@ -32,14 +32,14 @@ fromFile a =
 
 {-| To maybe get decoder from declaration.
 -}
-fromDeclaration : File -> Node Declaration -> Maybe String
-fromDeclaration file a =
+fromDeclaration : Node Declaration -> Maybe String
+fromDeclaration a =
     case a |> Node.value of
         AliasDeclaration b ->
             Just (fromTypeAlias b)
 
         CustomTypeDeclaration b ->
-            Just (fromCustomType file b)
+            Just (fromCustomType b)
 
         _ ->
             Nothing
@@ -54,40 +54,27 @@ fromTypeAlias a =
 
 {-| To get decoder from custom type.
 -}
-fromCustomType : File -> Type -> String
-fromCustomType file a =
+fromCustomType : Type -> String
+fromCustomType a =
     let
-        customTags : Maybe (List ( String, Node ValueConstructor ))
-        customTags =
-            a |> maybeCustomTypeHasCustomTags file
-
-        tagDecoder : String
-        tagDecoder =
-            case customTags of
-                Just _ ->
-                    "D.field \"_type\" D.string"
-
-                Nothing ->
-                    "D.index 0 D.string"
-
         cases : String
         cases =
-            customTags
-                |> Maybe.withDefault (a.constructors |> List.map (\v -> Tuple.pair (v |> Node.value |> .name |> Node.value) v))
-                |> List.map (fromCustomTypeConstructor customTags)
+            a.constructors
+                |> List.map (\v -> Tuple.pair (v |> Node.value |> .name |> Node.value) v)
+                |> List.map fromCustomTypeConstructor
                 |> join "\n    "
 
         fail : String
         fail =
             "\n    _ -> D.fail (\"I can't decode \" ++ " ++ encodeJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
     in
-    a |> fromType ("\n  " ++ tagDecoder ++ " |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  D.index 0 D.string |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
 -}
-fromCustomTypeConstructor : Maybe a -> ( String, Node ValueConstructor ) -> String
-fromCustomTypeConstructor customTags ( tag, Node _ a ) =
+fromCustomTypeConstructor : ( String, Node ValueConstructor ) -> String
+fromCustomTypeConstructor ( tag, Node _ a ) =
     let
         name : String
         name =
@@ -95,12 +82,7 @@ fromCustomTypeConstructor customTags ( tag, Node _ a ) =
 
         arguments : String
         arguments =
-            case customTags of
-                Just _ ->
-                    a.arguments |> List.map fromTypeAnnotation |> join " "
-
-                Nothing ->
-                    a.arguments |> List.indexedMap (\i v -> fromElementAt (1 + i) v) |> join " "
+            a.arguments |> List.indexedMap (\i v -> fromElementAt (1 + i) v) |> join " "
 
         decoder : String
         decoder =
