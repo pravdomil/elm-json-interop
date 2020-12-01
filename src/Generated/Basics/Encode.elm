@@ -14,10 +14,10 @@ char a =
 {-| To encode maybe.
 -}
 maybe : (a -> E.Value) -> Maybe a -> E.Value
-maybe a b =
-    case b of
-        Just c ->
-            a c
+maybe encode a =
+    case a of
+        Just b ->
+            encode b
 
         Nothing ->
             E.null
