@@ -30,9 +30,9 @@ set a =
 
 {-| To decode dictionary.
 -}
-dict : k -> Decoder v -> Decoder (Dict String v)
-dict _ a =
-    D.dict a
+dict : Decoder comparable -> Decoder v -> Decoder (Dict comparable v)
+dict k v =
+    D.map Dict.fromList (D.list (D.map2 Tuple.pair (D.index 0 k) (D.index 1 v)))
 
 
 {-| To maybe decode field.

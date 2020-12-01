@@ -25,9 +25,11 @@ maybe encode a =
 
 {-| To encode dictionary.
 -}
-dict : (k -> E.Value) -> (v -> E.Value) -> Dict String v -> E.Value
-dict _ b c =
-    E.dict identity b c
+dict : (comparable -> E.Value) -> (v -> E.Value) -> Dict comparable v -> E.Value
+dict encodeKey encodeValue a =
+    a
+        |> Dict.toList
+        |> E.list (\( k, v ) -> E.list identity [ encodeKey k, encodeValue v ])
 
 
 {-| To encode result.
