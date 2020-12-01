@@ -30,9 +30,9 @@ set a =
 
 {-| To decode dictionary.
 -}
-dict : k -> Decoder v -> Decoder (Dict String v)
-dict _ a =
-    D.dict a
+dict : Decoder comparable -> Decoder v -> Decoder (Dict comparable v)
+dict k v =
+    D.map Dict.fromList (D.list (D.map2 Tuple.pair (D.index 0 k) (D.index 1 v)))
 
 
 {-| To maybe decode field.
@@ -57,16 +57,16 @@ maybeField name a =
 {-| To decode result.
 -}
 result : Decoder e -> Decoder v -> Decoder (Result e v)
-result errorDecoder valueDecoder =
-    D.index 0 D.string
+result e v =
+    D.field "type" D.string
         |> D.andThen
             (\tag ->
                 case tag of
                     "Ok" ->
-                        D.map Ok (D.index 1 valueDecoder)
+                        D.map Ok (D.field "a" v)
 
                     "Err" ->
-                        D.map Err (D.index 1 errorDecoder)
+                        D.map Err (D.field "a" e)
 
                     _ ->
                         D.fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")

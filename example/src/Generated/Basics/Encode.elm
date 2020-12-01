@@ -14,10 +14,10 @@ char a =
 {-| To encode maybe.
 -}
 maybe : (a -> E.Value) -> Maybe a -> E.Value
-maybe a b =
-    case b of
-        Just c ->
-            a c
+maybe encode a =
+    case a of
+        Just b ->
+            encode b
 
         Nothing ->
             E.null
@@ -25,9 +25,11 @@ maybe a b =
 
 {-| To encode dictionary.
 -}
-dict : (k -> E.Value) -> (v -> E.Value) -> Dict String v -> E.Value
-dict _ b c =
-    E.dict identity b c
+dict : (comparable -> E.Value) -> (v -> E.Value) -> Dict comparable v -> E.Value
+dict encodeKey encodeValue a =
+    a
+        |> Dict.toList
+        |> E.list (\( k, v ) -> E.list identity [ encodeKey k, encodeValue v ])
 
 
 {-| To encode result.
@@ -36,7 +38,7 @@ result : (e -> E.Value) -> (v -> E.Value) -> Result e v -> E.Value
 result encodeError encodeValue a =
     case a of
         Ok b ->
-            E.list identity [ E.string "Ok", encodeValue b ]
+            E.object [ ( "type", E.string "Ok" ), ( "a", encodeValue b ) ]
 
         Err b ->
-            E.list identity [ E.string "Err", encodeError b ]
+            E.object [ ( "type", E.string "Err" ), ( "a", encodeError b ) ]
