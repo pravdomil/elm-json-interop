@@ -17,11 +17,10 @@ msg =
 
 
 {-| -}
-test : Bool
+test : Result Decode.Error Bool
 test =
     msg
         |> MsgEncode.msg
         |> Encode.encode 0
         |> Decode.decodeString MsgDecode.msg
         |> Result.map ((==) msg)
-        |> Result.withDefault False
