@@ -308,7 +308,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
         fieldName : String
         fieldName =
             case ( a, Node.value b ) of
-                ( "id", Typed (Node _ ( _, "ObjectId" )) _ ) ->
+                ( "id", Typed (Node _ ( _, "Id" )) _ ) ->
                     "_id"
 
                 _ ->
