@@ -251,7 +251,7 @@ fromTuple parameter a =
 
         parameterFromInt : Int -> String
         parameterFromInt i =
-            parameter ++ "_" ++ letterByInt i
+            (parameter |> String.replace "." "_") ++ "_" ++ letterByInt i
     in
     "(\\( " ++ parameters ++ " ) -> E.list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
 
