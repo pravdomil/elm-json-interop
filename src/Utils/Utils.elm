@@ -37,24 +37,20 @@ letterByInt a =
 -}
 firstToUpper : String -> String
 firstToUpper a =
-    case a |> String.toList of
-        first :: rest ->
-            String.fromList (Char.toUpper first :: rest)
-
-        _ ->
-            a
+    a |> mapFirstLetter String.toUpper
 
 
 {-| To convert first letter of string to lower case.
 -}
 firstToLower : String -> String
 firstToLower a =
-    case a |> String.toList of
-        first :: rest ->
-            String.fromList (Char.toLower first :: rest)
+    a |> mapFirstLetter String.toLower
 
-        _ ->
-            a
+
+{-| -}
+mapFirstLetter : (String -> String) -> String -> String
+mapFirstLetter fn a =
+    (a |> String.slice 0 1 |> fn) ++ (a |> String.dropLeft 1)
 
 
 
