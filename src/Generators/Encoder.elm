@@ -11,7 +11,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
 import Utils.Imports as Imports
-import Utils.Utils exposing (fileToModuleName, firstToLower, letterByInt, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (fileToModuleName, firstToLower, firstToUpper, letterByInt, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -123,7 +123,7 @@ fromType a =
                     ""
 
                 _ ->
-                    " " ++ (a.generics |> List.map (\v -> "t_" ++ Node.value v) |> join " ")
+                    " " ++ (a.generics |> List.map (\v -> "encode" ++ firstToUpper (Node.value v)) |> join " ")
     in
     signature ++ declaration
 
@@ -134,7 +134,7 @@ fromTypeAnnotation : String -> Node TypeAnnotation -> String
 fromTypeAnnotation parameter a =
     (case a |> Node.value of
         GenericType b ->
-            "t_" ++ b ++ parameterToString parameter
+            "encode" ++ firstToUpper b ++ parameterToString parameter
 
         Typed b c ->
             fromTyped parameter b c
