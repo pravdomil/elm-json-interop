@@ -35,8 +35,8 @@ letterByInt a =
 
 {-| To convert first letter of string to lower case.
 -}
-firstToLowerCase : String -> String
-firstToLowerCase a =
+firstToLower : String -> String
+firstToLower a =
     case String.toList a of
         first :: rest ->
             String.fromList (Char.toLower first :: rest)

@@ -11,7 +11,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
 import Utils.Imports as Imports
-import Utils.Utils exposing (fileToModuleName, firstToLowerCase, letterByInt, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (fileToModuleName, firstToLower, letterByInt, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -288,7 +288,7 @@ fromRecordField parameter (Node _ ( Node _ a, b )) =
 -}
 encoderName : String -> String
 encoderName a =
-    firstToLowerCase a
+    firstToLower a
 
 
 {-| To convert parameter to string.

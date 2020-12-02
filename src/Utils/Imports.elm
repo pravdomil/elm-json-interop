@@ -4,7 +4,7 @@ import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import String exposing (join)
-import Utils.Utils exposing (firstToLowerCase)
+import Utils.Utils exposing (firstToLower)
 
 
 {-| -}
@@ -61,7 +61,7 @@ fromTopLevelExpose a =
         _ ->
             Nothing
     )
-        |> Maybe.map firstToLowerCase
+        |> Maybe.map firstToLower
 
 
 {-| -}
