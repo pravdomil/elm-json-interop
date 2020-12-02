@@ -37,7 +37,7 @@ letterByInt a =
 -}
 firstToUpper : String -> String
 firstToUpper a =
-    case String.toList a of
+    case a |> String.toList of
         first :: rest ->
             String.fromList (Char.toUpper first :: rest)
 
@@ -49,7 +49,7 @@ firstToUpper a =
 -}
 firstToLower : String -> String
 firstToLower a =
-    case String.toList a of
+    case a |> String.toList of
         first :: rest ->
             String.fromList (Char.toLower first :: rest)
 
