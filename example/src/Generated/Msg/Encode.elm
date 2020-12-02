@@ -1,82 +1,16 @@
 module Generated.Msg.Encode exposing (..)
 
-import Generated.Basics.Encode as BE
-import Generated.User.Encode as User exposing (user)
-import Json.Encode as E
 import Msg as A
-
+import Generated.Basics.Encode as BE
+import Json.Encode as E
+import Generated.User.Encode as User exposing (user)
 
 msg : A.Msg -> E.Value
 msg a =
-    case a of
-        A.PressedEnter ->
-            E.object [ ( "type", E.string "PressedEnter" ) ]
+  case a of
+    A.PressedEnter -> E.object [ ( "type", E.string "PressedEnter" ) ]
+    A.ChangedDraft b -> E.object [ ( "type", E.string "ChangedDraft" ), ( "a", (E.string (b)) ) ]
+    A.ReceivedMessages b -> E.object [ ( "type", E.string "ReceivedMessages" ), ( "a", (E.list(\b_ -> (example(\b__ -> (user (b__)) ) (\b__ -> (E.string (b__)) ) (b_)) ) (b)) ) ]
+    A.ClickedExit -> E.object [ ( "type", E.string "ClickedExit" ) ]
 
-        A.ChangedDraft b ->
-            E.object [ ( "type", E.string "ChangedDraft" ), ( "a", E.string b ) ]
-
-        A.ReceivedMessages b ->
-            E.object [ ( "type", E.string "ReceivedMessages" ), ( "a", E.list (\b_ -> E.object [ ( "user", user b_.user ), ( "message", BE.maybe (\b__message_ -> E.string b__message_) b_.message ) ]) b ) ]
-
-        A.ClickedExit ->
-            E.object [ ( "type", E.string "ClickedExit" ) ]
-
-
-exampleBool : A.ExampleBool -> E.Value
-exampleBool a =
-    E.bool a
-
-
-exampleInt : A.ExampleInt -> E.Value
-exampleInt a =
-    E.int a
-
-
-exampleFloat : A.ExampleFloat -> E.Value
-exampleFloat a =
-    E.float a
-
-
-exampleString : A.ExampleString -> E.Value
-exampleString a =
-    E.string a
-
-
-exampleMaybe : A.ExampleMaybe -> E.Value
-exampleMaybe a =
-    BE.maybe (\a_ -> E.string a_) a
-
-
-exampleList : A.ExampleList -> E.Value
-exampleList a =
-    E.list (\a_ -> E.string a_) a
-
-
-exampleRecord : A.ExampleRecord -> E.Value
-exampleRecord a =
-    E.object [ ( "a", E.string a.a ), ( "b", BE.maybe (\a_b_ -> E.string a_b_) a.b ) ]
-
-
-exampleChar : A.ExampleChar -> E.Value
-exampleChar a =
-    BE.char a
-
-
-exampleTuple : A.ExampleTuple -> E.Value
-exampleTuple a =
-    (\( a_a, a_b, a_c ) -> E.list identity [ E.string a_a, E.string a_b, E.string a_c ]) a
-
-
-exampleResult : A.ExampleResult -> E.Value
-exampleResult a =
-    BE.result (\a_ -> E.string a_) (\a_ -> E.string a_) a
-
-
-exampleSet : A.ExampleSet -> E.Value
-exampleSet a =
-    E.set (\a_ -> E.string a_) a
-
-
-exampleDict : A.ExampleDict -> E.Value
-exampleDict a =
-    BE.dict (\a_ -> E.string a_) (\a_ -> E.string a_) a
+example t_a t_b a = (E.object [ ( "bool", (E.bool (a.bool)) ), ( "int", (E.int (a.int)) ), ( "float", (E.float (a.float)) ), ( "char", (BE.char (a.char)) ), ( "string", (E.string (a.string)) ), ( "tuple", ((\( a.tuple_a, a.tuple_b ) -> E.list identity [ (t_a (a.tuple_a)), (t_b (a.tuple_b)) ]) (a.tuple)) ), ( "list", (E.list(\a_list_ -> (E.object [ ( "a", (t_a (a_list_.a)) ), ( "b", (t_b (a_list_.b)) ) ]) ) (a.list)) ), ( "array", (E.array(\a_array_ -> (E.object [ ( "a", (t_a (a_array_.a)) ), ( "b", (t_b (a_array_.b)) ) ]) ) (a.array)) ), ( "record", (E.object [ ( "a", (t_a (a.record.a)) ), ( "b", (t_b (a.record.b)) ) ]) ), ( "maybe", (BE.maybe(\a_maybe_ -> (t_a (a_maybe_)) ) (a.maybe)) ), ( "result", (BE.result(\a_result_ -> (E.int (a_result_)) ) (\a_result_ -> (t_a (a_result_)) ) (a.result)) ), ( "set", (E.set(\a_set_ -> (E.int (a_set_)) ) (a.set)) ), ( "dict", (BE.dict(\a_dict_ -> (E.int (a_dict_)) ) (\a_dict_ -> (t_a (a_dict_)) ) (a.dict)) ) ])

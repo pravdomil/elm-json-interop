@@ -1,5 +1,6 @@
 module Msg exposing (..)
 
+import Array exposing (Array)
 import Dict exposing (Dict)
 import Set exposing (Set)
 import User exposing (User)
@@ -10,7 +11,7 @@ import User exposing (User)
 type Msg
     = PressedEnter
     | ChangedDraft String
-    | ReceivedMessages (List { user : User, message : Maybe String })
+    | ReceivedMessages (List (Example User String))
     | ClickedExit
 
 
@@ -19,70 +20,24 @@ type Msg
 
 
 {-| -}
-type alias ExampleBool =
-    Bool
+type alias Example a b =
+    { bool : Bool
+    , int : Int
+    , float : Float
+    , char : Char
+    , string : String
 
+    --
+    , tuple : ( a, b )
+    , list : List { a : a, b : b }
+    , array : Array { a : a, b : b }
+    , record : { a : a, b : b }
 
-{-| -}
-type alias ExampleInt =
-    Int
+    --
+    , maybe : Maybe a
+    , result : Result Int a
 
-
-{-| -}
-type alias ExampleFloat =
-    Float
-
-
-{-| -}
-type alias ExampleString =
-    String
-
-
-{-| -}
-type alias ExampleMaybe =
-    Maybe String
-
-
-{-| -}
-type alias ExampleList =
-    List String
-
-
-{-| -}
-type alias ExampleRecord =
-    { a : String
-    , b : Maybe String
+    --
+    , set : Set Int
+    , dict : Dict Int a
     }
-
-
-
---
-
-
-{-| -}
-type alias ExampleChar =
-    Char
-
-
-{-| -}
-type alias ExampleTuple =
-    ( String, String, String )
-
-
-{-| -}
-type alias ExampleResult =
-    Result String String
-
-
-
---
-
-
-{-| -}
-type alias ExampleSet =
-    Set String
-
-
-{-| -}
-type alias ExampleDict =
-    Dict String String

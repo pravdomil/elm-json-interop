@@ -19,7 +19,7 @@ msg =
                         D.map A.ChangedDraft (D.field "a" D.string)
 
                     "ReceivedMessages" ->
-                        D.map A.ReceivedMessages (D.field "a" (D.list (D.map2 (\a b -> { user = a, message = b }) (D.field "user" user) (BD.maybeField "message" (D.nullable D.string)))))
+                        D.map A.ReceivedMessages (D.field "a" (D.list (example user D.string)))
 
                     "ClickedExit" ->
                         D.succeed A.ClickedExit
@@ -29,61 +29,5 @@ msg =
             )
 
 
-exampleBool : Decoder A.ExampleBool
-exampleBool =
-    D.bool
-
-
-exampleInt : Decoder A.ExampleInt
-exampleInt =
-    D.int
-
-
-exampleFloat : Decoder A.ExampleFloat
-exampleFloat =
-    D.float
-
-
-exampleString : Decoder A.ExampleString
-exampleString =
-    D.string
-
-
-exampleMaybe : Decoder A.ExampleMaybe
-exampleMaybe =
-    D.nullable D.string
-
-
-exampleList : Decoder A.ExampleList
-exampleList =
-    D.list D.string
-
-
-exampleRecord : Decoder A.ExampleRecord
-exampleRecord =
-    D.map2 (\a b -> { a = a, b = b }) (D.field "a" D.string) (BD.maybeField "b" (D.nullable D.string))
-
-
-exampleChar : Decoder A.ExampleChar
-exampleChar =
-    BD.char
-
-
-exampleTuple : Decoder A.ExampleTuple
-exampleTuple =
-    D.map3 (\a b c -> ( a, b, c )) (D.index 0 D.string) (D.index 1 D.string) (D.index 2 D.string)
-
-
-exampleResult : Decoder A.ExampleResult
-exampleResult =
-    BD.result D.string D.string
-
-
-exampleSet : Decoder A.ExampleSet
-exampleSet =
-    BD.set D.string
-
-
-exampleDict : Decoder A.ExampleDict
-exampleDict =
-    BD.dict D.string D.string
+example t_a t_b =
+    BD.map13 (\a b c d e f g h i j k l m -> { bool = a, int = b, float = c, char = d, string = e, tuple = f, list = g, array = h, record = i, maybe = j, result = k, set = l, dict = m }) (D.field "bool" D.bool) (D.field "int" D.int) (D.field "float" D.float) (D.field "char" BD.char) (D.field "string" D.string) (D.field "tuple" (D.map2 Tuple.pair (D.index 0 t_a) (D.index 1 t_b))) (D.field "list" (D.list (D.map2 (\a b -> { a = a, b = b }) (D.field "a" t_a) (D.field "b" t_b)))) (D.field "array" (D.array (D.map2 (\a b -> { a = a, b = b }) (D.field "a" t_a) (D.field "b" t_b)))) (D.field "record" (D.map2 (\a b -> { a = a, b = b }) (D.field "a" t_a) (D.field "b" t_b))) (BD.maybeField "maybe" (D.nullable t_a)) (D.field "result" (BD.result D.int t_a)) (D.field "set" (BD.set D.int)) (D.field "dict" (BD.dict D.int t_a))
