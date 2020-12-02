@@ -3471,28 +3471,27 @@ var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
 	ax: {av: 0, aW: 0},
 	ao: {av: 0, aW: 0}
 };
-var $elm$core$String$fromList = _String_fromList;
-var $elm$core$String$foldr = _String_foldr;
-var $elm$core$String$toList = function (string) {
-	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
-};
-var $elm$core$Char$toLower = _Char_toLower;
-var $author$project$Utils$Utils$firstToLowerCase = function (a) {
-	var _v0 = $elm$core$String$toList(a);
-	if (_v0.b) {
-		var first = _v0.a;
-		var rest = _v0.b;
-		return $elm$core$String$fromList(
-			A2(
-				$elm$core$List$cons,
-				$elm$core$Char$toLower(first),
-				rest));
-	} else {
-		return a;
-	}
+var $elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			$elm$core$String$slice,
+			n,
+			$elm$core$String$length(string),
+			string);
+	});
+var $author$project$Utils$Utils$mapFirstLetter = F2(
+	function (fn, a) {
+		return _Utils_ap(
+			fn(
+				A3($elm$core$String$slice, 0, 1, a)),
+			A2($elm$core$String$dropLeft, 1, a));
+	});
+var $elm$core$String$toLower = _String_toLower;
+var $author$project$Utils$Utils$firstToLower = function (a) {
+	return A2($author$project$Utils$Utils$mapFirstLetter, $elm$core$String$toLower, a);
 };
 var $author$project$Generators$Decoder$decoderName = function (a) {
-	return $author$project$Utils$Utils$firstToLowerCase(a);
+	return $author$project$Utils$Utils$firstToLower(a);
 };
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
@@ -3612,7 +3611,7 @@ var $author$project$Generators$Decoder$fromTypeAnnotation = function (a) {
 			switch (_v4.$) {
 				case 0:
 					var b = _v4.a;
-					return 't_' + b;
+					return b + 'Decoder';
 				case 1:
 					var b = _v4.a;
 					var c = _v4.b;
@@ -3738,7 +3737,6 @@ var $elm$core$Maybe$map = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
-var $elm$core$String$toLower = _String_toLower;
 var $author$project$Generators$Decoder$fromType = F2(
 	function (body, a) {
 		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.O);
@@ -3781,7 +3779,7 @@ var $author$project$Generators$Decoder$fromType = F2(
 					A2(
 						$elm$core$List$map,
 						function (v) {
-							return 't_' + $stil4m$elm_syntax$Elm$Syntax$Node$value(v);
+							return $stil4m$elm_syntax$Elm$Syntax$Node$value(v) + 'Decoder';
 						},
 						a.R));
 			}
@@ -3849,7 +3847,7 @@ var $elm$core$List$filter = F2(
 var $author$project$Utils$Imports$fromTopLevelExpose = function (a) {
 	return A2(
 		$elm$core$Maybe$map,
-		$author$project$Utils$Utils$firstToLowerCase,
+		$author$project$Utils$Utils$firstToLower,
 		function () {
 			var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
 			switch (_v0.$) {
@@ -3985,7 +3983,11 @@ var $author$project$Generators$Decoder$fromFile = function (a) {
 			]));
 };
 var $author$project$Generators$Encoder$encoderName = function (a) {
-	return $author$project$Utils$Utils$firstToLowerCase(a);
+	return $author$project$Utils$Utils$firstToLower(a);
+};
+var $elm$core$String$toUpper = _String_toUpper;
+var $author$project$Utils$Utils$firstToUpper = function (a) {
+	return A2($author$project$Utils$Utils$mapFirstLetter, $elm$core$String$toUpper, a);
 };
 var $author$project$Generators$Encoder$parameterToString = function (a) {
 	return ' ' + $author$project$Utils$Utils$wrapInParentheses(a);
@@ -4031,7 +4033,7 @@ var $author$project$Generators$Encoder$fromRecordField = F2(
 var $author$project$Generators$Encoder$fromTuple = F2(
 	function (parameter, a) {
 		var parameterFromInt = function (i) {
-			return parameter + ('_' + $author$project$Utils$Utils$letterByInt(i));
+			return A3($elm$core$String$replace, '.', '_', parameter) + ('_' + $author$project$Utils$Utils$letterByInt(i));
 		};
 		var parameters = A2(
 			$elm$core$String$join,
@@ -4063,7 +4065,7 @@ var $author$project$Generators$Encoder$fromTypeAnnotation = F2(
 				switch (_v4.$) {
 					case 0:
 						var b = _v4.a;
-						return 't_' + (b + $author$project$Generators$Encoder$parameterToString(parameter));
+						return 'encode' + ($author$project$Utils$Utils$firstToUpper(b) + $author$project$Generators$Encoder$parameterToString(parameter));
 					case 1:
 						var b = _v4.a;
 						var c = _v4.b;
@@ -4214,7 +4216,8 @@ var $author$project$Generators$Encoder$fromType = function (a) {
 				A2(
 					$elm$core$List$map,
 					function (v) {
-						return 't_' + $stil4m$elm_syntax$Elm$Syntax$Node$value(v);
+						return 'encode' + $author$project$Utils$Utils$firstToUpper(
+							$stil4m$elm_syntax$Elm$Syntax$Node$value(v));
 					},
 					a.R));
 		}
@@ -6420,6 +6423,10 @@ var $stil4m$elm_syntax$Combine$fromCore = function (p) {
 			p);
 	};
 };
+var $elm$core$String$foldr = _String_foldr;
+var $elm$core$String$toList = function (string) {
+	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
+};
 var $stil4m$elm_syntax$Combine$Char$satisfy = function (pred) {
 	return $stil4m$elm_syntax$Combine$fromCore(
 		A2(
@@ -6446,6 +6453,7 @@ var $stil4m$elm_syntax$Combine$Char$anyChar = A2(
 			$stil4m$elm_syntax$Combine$fail('expected any character'))),
 	$stil4m$elm_syntax$Combine$Char$satisfy(
 		$elm$core$Basics$always(true)));
+var $elm$core$String$fromList = _String_fromList;
 var $stil4m$elm_syntax$Combine$Char$char = function (c) {
 	return A2(
 		$stil4m$elm_syntax$Combine$andThen,
@@ -8579,14 +8587,6 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$GLSLExpression = function (a) {
 	return {$: 23, a: a};
 };
 var $elm$parser$Parser$NotNestable = 0;
-var $elm$core$String$dropLeft = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(
-			$elm$core$String$slice,
-			n,
-			$elm$core$String$length(string),
-			string);
-	});
 var $stil4m$elm_syntax$Elm$Parser$Declarations$glslExpression = function () {
 	var start = '[glsl|';
 	var end = '|]';
