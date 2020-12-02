@@ -33,6 +33,18 @@ letterByInt a =
     a + 97 |> Char.fromCode |> String.fromChar
 
 
+{-| To convert first letter of string to upper case.
+-}
+firstToUpper : String -> String
+firstToUpper a =
+    case String.toList a of
+        first :: rest ->
+            String.fromList (Char.toUpper first :: rest)
+
+        _ ->
+            a
+
+
 {-| To convert first letter of string to lower case.
 -}
 firstToLower : String -> String
