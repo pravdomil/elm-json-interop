@@ -146,7 +146,7 @@ fromType body a =
                     ""
 
                 _ ->
-                    " " ++ (a.generics |> List.map (\v -> "t_" ++ Node.value v) |> join " ")
+                    " " ++ (a.generics |> List.map (\v -> Node.value v ++ "Decoder") |> join " ")
     in
     signature ++ declaration
 
@@ -157,7 +157,7 @@ fromTypeAnnotation : Node TypeAnnotation -> String
 fromTypeAnnotation a =
     (case a |> Node.value of
         GenericType b ->
-            "t_" ++ b
+            b ++ "Decoder"
 
         Typed b c ->
             fromTyped b c
