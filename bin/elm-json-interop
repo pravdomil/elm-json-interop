@@ -3332,20 +3332,17 @@ var $author$project$Interop$JsCode$getArguments = A2(
 	$author$project$Utils$TaskUtils$andThenDecode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await process.argv)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+var $author$project$Interop$JsCode$copyFile = F2(
+	function (_v0, _v1) {
+		return A2(
+			$author$project$Utils$TaskUtils$andThenDecode,
+			$elm$json$Json$Decode$succeed(0),
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').copyFile(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+	});
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
 		return a;
 	});
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $elm$core$String$slice = _String_slice;
-var $elm$core$String$dropRight = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
-	});
-var $elm$core$String$endsWith = _String_endsWith;
-var $elm$core$String$length = _String_length;
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -3389,27 +3386,6 @@ var $author$project$Utils$Utils$regexReplace = F3(
 				replacement),
 			a);
 	});
-var $author$project$Main$basename = F2(
-	function (extension, a) {
-		return function (v) {
-			return A2($elm$core$String$endsWith, extension, v) ? A2(
-				$elm$core$String$dropRight,
-				$elm$core$String$length(extension),
-				v) : v;
-		}(
-			A3(
-				$author$project$Utils$Utils$regexReplace,
-				'^.*/',
-				$elm$core$Basics$always(''),
-				a));
-	});
-var $author$project$Interop$JsCode$copyFile = F2(
-	function (_v0, _v1) {
-		return A2(
-			$author$project$Utils$TaskUtils$andThenDecode,
-			$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').copyFile(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
-	});
 var $author$project$Main$dirname = function (a) {
 	return A3(
 		$author$project$Utils$Utils$regexReplace,
@@ -3421,6 +3397,13 @@ var $author$project$Interop$JsCode$dirname__ = A2(
 	$author$project$Utils$TaskUtils$andThenDecode,
 	$elm$json$Json$Decode$string,
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await __dirname)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+var $author$project$Utils$Utils$dropLast = function (a) {
+	return $elm$core$List$reverse(
+		A2(
+			$elm$core$List$drop,
+			1,
+			$elm$core$List$reverse(a)));
+};
 var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
 	var v = _v0.b;
 	return v;
@@ -3439,11 +3422,8 @@ var $stil4m$elm_syntax$Elm$Syntax$Module$moduleName = function (m) {
 	}
 };
 var $author$project$Utils$Utils$fileToModuleName = function (a) {
-	return A2(
-		$elm$core$String$join,
-		'.',
-		$stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.bx)));
+	return $stil4m$elm_syntax$Elm$Syntax$Module$moduleName(
+		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.bx));
 };
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
@@ -3471,6 +3451,8 @@ var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
 	ax: {av: 0, aW: 0},
 	ao: {av: 0, aW: 0}
 };
+var $elm$core$String$length = _String_length;
+var $elm$core$String$slice = _String_slice;
 var $elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
@@ -3893,12 +3875,10 @@ var $author$project$Utils$Imports$fromImport = F2(
 					$elm$core$String$join,
 					'.',
 					_Utils_ap(
+						$author$project$Utils$Utils$dropLast(
+							$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)),
 						_List_fromArray(
-							['Generated']),
-						_Utils_ap(
-							$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T),
-							_List_fromArray(
-								[suffix])))),
+							[suffix]))),
 					' ',
 					function (v) {
 					return 'as ' + A2(
@@ -3968,10 +3948,17 @@ var $author$project$Generators$Decoder$fromFile = function (a) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + '.Decode exposing (..)'),
+				'module ' + (A2(
+				$elm$core$String$join,
+				'.',
+				$author$project$Utils$Utils$dropLast(
+					$author$project$Utils$Utils$fileToModuleName(a))) + '.Decode exposing (..)'),
 				'',
-				'import ' + ($author$project$Utils$Utils$fileToModuleName(a) + ' as A'),
-				'import Generated.Basics.Decode as BD',
+				'import ' + (A2(
+				$elm$core$String$join,
+				'.',
+				$author$project$Utils$Utils$fileToModuleName(a)) + ' as A'),
+				'import Utils.Basics.Decode as BD',
 				'import Json.Decode as D exposing (Decoder)',
 				A2($author$project$Utils$Imports$fromList, 'Decode', a.bp),
 				'',
@@ -4259,10 +4246,17 @@ var $author$project$Generators$Encoder$fromFile = function (a) {
 		'\n',
 		_List_fromArray(
 			[
-				'module Generated.' + ($author$project$Utils$Utils$fileToModuleName(a) + '.Encode exposing (..)'),
+				'module ' + (A2(
+				$elm$core$String$join,
+				'.',
+				$author$project$Utils$Utils$dropLast(
+					$author$project$Utils$Utils$fileToModuleName(a))) + '.Encode exposing (..)'),
 				'',
-				'import ' + ($author$project$Utils$Utils$fileToModuleName(a) + ' as A'),
-				'import Generated.Basics.Encode as BE',
+				'import ' + (A2(
+				$elm$core$String$join,
+				'.',
+				$author$project$Utils$Utils$fileToModuleName(a)) + ' as A'),
+				'import Utils.Basics.Encode as BE',
 				'import Json.Encode as E',
 				A2($author$project$Utils$Imports$fromList, 'Encode', a.bp),
 				'',
@@ -6288,6 +6282,9 @@ var $elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
 var $elm$parser$Parser$Advanced$isSubString = _Parser_isSubString;
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var $elm$core$Basics$not = _Basics_not;
 var $elm$parser$Parser$Advanced$token = function (_v0) {
 	var str = _v0.a;
@@ -10747,29 +10744,26 @@ _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await
 var $author$project$Main$processFile = function (path) {
 	var generateTask = F4(
 		function (binPath, fullPath, srcFolder, rawFile) {
-			var moduleName = A2($author$project$Main$basename, '.elm', fullPath);
-			var generatedFolder = $author$project$Main$dirname(
-				A3($elm$core$String$replace, srcFolder, srcFolder + 'Generated/', fullPath)) + ('/' + moduleName);
+			var folderPath = $author$project$Main$dirname(fullPath);
 			var file = A2($stil4m$elm_syntax$Elm$Processing$process, $stil4m$elm_syntax$Elm$Processing$init, rawFile);
 			return A2(
 				$elm$core$Task$map,
 				function (_v0) {
-					return 'I have generated JSON encoders/decoders in folder:\n' + generatedFolder;
+					return 'I have generated JSON encoders/decoders for:\n' + fullPath;
 				},
 				$elm$core$Task$sequence(
 					_List_fromArray(
 						[
-							$author$project$Interop$JsCode$mkDir(srcFolder + 'Generated/Basics'),
-							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/Encode.elm', srcFolder + 'Generated/Basics/Encode.elm'),
-							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Generated/Basics/Decode.elm', srcFolder + 'Generated/Basics/Decode.elm'),
-							$author$project$Interop$JsCode$mkDir(generatedFolder),
+							$author$project$Interop$JsCode$mkDir(srcFolder + 'Utils/Basics'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Utils/Basics/Encode.elm', srcFolder + 'Utils/Basics/Encode.elm'),
+							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Utils/Basics/Decode.elm', srcFolder + 'Utils/Basics/Decode.elm'),
 							A2(
 							$author$project$Interop$JsCode$writeFile,
-							generatedFolder + '/Encode.elm',
+							folderPath + '/Encode.elm',
 							$author$project$Generators$Encoder$fromFile(file)),
 							A2(
 							$author$project$Interop$JsCode$writeFile,
-							generatedFolder + '/Decode.elm',
+							folderPath + '/Decode.elm',
 							$author$project$Generators$Decoder$fromFile(file))
 						])));
 		});
