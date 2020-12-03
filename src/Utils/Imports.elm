@@ -4,7 +4,7 @@ import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import String exposing (join)
-import Utils.Utils exposing (firstToLower)
+import Utils.Utils exposing (dropLast, firstToLower)
 
 
 {-| -}
@@ -21,7 +21,7 @@ fromImport : String -> Node Import -> String
 fromImport suffix (Node _ a) =
     [ "import"
     , " "
-    , ([ "Generated" ] ++ (a.moduleName |> Node.value) ++ [ suffix ]) |> join "."
+    , ((a.moduleName |> Node.value |> dropLast) ++ [ suffix ]) |> join "."
     , " "
     , a.moduleAlias
         |> Maybe.withDefault a.moduleName

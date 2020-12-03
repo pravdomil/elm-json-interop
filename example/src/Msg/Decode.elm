@@ -1,9 +1,9 @@
-module Generated.Msg.Decode exposing (..)
+module Msg.Decode exposing (..)
 
-import Generated.Basics.Decode as BD
-import Generated.User.Decode as User exposing (user)
 import Json.Decode as D exposing (Decoder)
-import Msg as A
+import Msg.Msg as A
+import User.Decode as User_User exposing (user)
+import Utils.Basics.Decode as BD
 
 
 msg : Decoder A.Msg

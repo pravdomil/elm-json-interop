@@ -1,8 +1,8 @@
-module Generated.User.Decode exposing (..)
+module User.Decode exposing (..)
 
-import Generated.Basics.Decode as BD
 import Json.Decode as D exposing (Decoder)
-import User as A
+import User.User as A
+import Utils.Basics.Decode as BD
 
 
 user : Decoder A.User

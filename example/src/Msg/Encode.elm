@@ -1,9 +1,9 @@
-module Generated.Msg.Encode exposing (..)
+module Msg.Encode exposing (..)
 
-import Generated.Basics.Encode as BE
-import Generated.User.Encode as User exposing (user)
 import Json.Encode as E
-import Msg as A
+import Msg.Msg as A
+import User.Encode as User_User exposing (user)
+import Utils.Basics.Encode as BE
 
 
 msg : A.Msg -> E.Value

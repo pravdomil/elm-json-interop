@@ -1,4 +1,4 @@
-module Generated.Basics.Decode exposing (..)
+module Utils.Basics.Decode exposing (..)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)

@@ -1,4 +1,4 @@
-module Generated.Basics.Encode exposing (..)
+module Utils.Basics.Encode exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode as E

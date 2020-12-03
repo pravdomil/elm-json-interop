@@ -1,8 +1,8 @@
-module Generated.User.Encode exposing (..)
+module User.Encode exposing (..)
 
-import Generated.Basics.Encode as BE
 import Json.Encode as E
-import User as A
+import User.User as A
+import Utils.Basics.Encode as BE
 
 
 user : A.User -> E.Value

@@ -5,23 +5,22 @@ import Elm.Syntax.Documentation exposing (Documentation)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
 import Utils.Imports as Imports
-import Utils.Utils exposing (fileToModuleName, firstToLower, firstToUpper, letterByInt, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (dropLast, fileToModuleName, firstToLower, firstToUpper, letterByInt, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
 -}
 fromFile : File -> String
 fromFile a =
-    [ "module Generated." ++ fileToModuleName a ++ ".Encode exposing (..)"
+    [ "module " ++ (a |> fileToModuleName |> dropLast |> join ".") ++ ".Encode exposing (..)"
     , ""
-    , "import " ++ fileToModuleName a ++ " as A"
-    , "import Generated.Basics.Encode as BE"
+    , "import " ++ (a |> fileToModuleName |> join ".") ++ " as A"
+    , "import Utils.Basics.Encode as BE"
     , "import Json.Encode as E"
     , a.imports |> Imports.fromList "Encode"
     , ""

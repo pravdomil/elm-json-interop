@@ -61,29 +61,24 @@ processFile path =
         generateTask : String -> String -> String -> RawFile -> Task Error String
         generateTask binPath fullPath srcFolder rawFile =
             let
-                generatedFolder : String
-                generatedFolder =
-                    (fullPath |> replace srcFolder (srcFolder ++ "Generated/") |> dirname) ++ "/" ++ moduleName
-
-                moduleName : String
-                moduleName =
-                    fullPath |> basename ".elm"
+                folderPath : String
+                folderPath =
+                    fullPath |> dirname
 
                 file : File
                 file =
                     rawFile |> Processing.process Processing.init
             in
-            [ mkDir (srcFolder ++ "Generated/Basics")
-            , copyFile (binPath ++ "/../src/Generated/Basics/Encode.elm") (srcFolder ++ "Generated/Basics/Encode.elm")
-            , copyFile (binPath ++ "/../src/Generated/Basics/Decode.elm") (srcFolder ++ "Generated/Basics/Decode.elm")
-            , mkDir generatedFolder
-            , writeFile (generatedFolder ++ "/Encode.elm") (Encoder.fromFile file)
-            , writeFile (generatedFolder ++ "/Decode.elm") (Decoder.fromFile file)
+            [ mkDir (srcFolder ++ "Utils/Basics")
+            , copyFile (binPath ++ "/../src/Utils/Basics/Encode.elm") (srcFolder ++ "Utils/Basics/Encode.elm")
+            , copyFile (binPath ++ "/../src/Utils/Basics/Decode.elm") (srcFolder ++ "Utils/Basics/Decode.elm")
+            , writeFile (folderPath ++ "/Encode.elm") (Encoder.fromFile file)
+            , writeFile (folderPath ++ "/Decode.elm") (Decoder.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map
                     (\_ ->
-                        "I have generated JSON encoders/decoders in folder:\n" ++ generatedFolder
+                        "I have generated JSON encoders/decoders for:\n" ++ fullPath
                     )
     in
     taskAndThen2

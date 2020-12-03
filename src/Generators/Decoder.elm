@@ -11,17 +11,17 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
 import Utils.Imports as Imports
-import Utils.Utils exposing (fileToModuleName, firstToLower, letterByInt, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (dropLast, fileToModuleName, firstToLower, letterByInt, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
 -}
 fromFile : File -> String
 fromFile a =
-    [ "module Generated." ++ fileToModuleName a ++ ".Decode exposing (..)"
+    [ "module " ++ (a |> fileToModuleName |> dropLast |> join ".") ++ ".Decode exposing (..)"
     , ""
-    , "import " ++ fileToModuleName a ++ " as A"
-    , "import Generated.Basics.Decode as BD"
+    , "import " ++ (a |> fileToModuleName |> join ".") ++ " as A"
+    , "import Utils.Basics.Decode as BD"
     , "import Json.Decode as D exposing (Decoder)"
     , a.imports |> Imports.fromList "Decode"
     , ""

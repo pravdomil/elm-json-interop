@@ -10,9 +10,9 @@ import String exposing (join)
 
 {-| To get module name from file.
 -}
-fileToModuleName : File -> String
+fileToModuleName : File -> List String
 fileToModuleName a =
-    Node.value a.moduleDefinition |> Module.moduleName |> join "."
+    Node.value a.moduleDefinition |> Module.moduleName
 
 
 {-| To wrap string in parentheses.
@@ -76,3 +76,13 @@ regexReplace regex replacement a =
         |> Regex.replace
             (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
             (.match >> replacement)
+
+
+
+--
+
+
+{-| -}
+dropLast : List a -> List a
+dropLast a =
+    a |> List.reverse |> List.drop 1 |> List.reverse

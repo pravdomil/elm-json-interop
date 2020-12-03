@@ -21,8 +21,8 @@ mv bin/elm-json-interop.js bin/elm-json-interop
 chmod +x bin/elm-json-interop
 
 # To build example.
-bin/elm-json-interop example/src/Msg.elm
-bin/elm-json-interop example/src/User.elm
-elm-format --yes example/src/Generated/Msg/*.elm
-elm-format --yes example/src/Generated/User/*.elm
+bin/elm-json-interop example/src/Msg/Msg.elm
+bin/elm-json-interop example/src/User/User.elm
+elm-format --yes example/src/Msg/*.elm
+elm-format --yes example/src/User/*.elm
 (cd example/src && printf "import Test\nTest.test" | elm repl)
