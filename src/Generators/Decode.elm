@@ -290,7 +290,11 @@ fromRecord a =
         constructorFn =
             "(\\" ++ parameters ++ " -> { " ++ fields ++ " })"
     in
-    mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map fromRecordField |> join " ")
+    if a |> List.length |> (==) 0 then
+        "D.succeed {}"
+
+    else
+        mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map fromRecordField |> join " ")
 
 
 {-| To get decoder from record field.
