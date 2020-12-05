@@ -69,9 +69,9 @@ fromCustomType a =
 
         fail : String
         fail =
-            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \" ++ String.fromInt tag ++ \".\")"
+            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \" ++ String.fromInt type_ ++ \".\")"
     in
-    a |> fromType ("\n  D.field \"type\" D.int |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  D.field \"type\" D.int |> D.andThen (\\type_ -> case type_ of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
