@@ -12,8 +12,8 @@ user : Decoder A.User
 user =
     D.field "type" D.int
         |> D.andThen
-            (\type_ ->
-                case type_ of
+            (\typeIndex_ ->
+                case typeIndex_ of
                     0 ->
                         D.map2 A.Regular (D.field "a" D.string) (D.field "b" D.int)
 
@@ -24,5 +24,5 @@ user =
                         D.succeed A.Anonymous
 
                     _ ->
-                        D.fail ("I can't decode " ++ "User" ++ ", unknown tag " ++ String.fromInt type_ ++ ".")
+                        D.fail ("I can't decode " ++ "User" ++ ", unknown tag " ++ String.fromInt typeIndex_ ++ ".")
             )

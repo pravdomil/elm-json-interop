@@ -11,7 +11,7 @@ import User.User exposing (User)
 type Msg
     = PressedEnter
     | ChangedDraft String
-    | ReceivedMessages (List (Example User String))
+    | ReceivedMessages (List (Type User String))
     | ClickedExit
 
 
@@ -20,7 +20,7 @@ type Msg
 
 
 {-| -}
-type alias Example a b =
+type alias Type a b =
     { bool : Bool
     , int : Int
     , float : Float
