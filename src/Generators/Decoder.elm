@@ -64,21 +64,20 @@ fromCustomType a =
         cases : String
         cases =
             a.constructors
-                |> List.map (\v -> Tuple.pair (v |> Node.value |> .name |> Node.value) v)
-                |> List.map fromCustomTypeConstructor
+                |> List.indexedMap fromCustomTypeConstructor
                 |> join "\n    "
 
         fail : String
         fail =
-            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \\\"\" ++ tag ++ \"\\\".\")"
+            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \" ++ String.fromInt tag ++ \".\")"
     in
-    a |> fromType ("\n  D.field \"type\" D.string |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
+    a |> fromType ("\n  D.field \"type\" D.int |> D.andThen (\\tag -> case tag of\n    " ++ cases ++ fail ++ "\n  )")
 
 
 {-| To get decoder from custom type constructor.
 -}
-fromCustomTypeConstructor : ( String, Node ValueConstructor ) -> String
-fromCustomTypeConstructor ( tag, Node _ a ) =
+fromCustomTypeConstructor : Int -> Node ValueConstructor -> String
+fromCustomTypeConstructor i (Node _ a) =
     let
         name : String
         name =
@@ -88,8 +87,8 @@ fromCustomTypeConstructor ( tag, Node _ a ) =
         arguments =
             a.arguments
                 |> List.indexedMap
-                    (\i v ->
-                        fromRecordField (Node emptyRange ( Node emptyRange (letterByInt i), v ))
+                    (\i_ v ->
+                        fromRecordField (Node emptyRange ( Node emptyRange (letterByInt i_), v ))
                     )
                 |> join " "
 
@@ -102,7 +101,7 @@ fromCustomTypeConstructor ( tag, Node _ a ) =
                 _ ->
                     mapFn (List.length a.arguments) ++ " A." ++ name ++ " " ++ arguments
     in
-    toJsonString tag ++ " -> " ++ decoder
+    String.fromInt i ++ " -> " ++ decoder
 
 
 {-| To get decoder from type.

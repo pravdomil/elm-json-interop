@@ -62,15 +62,15 @@ fromCustomType a =
     let
         cases : String
         cases =
-            a.constructors |> List.map fromCustomTypeConstructor |> join "\n    "
+            a.constructors |> List.indexedMap fromCustomTypeConstructor |> join "\n    "
     in
     fromType a ++ "\n  case a of\n    " ++ cases
 
 
 {-| To get encoder from custom type constructor.
 -}
-fromCustomTypeConstructor : Node ValueConstructor -> String
-fromCustomTypeConstructor (Node _ a) =
+fromCustomTypeConstructor : Int -> Node ValueConstructor -> String
+fromCustomTypeConstructor i (Node _ a) =
     let
         name : String
         name =
@@ -83,15 +83,15 @@ fromCustomTypeConstructor (Node _ a) =
                     ""
 
                 _ ->
-                    " " ++ (a.arguments |> List.indexedMap (\i _ -> letterByInt (i + 1)) |> join " ")
+                    " " ++ (a.arguments |> List.indexedMap (\i_ _ -> letterByInt (i_ + 1)) |> join " ")
 
         encoder : String
         encoder =
-            ("( \"type\", E.string " ++ toJsonString name ++ " )") :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
+            ("( \"type\", E.int " ++ String.fromInt i ++ " )") :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
 
         argToEncoder : Int -> Node TypeAnnotation -> String
-        argToEncoder i b =
-            "( " ++ toJsonString (letterByInt i) ++ ", " ++ fromTypeAnnotation (letterByInt (i + 1)) b ++ " )"
+        argToEncoder i_ b =
+            "( " ++ toJsonString (letterByInt i_) ++ ", " ++ fromTypeAnnotation (letterByInt (i_ + 1)) b ++ " )"
     in
     "A." ++ name ++ arguments ++ " -> E.object [ " ++ encoder ++ " ]"
 

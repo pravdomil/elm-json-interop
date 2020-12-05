@@ -13,16 +13,16 @@ msg : A.Msg -> E.Value
 msg a =
     case a of
         A.PressedEnter ->
-            E.object [ ( "type", E.string "PressedEnter" ) ]
+            E.object [ ( "type", E.int 0 ) ]
 
         A.ChangedDraft b ->
-            E.object [ ( "type", E.string "ChangedDraft" ), ( "a", E.string b ) ]
+            E.object [ ( "type", E.int 1 ), ( "a", E.string b ) ]
 
         A.ReceivedMessages b ->
-            E.object [ ( "type", E.string "ReceivedMessages" ), ( "a", E.list (\b_ -> example (\b__ -> user b__) (\b__ -> E.string b__) b_) b ) ]
+            E.object [ ( "type", E.int 2 ), ( "a", E.list (\b_ -> example (\b__ -> user b__) (\b__ -> E.string b__) b_) b ) ]
 
         A.ClickedExit ->
-            E.object [ ( "type", E.string "ClickedExit" ) ]
+            E.object [ ( "type", E.int 3 ) ]
 
 
 example encodeA encodeB a =

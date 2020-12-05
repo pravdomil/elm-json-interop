@@ -10,19 +10,19 @@ import Utils.Basics.Decode as BD
 
 user : Decoder A.User
 user =
-    D.field "type" D.string
+    D.field "type" D.int
         |> D.andThen
             (\tag ->
                 case tag of
-                    "Regular" ->
+                    0 ->
                         D.map2 A.Regular (D.field "a" D.string) (D.field "b" D.int)
 
-                    "Visitor" ->
+                    1 ->
                         D.map A.Visitor (D.field "a" D.string)
 
-                    "Anonymous" ->
+                    2 ->
                         D.succeed A.Anonymous
 
                     _ ->
-                        D.fail ("I can't decode " ++ "User" ++ ", unknown tag \"" ++ tag ++ "\".")
+                        D.fail ("I can't decode " ++ "User" ++ ", unknown tag " ++ String.fromInt tag ++ ".")
             )

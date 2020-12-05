@@ -11,24 +11,24 @@ import Utils.Basics.Decode as BD
 
 msg : Decoder A.Msg
 msg =
-    D.field "type" D.string
+    D.field "type" D.int
         |> D.andThen
             (\tag ->
                 case tag of
-                    "PressedEnter" ->
+                    0 ->
                         D.succeed A.PressedEnter
 
-                    "ChangedDraft" ->
+                    1 ->
                         D.map A.ChangedDraft (D.field "a" D.string)
 
-                    "ReceivedMessages" ->
+                    2 ->
                         D.map A.ReceivedMessages (D.field "a" (D.list (example user D.string)))
 
-                    "ClickedExit" ->
+                    3 ->
                         D.succeed A.ClickedExit
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown tag \"" ++ tag ++ "\".")
+                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown tag " ++ String.fromInt tag ++ ".")
             )
 
 
