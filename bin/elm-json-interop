@@ -3291,19 +3291,19 @@ var $author$project$Interop$JsCode$consoleError = function (_v0) {
 	return A2(
 		$author$project$Utils$TaskUtils$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await console.error(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await console.error(_v0)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Interop$JsCode$consoleLog = function (_v0) {
 	return A2(
 		$author$project$Utils$TaskUtils$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await console.log(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await console.log(_v0)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Interop$JsCode$processExit = function (_v0) {
 	return A2(
 		$author$project$Utils$TaskUtils$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await process.exit(_v0))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await process.exit(_v0)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -3331,13 +3331,13 @@ var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Interop$JsCode$getArguments = A2(
 	$author$project$Utils$TaskUtils$andThenDecode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await process.argv)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await process.argv))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $author$project$Interop$JsCode$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
 			$author$project$Utils$TaskUtils$andThenDecode,
 			$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').copyFile(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').copyFile(_v0, _v1)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
 var $elm$core$Basics$always = F2(
 	function (a, _v0) {
@@ -3396,7 +3396,7 @@ var $author$project$Main$dirname = function (a) {
 var $author$project$Interop$JsCode$dirname__ = A2(
 	$author$project$Utils$TaskUtils$andThenDecode,
 	$elm$json$Json$Decode$string,
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await __dirname)) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await __dirname))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $author$project$Utils$Utils$dropLast = function (a) {
 	return $elm$core$List$reverse(
 		A2(
@@ -4265,7 +4265,7 @@ var $author$project$Interop$JsCode$mkDir = function (_v0) {
 	return A2(
 		$author$project$Utils$TaskUtils$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').mkdir(_v0, { recursive: true }))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').mkdir(_v0, { recursive: true })))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $stil4m$elm_syntax$Elm$Syntax$Expression$Application = function (a) {
 	return {$: 1, a: a};
@@ -10661,7 +10661,7 @@ var $author$project$Interop$JsCode$readFile = function (_v0) {
 	return A2(
 		$author$project$Utils$TaskUtils$andThenDecode,
 		$elm$json$Json$Decode$string,
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').readFile(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').readFile(_v0, 'utf8')))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Main$readAndParseElmFile = function (a) {
 	return A2(
@@ -10681,7 +10681,7 @@ var $author$project$Interop$JsCode$realPath = function (_v0) {
 	return A2(
 		$author$project$Utils$TaskUtils$andThenDecode,
 		$elm$json$Json$Decode$string,
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').realpath(_v0, 'utf8'))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').realpath(_v0, 'utf8')))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Utils$TaskUtils$maybeToTask = F2(
 	function (x, a) {
@@ -10733,7 +10733,7 @@ var $author$project$Interop$JsCode$writeFile = F2(
 		return A2(
 			$author$project$Utils$TaskUtils$andThenDecode,
 			$elm$json$Json$Decode$succeed(0),
-_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(await require('fs/promises').writeFile(_v0, _v1))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').writeFile(_v0, _v1)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
 var $author$project$Main$processFile = function (path) {
 	var generateTask = F4(
