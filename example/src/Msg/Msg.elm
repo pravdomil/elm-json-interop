@@ -31,7 +31,7 @@ type alias Type a b =
     , tuple : ( a, b )
     , list : List { a : a, b : b }
     , array : Array { a : a, b : b }
-    , record : { a : a, b : b }
+    , record : {}
 
     --
     , maybe : Maybe a

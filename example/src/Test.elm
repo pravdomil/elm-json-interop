@@ -29,7 +29,7 @@ msg =
           , tuple = ( a, b )
           , list = [ { a = a, b = b } ]
           , array = Array.fromList [ { a = a, b = b } ]
-          , record = { a = a, b = b }
+          , record = {}
 
           --
           , maybe = Just a
