@@ -86,3 +86,24 @@ regexReplace regex replacement a =
 dropLast : List a -> List a
 dropLast a =
     a |> List.reverse |> List.drop 1 |> List.reverse
+
+
+
+--
+
+
+{-| -}
+toFunctionName : String -> String
+toFunctionName a =
+    if elmKeywords |> List.member a then
+        firstToLower a ++ "_"
+
+    else
+        firstToLower a
+
+
+{-| To define what are reserved Elm keywords.
+-}
+elmKeywords : List String
+elmKeywords =
+    [ "module", "where", "import", "as", "exposing", "if", "then", "else", "case", "of", "let", "in", "type", "port", "infix" ]

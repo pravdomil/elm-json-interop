@@ -10,7 +10,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
 import Utils.Imports as Imports
-import Utils.Utils exposing (dropLast, fileToModuleName, firstToLower, firstToUpper, letterByInt, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (dropLast, fileToModuleName, firstToUpper, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -109,14 +109,14 @@ fromType a =
         signature =
             case a.generics of
                 [] ->
-                    encoderName name ++ " : A." ++ name ++ " -> E.Value\n"
+                    toFunctionName name ++ " : A." ++ name ++ " -> E.Value\n"
 
                 _ ->
                     ""
 
         declaration : String
         declaration =
-            encoderName name ++ generics ++ " a ="
+            toFunctionName name ++ generics ++ " a ="
 
         generics : String
         generics =
@@ -213,7 +213,7 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
                      else
                         (moduleName |> join "_") ++ "."
                     )
-                        ++ encoderName name
+                        ++ toFunctionName name
 
         arguments_ : String
         arguments_ =
@@ -284,13 +284,6 @@ fromRecordField parameter (Node _ ( Node _ a, b )) =
 
 
 --
-
-
-{-| To get encoder name.
--}
-encoderName : String -> String
-encoderName a =
-    firstToLower a
 
 
 {-| To convert parameter to string.

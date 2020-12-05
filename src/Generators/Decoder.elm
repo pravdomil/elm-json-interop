@@ -11,7 +11,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join)
 import Utils.Imports as Imports
-import Utils.Utils exposing (dropLast, fileToModuleName, firstToLower, letterByInt, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (dropLast, fileToModuleName, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for decoding types in file.
@@ -132,14 +132,14 @@ fromType body a =
         signature =
             case a.generics of
                 [] ->
-                    decoderName name ++ " : Decoder A." ++ name ++ "\n"
+                    toFunctionName name ++ " : Decoder A." ++ name ++ "\n"
 
                 _ ->
                     ""
 
         declaration : String
         declaration =
-            decoderName name ++ generics ++ " =" ++ maybeWrapInLazy body
+            toFunctionName name ++ generics ++ " =" ++ maybeWrapInLazy body
 
         generics : String
         generics =
@@ -236,7 +236,7 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                      else
                         (moduleName |> join "_") ++ "."
                     )
-                        ++ decoderName name
+                        ++ toFunctionName name
 
         arguments_ : String
         arguments_ =
@@ -321,13 +321,6 @@ fromRecordField (Node _ ( Node _ a, b )) =
 
 
 --
-
-
-{-| To get decoder name.
--}
-decoderName : String -> String
-decoderName a =
-    firstToLower a
 
 
 {-| To get function for constructing tuples by number.
