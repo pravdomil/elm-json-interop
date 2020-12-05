@@ -95,11 +95,15 @@ dropLast a =
 {-| -}
 toFunctionName : String -> String
 toFunctionName a =
-    if elmKeywords |> List.member a then
-        firstToLower a ++ "_"
+    a
+        |> firstToLower
+        |> (\v ->
+                if elmKeywords |> List.member v then
+                    firstToLower v ++ "_"
 
-    else
-        firstToLower a
+                else
+                    firstToLower v
+           )
 
 
 {-| To define what are reserved Elm keywords.
