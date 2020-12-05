@@ -3451,6 +3451,27 @@ var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
 	ax: {av: 0, aW: 0},
 	ao: {av: 0, aW: 0}
 };
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Char$fromCode = _Char_fromCode;
+var $author$project$Utils$Utils$letterByInt = function (a) {
+	return $elm$core$String$fromChar(
+		$elm$core$Char$fromCode(a + 97));
+};
+var $author$project$Generators$Decode$mapFn = function (a) {
+	return (a === 1) ? 'D.map' : ((a <= 8) ? ('D.map' + $elm$core$String$fromInt(a)) : ('BD.map' + $elm$core$String$fromInt(a)));
+};
+var $author$project$Utils$Utils$elmKeywords = _List_fromArray(
+	['module', 'where', 'import', 'as', 'exposing', 'if', 'then', 'else', 'case', 'of', 'let', 'in', 'type', 'port', 'infix']);
 var $elm$core$String$length = _String_length;
 var $elm$core$String$slice = _String_slice;
 var $elm$core$String$dropLeft = F2(
@@ -3472,27 +3493,41 @@ var $elm$core$String$toLower = _String_toLower;
 var $author$project$Utils$Utils$firstToLower = function (a) {
 	return A2($author$project$Utils$Utils$mapFirstLetter, $elm$core$String$toLower, a);
 };
-var $author$project$Generators$Decoder$decoderName = function (a) {
-	return $author$project$Utils$Utils$firstToLower(a);
-};
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$String$cons = _String_cons;
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
-};
-var $elm$core$Char$fromCode = _Char_fromCode;
-var $author$project$Utils$Utils$letterByInt = function (a) {
-	return $elm$core$String$fromChar(
-		$elm$core$Char$fromCode(a + 97));
-};
-var $author$project$Generators$Decoder$mapFn = function (a) {
-	return (a === 1) ? 'D.map' : ((a <= 8) ? ('D.map' + $elm$core$String$fromInt(a)) : ('BD.map' + $elm$core$String$fromInt(a)));
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $author$project$Utils$Utils$toFunctionName = function (a) {
+	return function (v) {
+		return A2($elm$core$List$member, v, $author$project$Utils$Utils$elmKeywords) ? ($author$project$Utils$Utils$firstToLower(v) + '_') : $author$project$Utils$Utils$firstToLower(v);
+	}(
+		$author$project$Utils$Utils$firstToLower(a));
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Utils$Utils$toJsonString = function (a) {
@@ -3501,7 +3536,7 @@ var $author$project$Utils$Utils$toJsonString = function (a) {
 		0,
 		$elm$json$Json$Encode$string(a));
 };
-var $author$project$Generators$Decoder$tupleFn = function (len) {
+var $author$project$Generators$Decode$tupleFn = function (len) {
 	switch (len) {
 		case 2:
 			return 'Tuple.pair';
@@ -3514,11 +3549,11 @@ var $author$project$Generators$Decoder$tupleFn = function (len) {
 var $author$project$Utils$Utils$wrapInParentheses = function (a) {
 	return '(' + (a + ')');
 };
-var $author$project$Generators$Decoder$fromElementAt = F2(
+var $author$project$Generators$Decode$fromElementAt = F2(
 	function (i, a) {
-		return '(D.index ' + ($elm$core$String$fromInt(i) + (' ' + ($author$project$Generators$Decoder$fromTypeAnnotation(a) + ')')));
+		return '(D.index ' + ($elm$core$String$fromInt(i) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(a) + ')')));
 	});
-var $author$project$Generators$Decoder$fromRecord = function (a) {
+var $author$project$Generators$Decode$fromRecord = function (a) {
 	var parameters = A2(
 		$elm$core$String$join,
 		' ',
@@ -3541,13 +3576,13 @@ var $author$project$Generators$Decoder$fromRecord = function (a) {
 				}),
 			a));
 	var constructorFn = '(\\' + (parameters + (' -> { ' + (fields + ' })')));
-	return $author$project$Generators$Decoder$mapFn(
+	return $author$project$Generators$Decode$mapFn(
 		$elm$core$List$length(a)) + (' ' + (constructorFn + (' ' + A2(
 		$elm$core$String$join,
 		' ',
-		A2($elm$core$List$map, $author$project$Generators$Decoder$fromRecordField, a)))));
+		A2($elm$core$List$map, $author$project$Generators$Decode$fromRecordField, a)))));
 };
-var $author$project$Generators$Decoder$fromRecordField = function (_v6) {
+var $author$project$Generators$Decode$fromRecordField = function (_v6) {
 	var _v7 = _v6.b;
 	var _v8 = _v7.a;
 	var a = _v8.b;
@@ -3575,18 +3610,18 @@ var $author$project$Generators$Decoder$fromRecordField = function (_v6) {
 			return 'D.field';
 		}
 	}();
-	return '(' + (decoder + (' ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (' ' + ($author$project$Generators$Decoder$fromTypeAnnotation(b) + ')')))));
+	return '(' + (decoder + (' ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(b) + ')')))));
 };
-var $author$project$Generators$Decoder$fromTuple = function (a) {
+var $author$project$Generators$Decode$fromTuple = function (a) {
 	var _arguments = A2(
 		$elm$core$String$join,
 		' ',
-		A2($elm$core$List$indexedMap, $author$project$Generators$Decoder$fromElementAt, a));
-	return $author$project$Generators$Decoder$mapFn(
-		$elm$core$List$length(a)) + (' ' + ($author$project$Generators$Decoder$tupleFn(
+		A2($elm$core$List$indexedMap, $author$project$Generators$Decode$fromElementAt, a));
+	return $author$project$Generators$Decode$mapFn(
+		$elm$core$List$length(a)) + (' ' + ($author$project$Generators$Decode$tupleFn(
 		$elm$core$List$length(a)) + (' ' + _arguments)));
 };
-var $author$project$Generators$Decoder$fromTypeAnnotation = function (a) {
+var $author$project$Generators$Decode$fromTypeAnnotation = function (a) {
 	return $author$project$Utils$Utils$wrapInParentheses(
 		function () {
 			var _v4 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
@@ -3597,25 +3632,25 @@ var $author$project$Generators$Decoder$fromTypeAnnotation = function (a) {
 				case 1:
 					var b = _v4.a;
 					var c = _v4.b;
-					return A2($author$project$Generators$Decoder$fromTyped, b, c);
+					return A2($author$project$Generators$Decode$fromTyped, b, c);
 				case 2:
 					return 'D.succeed ()';
 				case 3:
 					var nodes = _v4.a;
-					return $author$project$Generators$Decoder$fromTuple(nodes);
+					return $author$project$Generators$Decode$fromTuple(nodes);
 				case 4:
 					var b = _v4.a;
-					return $author$project$Generators$Decoder$fromRecord(b);
+					return $author$project$Generators$Decode$fromRecord(b);
 				case 5:
 					var _v5 = _v4.b;
 					var b = _v5.b;
-					return $author$project$Generators$Decoder$fromRecord(b);
+					return $author$project$Generators$Decode$fromRecord(b);
 				default:
 					return 'Debug.todo \"I don\'t know how to decode function.\"';
 			}
 		}());
 };
-var $author$project$Generators$Decoder$fromTyped = F2(
+var $author$project$Generators$Decode$fromTyped = F2(
 	function (_v0, _arguments) {
 		var _v1 = _v0.b;
 		var moduleName = _v1.a;
@@ -3658,7 +3693,7 @@ var $author$project$Generators$Decoder$fromTyped = F2(
 				default:
 					return _Utils_ap(
 						$elm$core$List$isEmpty(moduleName) ? '' : (A2($elm$core$String$join, '_', moduleName) + '.'),
-						$author$project$Generators$Decoder$decoderName(name));
+						$author$project$Utils$Utils$toFunctionName(name));
 			}
 		}();
 		var arguments_ = function () {
@@ -3668,12 +3703,12 @@ var $author$project$Generators$Decoder$fromTyped = F2(
 				return ' ' + A2(
 					$elm$core$String$join,
 					' ',
-					A2($elm$core$List$map, $author$project$Generators$Decoder$fromTypeAnnotation, _arguments));
+					A2($elm$core$List$map, $author$project$Generators$Decode$fromTypeAnnotation, _arguments));
 			}
 		}();
 		return _Utils_ap(fn, arguments_);
 	});
-var $author$project$Generators$Decoder$fromCustomTypeConstructor = F2(
+var $author$project$Generators$Decode$fromCustomTypeConstructor = F2(
 	function (i, _v0) {
 		var a = _v0.b;
 		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
@@ -3684,7 +3719,7 @@ var $author$project$Generators$Decoder$fromCustomTypeConstructor = F2(
 				$elm$core$List$indexedMap,
 				F2(
 					function (i_, v) {
-						return $author$project$Generators$Decoder$fromRecordField(
+						return $author$project$Generators$Decode$fromRecordField(
 							A2(
 								$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 								$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
@@ -3701,7 +3736,7 @@ var $author$project$Generators$Decoder$fromCustomTypeConstructor = F2(
 			if (!_v1.b) {
 				return 'D.succeed A.' + name;
 			} else {
-				return $author$project$Generators$Decoder$mapFn(
+				return $author$project$Generators$Decode$mapFn(
 					$elm$core$List$length(a.O)) + (' A.' + (name + (' ' + _arguments)));
 			}
 		}();
@@ -3718,13 +3753,13 @@ var $elm$core$Maybe$map = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
-var $author$project$Generators$Decoder$fromType = F2(
+var $author$project$Generators$Decode$fromType = F2(
 	function (body, a) {
 		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
 		var signature = function () {
 			var _v2 = a.Q;
 			if (!_v2.b) {
-				return $author$project$Generators$Decoder$decoderName(name) + (' : Decoder A.' + (name + '\n'));
+				return $author$project$Utils$Utils$toFunctionName(name) + (' : Decoder A.' + (name + '\n'));
 			} else {
 				return '';
 			}
@@ -3765,35 +3800,35 @@ var $author$project$Generators$Decoder$fromType = F2(
 						a.Q));
 			}
 		}();
-		var declaration = $author$project$Generators$Decoder$decoderName(name) + (generics + (' =' + maybeWrapInLazy(body)));
+		var declaration = $author$project$Utils$Utils$toFunctionName(name) + (generics + (' =' + maybeWrapInLazy(body)));
 		return _Utils_ap(signature, declaration);
 	});
-var $author$project$Generators$Decoder$fromCustomType = function (a) {
+var $author$project$Generators$Decode$fromCustomType = function (a) {
 	var fail = '\n    _ -> D.fail (\"I can\'t decode \" ++ ' + ($author$project$Utils$Utils$toJsonString(
-		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)) + ' ++ \", unknown tag \" ++ String.fromInt type_ ++ \".\")');
+		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)) + ' ++ \", unknown tag \" ++ String.fromInt typeIndex_ ++ \".\")');
 	var cases = A2(
 		$elm$core$String$join,
 		'\n    ',
-		A2($elm$core$List$indexedMap, $author$project$Generators$Decoder$fromCustomTypeConstructor, a.bc));
-	return A2($author$project$Generators$Decoder$fromType, '\n  D.field \"type\" D.int |> D.andThen (\\type_ -> case type_ of\n    ' + (cases + (fail + '\n  )')), a);
+		A2($elm$core$List$indexedMap, $author$project$Generators$Decode$fromCustomTypeConstructor, a.bc));
+	return A2($author$project$Generators$Decode$fromType, '\n  D.field \"type\" D.int |> D.andThen (\\typeIndex_ -> case typeIndex_ of\n    ' + (cases + (fail + '\n  )')), a);
 };
-var $author$project$Generators$Decoder$fromTypeAlias = function (a) {
+var $author$project$Generators$Decode$fromTypeAlias = function (a) {
 	return A2(
-		$author$project$Generators$Decoder$fromType,
-		'\n  ' + $author$project$Generators$Decoder$fromTypeAnnotation(a.bL),
+		$author$project$Generators$Decode$fromType,
+		'\n  ' + $author$project$Generators$Decode$fromTypeAnnotation(a.bL),
 		a);
 };
-var $author$project$Generators$Decoder$fromDeclaration = function (a) {
+var $author$project$Generators$Decode$fromDeclaration = function (a) {
 	var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
 	switch (_v0.$) {
 		case 1:
 			var b = _v0.a;
 			return $elm$core$Maybe$Just(
-				$author$project$Generators$Decoder$fromTypeAlias(b));
+				$author$project$Generators$Decode$fromTypeAlias(b));
 		case 2:
 			var b = _v0.a;
 			return $elm$core$Maybe$Just(
-				$author$project$Generators$Decoder$fromCustomType(b));
+				$author$project$Generators$Decode$fromCustomType(b));
 		default:
 			return $elm$core$Maybe$Nothing;
 	}
@@ -3925,7 +3960,7 @@ var $author$project$Utils$Imports$fromList = F2(
 				$author$project$Utils$Imports$fromImport(suffix),
 				A2($elm$core$List$filter, $author$project$Utils$Imports$shouldImport, a)));
 	});
-var $author$project$Generators$Decoder$fromFile = function (a) {
+var $author$project$Generators$Decode$fromFile = function (a) {
 	return A2(
 		$elm$core$String$join,
 		'\n',
@@ -3951,18 +3986,15 @@ var $author$project$Generators$Decoder$fromFile = function (a) {
 				A2(
 				$elm$core$String$join,
 				'\n\n',
-				A2($elm$core$List$filterMap, $author$project$Generators$Decoder$fromDeclaration, a.bf)),
+				A2($elm$core$List$filterMap, $author$project$Generators$Decode$fromDeclaration, a.bf)),
 				''
 			]));
-};
-var $author$project$Generators$Encoder$encoderName = function (a) {
-	return $author$project$Utils$Utils$firstToLower(a);
 };
 var $elm$core$String$toUpper = _String_toUpper;
 var $author$project$Utils$Utils$firstToUpper = function (a) {
 	return A2($author$project$Utils$Utils$mapFirstLetter, $elm$core$String$toUpper, a);
 };
-var $author$project$Generators$Encoder$parameterToString = function (a) {
+var $author$project$Generators$Encode$parameterToString = function (a) {
 	return ' ' + $author$project$Utils$Utils$wrapInParentheses(a);
 };
 var $elm$core$String$replace = F3(
@@ -3972,17 +4004,17 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
-var $author$project$Generators$Encoder$fromRecord = F2(
+var $author$project$Generators$Encode$fromRecord = F2(
 	function (parameter, a) {
 		return 'E.object [ ' + (A2(
 			$elm$core$String$join,
 			', ',
 			A2(
 				$elm$core$List$map,
-				$author$project$Generators$Encoder$fromRecordField(parameter),
+				$author$project$Generators$Encode$fromRecordField(parameter),
 				a)) + ' ]');
 	});
-var $author$project$Generators$Encoder$fromRecordField = F2(
+var $author$project$Generators$Encode$fromRecordField = F2(
 	function (parameter, _v7) {
 		var _v8 = _v7.b;
 		var _v9 = _v8.a;
@@ -4001,9 +4033,9 @@ var $author$project$Generators$Encoder$fromRecordField = F2(
 				return a;
 			}
 		}();
-		return '( ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (', ' + (A2($author$project$Generators$Encoder$fromTypeAnnotation, parameter + ('.' + a), b) + ' )')));
+		return '( ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (', ' + (A2($author$project$Generators$Encode$fromTypeAnnotation, parameter + ('.' + a), b) + ' )')));
 	});
-var $author$project$Generators$Encoder$fromTuple = F2(
+var $author$project$Generators$Encode$fromTuple = F2(
 	function (parameter, a) {
 		var parameterFromInt = function (i) {
 			return A3($elm$core$String$replace, '.', '_', parameter) + ('_' + $author$project$Utils$Utils$letterByInt(i));
@@ -4021,16 +4053,16 @@ var $author$project$Generators$Encoder$fromTuple = F2(
 		var toEncoder = F2(
 			function (i, b) {
 				return A2(
-					$author$project$Generators$Encoder$fromTypeAnnotation,
+					$author$project$Generators$Encode$fromTypeAnnotation,
 					parameterFromInt(i),
 					b);
 			});
 		return '(\\( ' + (parameters + (' ) -> E.list identity [ ' + (A2(
 			$elm$core$String$join,
 			', ',
-			A2($elm$core$List$indexedMap, toEncoder, a)) + (' ])' + $author$project$Generators$Encoder$parameterToString(parameter)))));
+			A2($elm$core$List$indexedMap, toEncoder, a)) + (' ])' + $author$project$Generators$Encode$parameterToString(parameter)))));
 	});
-var $author$project$Generators$Encoder$fromTypeAnnotation = F2(
+var $author$project$Generators$Encode$fromTypeAnnotation = F2(
 	function (parameter, a) {
 		return $author$project$Utils$Utils$wrapInParentheses(
 			function () {
@@ -4038,29 +4070,29 @@ var $author$project$Generators$Encoder$fromTypeAnnotation = F2(
 				switch (_v4.$) {
 					case 0:
 						var b = _v4.a;
-						return 'encode' + ($author$project$Utils$Utils$firstToUpper(b) + $author$project$Generators$Encoder$parameterToString(parameter));
+						return 'encode' + ($author$project$Utils$Utils$firstToUpper(b) + $author$project$Generators$Encode$parameterToString(parameter));
 					case 1:
 						var b = _v4.a;
 						var c = _v4.b;
-						return A3($author$project$Generators$Encoder$fromTyped, parameter, b, c);
+						return A3($author$project$Generators$Encode$fromTyped, parameter, b, c);
 					case 2:
-						return '(\\_ -> E.list identity [])' + $author$project$Generators$Encoder$parameterToString(parameter);
+						return '(\\_ -> E.list identity [])' + $author$project$Generators$Encode$parameterToString(parameter);
 					case 3:
 						var b = _v4.a;
-						return A2($author$project$Generators$Encoder$fromTuple, parameter, b);
+						return A2($author$project$Generators$Encode$fromTuple, parameter, b);
 					case 4:
 						var b = _v4.a;
-						return A2($author$project$Generators$Encoder$fromRecord, parameter, b);
+						return A2($author$project$Generators$Encode$fromRecord, parameter, b);
 					case 5:
 						var _v5 = _v4.b;
 						var b = _v5.b;
-						return A2($author$project$Generators$Encoder$fromRecord, parameter, b);
+						return A2($author$project$Generators$Encode$fromRecord, parameter, b);
 					default:
 						return 'Debug.todo \"I don\'t know how to encode function.\"';
 				}
 			}());
 	});
-var $author$project$Generators$Encoder$fromTyped = F3(
+var $author$project$Generators$Encode$fromTyped = F3(
 	function (parameter, _v0, _arguments) {
 		var _v1 = _v0.b;
 		var moduleName = _v1.a;
@@ -4103,7 +4135,7 @@ var $author$project$Generators$Encoder$fromTyped = F3(
 				default:
 					return _Utils_ap(
 						$elm$core$List$isEmpty(moduleName) ? '' : (A2($elm$core$String$join, '_', moduleName) + '.'),
-						$author$project$Generators$Encoder$encoderName(name));
+						$author$project$Utils$Utils$toFunctionName(name));
 			}
 		}();
 		var arguments_ = function () {
@@ -4121,7 +4153,7 @@ var $author$project$Generators$Encoder$fromTyped = F3(
 						},
 						A2(
 							$elm$core$List$map,
-							$author$project$Generators$Encoder$fromTypeAnnotation(nextParameter),
+							$author$project$Generators$Encode$fromTypeAnnotation(nextParameter),
 							_arguments)));
 			}
 		}();
@@ -4129,9 +4161,9 @@ var $author$project$Generators$Encoder$fromTyped = F3(
 			fn,
 			_Utils_ap(
 				arguments_,
-				$author$project$Generators$Encoder$parameterToString(parameter)));
+				$author$project$Generators$Encode$parameterToString(parameter)));
 	});
-var $author$project$Generators$Encoder$fromCustomTypeConstructor = F2(
+var $author$project$Generators$Encode$fromCustomTypeConstructor = F2(
 	function (i, _v0) {
 		var a = _v0.b;
 		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
@@ -4156,7 +4188,7 @@ var $author$project$Generators$Encoder$fromCustomTypeConstructor = F2(
 			function (i_, b) {
 				return '( ' + ($author$project$Utils$Utils$toJsonString(
 					$author$project$Utils$Utils$letterByInt(i_)) + (', ' + (A2(
-					$author$project$Generators$Encoder$fromTypeAnnotation,
+					$author$project$Generators$Encode$fromTypeAnnotation,
 					$author$project$Utils$Utils$letterByInt(i_ + 1),
 					b) + ' )')));
 			});
@@ -4169,12 +4201,12 @@ var $author$project$Generators$Encoder$fromCustomTypeConstructor = F2(
 				A2($elm$core$List$indexedMap, argToEncoder, a.O)));
 		return 'A.' + (name + (_arguments + (' -> E.object [ ' + (encoder + ' ]'))));
 	});
-var $author$project$Generators$Encoder$fromType = function (a) {
+var $author$project$Generators$Encode$fromType = function (a) {
 	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
 	var signature = function () {
 		var _v1 = a.Q;
 		if (!_v1.b) {
-			return $author$project$Generators$Encoder$encoderName(name) + (' : A.' + (name + ' -> E.Value\n'));
+			return $author$project$Utils$Utils$toFunctionName(name) + (' : A.' + (name + ' -> E.Value\n'));
 		} else {
 			return '';
 		}
@@ -4196,38 +4228,38 @@ var $author$project$Generators$Encoder$fromType = function (a) {
 					a.Q));
 		}
 	}();
-	var declaration = $author$project$Generators$Encoder$encoderName(name) + (generics + ' a =');
+	var declaration = $author$project$Utils$Utils$toFunctionName(name) + (generics + ' a =');
 	return _Utils_ap(signature, declaration);
 };
-var $author$project$Generators$Encoder$fromCustomType = function (a) {
+var $author$project$Generators$Encode$fromCustomType = function (a) {
 	var cases = A2(
 		$elm$core$String$join,
 		'\n    ',
-		A2($elm$core$List$indexedMap, $author$project$Generators$Encoder$fromCustomTypeConstructor, a.bc));
-	return $author$project$Generators$Encoder$fromType(a) + ('\n  case a of\n    ' + cases);
+		A2($elm$core$List$indexedMap, $author$project$Generators$Encode$fromCustomTypeConstructor, a.bc));
+	return $author$project$Generators$Encode$fromType(a) + ('\n  case a of\n    ' + cases);
 };
-var $author$project$Generators$Encoder$fromTypeAlias = function (a) {
-	return $author$project$Generators$Encoder$fromType(a) + (' ' + A2(
-		$author$project$Generators$Encoder$fromTypeAnnotation,
+var $author$project$Generators$Encode$fromTypeAlias = function (a) {
+	return $author$project$Generators$Encode$fromType(a) + (' ' + A2(
+		$author$project$Generators$Encode$fromTypeAnnotation,
 		$author$project$Utils$Utils$letterByInt(0),
 		a.bL));
 };
-var $author$project$Generators$Encoder$fromDeclaration = function (a) {
+var $author$project$Generators$Encode$fromDeclaration = function (a) {
 	var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
 	switch (_v0.$) {
 		case 1:
 			var b = _v0.a;
 			return $elm$core$Maybe$Just(
-				$author$project$Generators$Encoder$fromTypeAlias(b));
+				$author$project$Generators$Encode$fromTypeAlias(b));
 		case 2:
 			var b = _v0.a;
 			return $elm$core$Maybe$Just(
-				$author$project$Generators$Encoder$fromCustomType(b));
+				$author$project$Generators$Encode$fromCustomType(b));
 		default:
 			return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Generators$Encoder$fromFile = function (a) {
+var $author$project$Generators$Encode$fromFile = function (a) {
 	return A2(
 		$elm$core$String$join,
 		'\n',
@@ -4253,7 +4285,7 @@ var $author$project$Generators$Encoder$fromFile = function (a) {
 				A2(
 				$elm$core$String$join,
 				'\n\n',
-				A2($elm$core$List$filterMap, $author$project$Generators$Encoder$fromDeclaration, a.bf)),
+				A2($elm$core$List$filterMap, $author$project$Generators$Encode$fromDeclaration, a.bf)),
 				''
 			]));
 };
@@ -5346,36 +5378,6 @@ var $stil4m$elm_syntax$Elm$Processing$Documentation$postProcess = function (file
 		file,
 		file);
 };
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
-	});
 var $stil4m$elm_syntax$Elm$Interface$operators = $elm$core$List$filterMap(
 	function (i) {
 		if (i.$ === 3) {
@@ -10754,11 +10756,11 @@ var $author$project$Main$processFile = function (path) {
 							A2(
 							$author$project$Interop$JsCode$writeFile,
 							folderPath + '/Encode.elm',
-							$author$project$Generators$Encoder$fromFile(file)),
+							$author$project$Generators$Encode$fromFile(file)),
 							A2(
 							$author$project$Interop$JsCode$writeFile,
 							folderPath + '/Decode.elm',
-							$author$project$Generators$Decoder$fromFile(file))
+							$author$project$Generators$Decode$fromFile(file))
 						])));
 		});
 	return A3(
