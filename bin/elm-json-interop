@@ -3576,11 +3576,11 @@ var $author$project$Generators$Decode$fromRecord = function (a) {
 				}),
 			a));
 	var constructorFn = '(\\' + (parameters + (' -> { ' + (fields + ' })')));
-	return $author$project$Generators$Decode$mapFn(
+	return (!$elm$core$List$length(a)) ? 'D.succeed {}' : ($author$project$Generators$Decode$mapFn(
 		$elm$core$List$length(a)) + (' ' + (constructorFn + (' ' + A2(
 		$elm$core$String$join,
 		' ',
-		A2($elm$core$List$map, $author$project$Generators$Decode$fromRecordField, a)))));
+		A2($elm$core$List$map, $author$project$Generators$Decode$fromRecordField, a))))));
 };
 var $author$project$Generators$Decode$fromRecordField = function (_v6) {
 	var _v7 = _v6.b;
