@@ -3805,12 +3805,12 @@ var $author$project$Generators$Decode$fromType = F2(
 	});
 var $author$project$Generators$Decode$fromCustomType = function (a) {
 	var fail = '\n    _ -> D.fail (\"I can\'t decode \" ++ ' + ($author$project$Utils$Utils$toJsonString(
-		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)) + ' ++ \", unknown tag \" ++ String.fromInt typeIndex_ ++ \".\")');
+		$stil4m$elm_syntax$Elm$Syntax$Node$value(a.T)) + ' ++ \", unknown type \" ++ String.fromInt type___ ++ \".\")');
 	var cases = A2(
 		$elm$core$String$join,
 		'\n    ',
 		A2($elm$core$List$indexedMap, $author$project$Generators$Decode$fromCustomTypeConstructor, a.bc));
-	return A2($author$project$Generators$Decode$fromType, '\n  D.field \"type\" D.int |> D.andThen (\\typeIndex_ -> case typeIndex_ of\n    ' + (cases + (fail + '\n  )')), a);
+	return A2($author$project$Generators$Decode$fromType, '\n  D.field \"type\" D.int |> D.andThen (\\type___ -> case type___ of\n    ' + (cases + (fail + '\n  )')), a);
 };
 var $author$project$Generators$Decode$fromTypeAlias = function (a) {
 	return A2(
