@@ -72,7 +72,7 @@ result e v =
                         D.map Err (D.field "a" e)
 
                     _ ->
-                        D.fail ("I can't decode Result, unknown type \"" ++ String.fromInt type___ ++ "\".")
+                        D.fail ("I can't decode Result, unknown type " ++ String.fromInt type___ ++ ".")
             )
 
 
