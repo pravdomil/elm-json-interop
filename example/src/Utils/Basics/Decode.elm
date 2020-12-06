@@ -61,18 +61,18 @@ maybeField name a =
 -}
 result : Decoder e -> Decoder v -> Decoder (Result e v)
 result e v =
-    D.field "type" D.string
+    D.field "type" D.int
         |> D.andThen
-            (\tag ->
-                case tag of
-                    "Ok" ->
+            (\type___ ->
+                case type___ of
+                    0 ->
                         D.map Ok (D.field "a" v)
 
-                    "Err" ->
+                    1 ->
                         D.map Err (D.field "a" e)
 
                     _ ->
-                        D.fail ("I can't decode Result, unknown tag \"" ++ tag ++ "\".")
+                        D.fail ("I can't decode Result, unknown type " ++ String.fromInt type___ ++ ".")
             )
 
 

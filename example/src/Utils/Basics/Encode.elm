@@ -41,7 +41,7 @@ result : (e -> E.Value) -> (v -> E.Value) -> Result e v -> E.Value
 result encodeError encodeValue a =
     case a of
         Ok b ->
-            E.object [ ( "type", E.string "Ok" ), ( "a", encodeValue b ) ]
+            E.object [ ( "type", E.int 0 ), ( "a", encodeValue b ) ]
 
         Err b ->
-            E.object [ ( "type", E.string "Err" ), ( "a", encodeError b ) ]
+            E.object [ ( "type", E.int 1 ), ( "a", encodeError b ) ]
