@@ -63,8 +63,8 @@ result : Decoder e -> Decoder v -> Decoder (Result e v)
 result e v =
     D.field "type" D.int
         |> D.andThen
-            (\tag ->
-                case tag of
+            (\type___ ->
+                case type___ of
                     0 ->
                         D.map Ok (D.field "a" v)
 
@@ -72,7 +72,7 @@ result e v =
                         D.map Err (D.field "a" e)
 
                     _ ->
-                        D.fail ("I can't decode Result, unknown tag \"" ++ String.fromInt tag ++ "\".")
+                        D.fail ("I can't decode Result, unknown tag \"" ++ String.fromInt type___ ++ "\".")
             )
 
 
