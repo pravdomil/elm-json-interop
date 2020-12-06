@@ -13,8 +13,8 @@ msg : Decoder A.Msg
 msg =
     D.field "type" D.int
         |> D.andThen
-            (\typeIndex_ ->
-                case typeIndex_ of
+            (\type___ ->
+                case type___ of
                     0 ->
                         D.succeed A.PressedEnter
 
@@ -28,7 +28,7 @@ msg =
                         D.succeed A.ClickedExit
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown tag " ++ String.fromInt typeIndex_ ++ ".")
+                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown tag " ++ String.fromInt type___ ++ ".")
             )
 
 
