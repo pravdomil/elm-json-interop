@@ -24,5 +24,5 @@ user =
                         D.succeed A.Anonymous
 
                     _ ->
-                        D.fail ("I can't decode " ++ "User" ++ ", unknown tag " ++ String.fromInt type___ ++ ".")
+                        D.fail ("I can't decode " ++ "User" ++ ", unknown type " ++ String.fromInt type___ ++ ".")
             )

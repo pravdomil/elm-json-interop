@@ -69,7 +69,7 @@ fromCustomType a =
 
         fail : String
         fail =
-            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown tag \" ++ String.fromInt type___ ++ \".\")"
+            "\n    _ -> D.fail (\"I can't decode \" ++ " ++ toJsonString (Node.value a.name) ++ " ++ \", unknown type \" ++ String.fromInt type___ ++ \".\")"
     in
     a |> fromType ("\n  D.field \"type\" D.int |> D.andThen (\\type___ -> case type___ of\n    " ++ cases ++ fail ++ "\n  )")
 

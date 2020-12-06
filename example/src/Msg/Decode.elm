@@ -28,7 +28,7 @@ msg =
                         D.succeed A.ClickedExit
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown tag " ++ String.fromInt type___ ++ ".")
+                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown type " ++ String.fromInt type___ ++ ".")
             )
 
 
