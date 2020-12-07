@@ -61,7 +61,7 @@ maybeField name a =
 -}
 result : Decoder e -> Decoder v -> Decoder (Result e v)
 result e v =
-    D.field "type" D.int
+    D.field "_" D.int
         |> D.andThen
             (\type___ ->
                 case type___ of

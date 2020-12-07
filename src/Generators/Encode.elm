@@ -87,7 +87,7 @@ fromCustomTypeConstructor i (Node _ a) =
 
         encoder : String
         encoder =
-            ("( \"type\", E.int " ++ String.fromInt i ++ " )") :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
+            ("( \"_\", E.int " ++ String.fromInt i ++ " )") :: (a.arguments |> List.indexedMap argToEncoder) |> join ", "
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i_ b =
