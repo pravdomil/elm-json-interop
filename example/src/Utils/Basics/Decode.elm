@@ -61,10 +61,10 @@ maybeField name a =
 -}
 result : Decoder e -> Decoder v -> Decoder (Result e v)
 result e v =
-    D.field "type" D.int
+    D.field "_" D.int
         |> D.andThen
-            (\type___ ->
-                case type___ of
+            (\i___ ->
+                case i___ of
                     0 ->
                         D.map Ok (D.field "a" v)
 
@@ -72,7 +72,7 @@ result e v =
                         D.map Err (D.field "a" e)
 
                     _ ->
-                        D.fail ("I can't decode Result, unknown type " ++ String.fromInt type___ ++ ".")
+                        D.fail ("I can't decode Result, unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
 
 

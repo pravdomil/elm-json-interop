@@ -11,10 +11,10 @@ import Utils.Basics.Decode as BD
 
 msg : Decoder A.Msg
 msg =
-    D.field "type" D.int
+    D.field "_" D.int
         |> D.andThen
-            (\type___ ->
-                case type___ of
+            (\i___ ->
+                case i___ of
                     0 ->
                         D.succeed A.PressedEnter
 
@@ -28,7 +28,7 @@ msg =
                         D.succeed A.ClickedExit
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown type " ++ String.fromInt type___ ++ ".")
+                        D.fail ("I can't decode " ++ "Msg" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
 
 

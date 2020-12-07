@@ -10,10 +10,10 @@ import Utils.Basics.Decode as BD
 
 user : Decoder A.User
 user =
-    D.field "type" D.int
+    D.field "_" D.int
         |> D.andThen
-            (\type___ ->
-                case type___ of
+            (\i___ ->
+                case i___ of
                     0 ->
                         D.map2 A.Regular (D.field "a" D.string) (D.field "b" D.int)
 
@@ -24,5 +24,5 @@ user =
                         D.succeed A.Anonymous
 
                     _ ->
-                        D.fail ("I can't decode " ++ "User" ++ ", unknown type " ++ String.fromInt type___ ++ ".")
+                        D.fail ("I can't decode " ++ "User" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
