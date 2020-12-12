@@ -10780,24 +10780,32 @@ var $author$project$Main$processFile = function (path) {
 		$author$project$Interop$JsCode$realPath(path));
 };
 var $author$project$Main$usage = 'Usage: elm-json-interop <File.elm>...';
-var $author$project$Main$run = A2(
-	$elm$core$Task$andThen,
-	function (args) {
-		var _v0 = A2($elm$core$List$drop, 2, args);
-		if (!_v0.b) {
-			return $elm$core$Task$fail($author$project$Main$usage);
-		} else {
-			var a = _v0;
-			return A2(
-				$elm$core$Task$map,
-				function (v) {
-					return 'I have generated JSON encoders/decoders for:\n' + A2($elm$core$String$join, '\n', v);
-				},
-				$elm$core$Task$sequence(
-					A2($elm$core$List$map, $author$project$Main$processFile, a)));
-		}
-	},
-	$author$project$Interop$JsCode$getArguments);
+var $author$project$Main$run = function () {
+	var fileCount = function (v) {
+		var len = $elm$core$List$length(v);
+		return _Utils_ap(
+			$elm$core$String$fromInt(len),
+			(len === 1) ? ' file' : ' files');
+	};
+	return A2(
+		$elm$core$Task$andThen,
+		function (args) {
+			var _v0 = A2($elm$core$List$drop, 2, args);
+			if (!_v0.b) {
+				return $elm$core$Task$fail($author$project$Main$usage);
+			} else {
+				var a = _v0;
+				return A2(
+					$elm$core$Task$map,
+					function (v) {
+						return 'I have generated JSON encoders/decoders for ' + (fileCount(v) + '.');
+					},
+					$elm$core$Task$sequence(
+						A2($elm$core$List$map, $author$project$Main$processFile, a)));
+			}
+		},
+		$author$project$Interop$JsCode$getArguments);
+}();
 var $author$project$Main$main = $author$project$Interop$JsCode$cliProgram(
 	A2(
 		$elm$core$Task$attempt,
