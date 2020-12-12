@@ -41,7 +41,7 @@ run =
                     a
                         |> List.map processFile
                         |> Task.sequence
-                        |> Task.map (join "\n")
+                        |> Task.map (\v -> "I have generated JSON encoders/decoders for:\n" ++ (v |> join "\n"))
         )
         getArguments
 
@@ -76,10 +76,7 @@ processFile path =
             , writeFile (folderPath ++ "/Decode.elm") (Decode.fromFile file)
             ]
                 |> Task.sequence
-                |> Task.map
-                    (\_ ->
-                        "I have generated JSON encoders/decoders for:\n" ++ fullPath
-                    )
+                |> Task.map (\_ -> fullPath)
     in
     taskAndThen2
         (\a b ->
