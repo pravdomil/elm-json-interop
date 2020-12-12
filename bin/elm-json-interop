@@ -10745,7 +10745,7 @@ var $author$project$Main$processFile = function (path) {
 			return A2(
 				$elm$core$Task$map,
 				function (_v0) {
-					return 'I have generated JSON encoders/decoders for:\n' + fullPath;
+					return fullPath;
 				},
 				$elm$core$Task$sequence(
 					_List_fromArray(
@@ -10790,7 +10790,9 @@ var $author$project$Main$run = A2(
 			var a = _v0;
 			return A2(
 				$elm$core$Task$map,
-				$elm$core$String$join('\n'),
+				function (v) {
+					return 'I have generated JSON encoders/decoders for:\n' + A2($elm$core$String$join, '\n', v);
+				},
 				$elm$core$Task$sequence(
 					A2($elm$core$List$map, $author$project$Main$processFile, a)));
 		}
