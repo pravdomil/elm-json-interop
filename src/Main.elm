@@ -31,6 +31,22 @@ main =
 -}
 run : Task Error String
 run =
+    let
+        fileCount : List a -> String
+        fileCount b =
+            let
+                len : Int
+                len =
+                    b |> List.length
+            in
+            String.fromInt len
+                ++ (if len == 1 then
+                        " file"
+
+                    else
+                        " files"
+                   )
+    in
     Task.andThen
         (\args ->
             case args |> List.drop 2 of
@@ -41,7 +57,10 @@ run =
                     a
                         |> List.map processFile
                         |> Task.sequence
-                        |> Task.map (\v -> "I have generated JSON encoders/decoders for:\n" ++ (v |> join "\n"))
+                        |> Task.map
+                            (\v ->
+                                "I have generated JSON encoders/decoders for " ++ fileCount v ++ "."
+                            )
         )
         getArguments
 
