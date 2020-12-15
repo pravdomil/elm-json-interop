@@ -10781,11 +10781,11 @@ var $author$project$Main$processFile = function (path) {
 };
 var $author$project$Main$usage = 'Usage: elm-json-interop <File.elm>...';
 var $author$project$Main$run = function () {
-	var fileCount = function (v) {
-		var len = $elm$core$List$length(v);
+	var fileCount = function (b) {
+		var len = $elm$core$List$length(b);
 		return _Utils_ap(
 			$elm$core$String$fromInt(len),
-			(len === 1) ? ' file' : ' files');
+			(len === 1) ? ' module' : ' modules');
 	};
 	return A2(
 		$elm$core$Task$andThen,
