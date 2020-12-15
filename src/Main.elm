@@ -9,7 +9,6 @@ import Generators.Encode as Encode
 import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
-import String exposing (join, replace)
 import Task exposing (Task)
 import Utils.TaskUtils exposing (..)
 import Utils.Utils exposing (regexReplace)
