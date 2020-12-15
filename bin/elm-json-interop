@@ -3458,6 +3458,16 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
+var $author$project$Utils$Utils$isIdType = function (a) {
+	if ((a.b.$ === 1) && (a.b.a.b.b === 'Id')) {
+		var _v1 = a.b;
+		var _v2 = _v1.a;
+		var _v3 = _v2.b;
+		return true;
+	} else {
+		return false;
+	}
+};
 var $elm$core$String$cons = _String_cons;
 var $elm$core$String$fromChar = function (_char) {
 	return A2($elm$core$String$cons, _char, '');
@@ -3560,7 +3570,7 @@ var $author$project$Generators$Decode$fromRecord = function (a) {
 		A2(
 			$elm$core$List$indexedMap,
 			F2(
-				function (i, _v15) {
+				function (i, _v11) {
 					return $author$project$Utils$Utils$letterByInt(i);
 				}),
 			a));
@@ -3587,19 +3597,7 @@ var $author$project$Generators$Decode$fromRecordField = function (_v5) {
 	var _v7 = _v6.a;
 	var a = _v7.b;
 	var b = _v6.b;
-	var fieldName = function () {
-		var _v11 = _Utils_Tuple2(
-			a,
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(b));
-		if (((_v11.a === 'id') && (_v11.b.$ === 1)) && (_v11.b.a.b.b === 'Id')) {
-			var _v12 = _v11.b;
-			var _v13 = _v12.a;
-			var _v14 = _v13.b;
-			return '_id';
-		} else {
-			return a;
-		}
-	}();
+	var fieldName = ((a === 'id') && $author$project$Utils$Utils$isIdType(b)) ? '_id' : a;
 	var decoder = function () {
 		var _v8 = $stil4m$elm_syntax$Elm$Syntax$Node$value(b);
 		if ((_v8.$ === 1) && (_v8.a.b.b === 'Maybe')) {
@@ -3717,15 +3715,13 @@ var $author$project$Generators$Decode$fromCustomTypeConstructor = F2(
 				$elm$core$List$indexedMap,
 				F2(
 					function (i_, v) {
+						var fieldName = $author$project$Utils$Utils$isIdType(v) ? '_id' : $author$project$Utils$Utils$letterByInt(i_);
 						return $author$project$Generators$Decode$fromRecordField(
 							A2(
 								$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 								$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 								_Utils_Tuple2(
-									A2(
-										$stil4m$elm_syntax$Elm$Syntax$Node$Node,
-										$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
-										$author$project$Utils$Utils$letterByInt(i_)),
+									A2($stil4m$elm_syntax$Elm$Syntax$Node$Node, $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange, fieldName),
 									v)));
 					}),
 				a.O));
@@ -4018,19 +4014,7 @@ var $author$project$Generators$Encode$fromRecordField = F2(
 		var _v8 = _v7.a;
 		var a = _v8.b;
 		var b = _v7.b;
-		var fieldName = function () {
-			var _v9 = _Utils_Tuple2(
-				a,
-				$stil4m$elm_syntax$Elm$Syntax$Node$value(b));
-			if (((_v9.a === 'id') && (_v9.b.$ === 1)) && (_v9.b.a.b.b === 'Id')) {
-				var _v10 = _v9.b;
-				var _v11 = _v10.a;
-				var _v12 = _v11.b;
-				return '_id';
-			} else {
-				return a;
-			}
-		}();
+		var fieldName = ((a === 'id') && $author$project$Utils$Utils$isIdType(b)) ? '_id' : a;
 		return '( ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (', ' + (A2($author$project$Generators$Encode$fromTypeAnnotation, parameter + ('.' + a), b) + ' )')));
 	});
 var $author$project$Generators$Encode$fromTuple = F2(
@@ -4182,8 +4166,8 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = F2(
 		}();
 		var argToEncoder = F2(
 			function (i_, b) {
-				return '( ' + ($author$project$Utils$Utils$toJsonString(
-					$author$project$Utils$Utils$letterByInt(i_)) + (', ' + (A2(
+				var fieldName = $author$project$Utils$Utils$isIdType(b) ? '_id' : $author$project$Utils$Utils$letterByInt(i_);
+				return '( ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (', ' + (A2(
 					$author$project$Generators$Encode$fromTypeAnnotation,
 					$author$project$Utils$Utils$letterByInt(i_ + 1),
 					b) + ' )')));
