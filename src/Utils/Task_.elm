@@ -51,12 +51,12 @@ andThenDecode decoder a =
 
 
 {-| -}
-taskAndThen2 :
+andThen2 :
     (a -> b -> Task x result)
     -> Task x a
     -> Task x b
     -> Task x result
-taskAndThen2 fn a b =
+andThen2 fn a b =
     andThen
         (\a_ ->
             andThen
@@ -71,13 +71,13 @@ taskAndThen2 fn a b =
 
 
 {-| -}
-taskAndThen3 :
+andThen3 :
     (a -> b -> c -> Task x result)
     -> Task x a
     -> Task x b
     -> Task x c
     -> Task x result
-taskAndThen3 fn a b c =
+andThen3 fn a b c =
     andThen
         (\a_ ->
             andThen
@@ -97,14 +97,14 @@ taskAndThen3 fn a b c =
 
 
 {-| -}
-taskAndThen4 :
+andThen4 :
     (a -> b -> c -> d -> Task x result)
     -> Task x a
     -> Task x b
     -> Task x c
     -> Task x d
     -> Task x result
-taskAndThen4 fn a b c d =
+andThen4 fn a b c d =
     andThen
         (\a_ ->
             andThen
@@ -129,7 +129,7 @@ taskAndThen4 fn a b c d =
 
 
 {-| -}
-taskAndThen5 :
+andThen5 :
     (a -> b -> c -> d -> e -> Task x result)
     -> Task x a
     -> Task x b
@@ -137,7 +137,7 @@ taskAndThen5 :
     -> Task x d
     -> Task x e
     -> Task x result
-taskAndThen5 fn a b c d e =
+andThen5 fn a b c d e =
     andThen
         (\a_ ->
             andThen
@@ -167,7 +167,7 @@ taskAndThen5 fn a b c d e =
 
 
 {-| -}
-taskAndThen6 :
+andThen6 :
     (a -> b -> c -> d -> e -> f -> Task x result)
     -> Task x a
     -> Task x b
@@ -176,7 +176,7 @@ taskAndThen6 :
     -> Task x e
     -> Task x f
     -> Task x result
-taskAndThen6 fn a b c d e f =
+andThen6 fn a b c d e f =
     andThen
         (\a_ ->
             andThen
@@ -211,7 +211,7 @@ taskAndThen6 fn a b c d e f =
 
 
 {-| -}
-taskAndThen7 :
+andThen7 :
     (a -> b -> c -> d -> e -> f -> g -> Task x result)
     -> Task x a
     -> Task x b
@@ -221,7 +221,7 @@ taskAndThen7 :
     -> Task x f
     -> Task x g
     -> Task x result
-taskAndThen7 fn a b c d e f g =
+andThen7 fn a b c d e f g =
     andThen
         (\a_ ->
             andThen
@@ -261,7 +261,7 @@ taskAndThen7 fn a b c d e f g =
 
 
 {-| -}
-taskAndThen8 :
+andThen8 :
     (a -> b -> c -> d -> e -> f -> g -> h -> Task x result)
     -> Task x a
     -> Task x b
@@ -272,7 +272,7 @@ taskAndThen8 :
     -> Task x g
     -> Task x h
     -> Task x result
-taskAndThen8 fn a b c d e f g h =
+andThen8 fn a b c d e f g h =
     andThen
         (\a_ ->
             andThen
@@ -317,7 +317,7 @@ taskAndThen8 fn a b c d e f g h =
 
 
 {-| -}
-taskAndThen9 :
+andThen9 :
     (a -> b -> c -> d -> e -> f -> g -> h -> i -> Task x result)
     -> Task x a
     -> Task x b
@@ -329,7 +329,7 @@ taskAndThen9 :
     -> Task x h
     -> Task x i
     -> Task x result
-taskAndThen9 fn a b c d e f g h i =
+andThen9 fn a b c d e f g h i =
     andThen
         (\a_ ->
             andThen
@@ -379,7 +379,7 @@ taskAndThen9 fn a b c d e f g h i =
 
 
 {-| -}
-taskAndThen10 :
+andThen10 :
     (a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> Task x result)
     -> Task x a
     -> Task x b
@@ -392,7 +392,7 @@ taskAndThen10 :
     -> Task x i
     -> Task x j
     -> Task x result
-taskAndThen10 fn a b c d e f g h i j =
+andThen10 fn a b c d e f g h i j =
     andThen
         (\a_ ->
             andThen

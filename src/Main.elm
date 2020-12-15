@@ -96,9 +96,9 @@ processFile path =
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)
     in
-    taskAndThen2
+    andThen2
         (\a b ->
-            taskAndThen2
+            andThen2
                 (\c d ->
                     generateTask a b c d
                 )
