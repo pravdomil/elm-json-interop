@@ -5,7 +5,7 @@ module Interop.JsCode exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
-import Utils.TaskUtils exposing (andThenDecode)
+import Utils.Task_ exposing (andThenDecode)
 
 
 {-| To define error.

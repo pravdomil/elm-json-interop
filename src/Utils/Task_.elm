@@ -1,4 +1,4 @@
-module Utils.TaskUtils exposing (..)
+module Utils.Task_ exposing (..)
 
 {-| <https://github.com/avh4/elm-format/issues/568#issuecomment-554753735>
 -}

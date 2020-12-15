@@ -10,7 +10,7 @@ import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
 import Task exposing (Task)
-import Utils.TaskUtils exposing (..)
+import Utils.Task_ exposing (..)
 import Utils.Utils exposing (regexReplace)
 
 
