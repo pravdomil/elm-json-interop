@@ -5,7 +5,7 @@ module Interop.JsCode exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
-import Utils.Task_ exposing (andThenDecode)
+import Utils.Task_ as Task_
 
 
 {-| To define error.
@@ -46,7 +46,7 @@ jsCode _ =
 getArguments : Task Error (List String)
 getArguments =
     jsCode "process.argv"
-        |> andThenDecode (Decode.list Decode.string)
+        |> Task_.andThenDecode (Decode.list Decode.string)
 
 
 {-| To get stdin.
@@ -54,7 +54,7 @@ getArguments =
 getStdin : Task Error (Maybe String)
 getStdin =
     jsCode "process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8')"
-        |> andThenDecode (Decode.nullable Decode.string)
+        |> Task_.andThenDecode (Decode.nullable Decode.string)
 
 
 
@@ -66,7 +66,7 @@ getStdin =
 consoleLog : String -> Task Error ()
 consoleLog _ =
     jsCode "console.log(_v0)"
-        |> andThenDecode (Decode.succeed ())
+        |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To call console.error function.
@@ -74,7 +74,7 @@ consoleLog _ =
 consoleError : String -> Task Error ()
 consoleError _ =
     jsCode "console.error(_v0)"
-        |> andThenDecode (Decode.succeed ())
+        |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To kill process with exit code.
@@ -82,7 +82,7 @@ consoleError _ =
 processExit : Int -> Task Error ()
 processExit _ =
     jsCode "process.exit(_v0)"
-        |> andThenDecode (Decode.succeed ())
+        |> Task_.andThenDecode (Decode.succeed ())
 
 
 
@@ -94,7 +94,7 @@ processExit _ =
 filename__ : Task Error String
 filename__ =
     jsCode "__filename"
-        |> andThenDecode Decode.string
+        |> Task_.andThenDecode Decode.string
 
 
 {-| To get \_\_dirname.
@@ -102,7 +102,7 @@ filename__ =
 dirname__ : Task Error String
 dirname__ =
     jsCode "__dirname"
-        |> andThenDecode Decode.string
+        |> Task_.andThenDecode Decode.string
 
 
 {-| To get real path.
@@ -110,7 +110,7 @@ dirname__ =
 realPath : String -> Task Error String
 realPath _ =
     jsCode "require('fs/promises').realpath(_v0, 'utf8')"
-        |> andThenDecode Decode.string
+        |> Task_.andThenDecode Decode.string
 
 
 
@@ -122,7 +122,7 @@ realPath _ =
 mkDir : String -> Task Error ()
 mkDir _ =
     jsCode "require('fs/promises').mkdir(_v0, { recursive: true })"
-        |> andThenDecode (Decode.succeed ())
+        |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To read file.
@@ -130,7 +130,7 @@ mkDir _ =
 readFile : String -> Task Error String
 readFile _ =
     jsCode "require('fs/promises').readFile(_v0, 'utf8')"
-        |> andThenDecode Decode.string
+        |> Task_.andThenDecode Decode.string
 
 
 {-| To write file.
@@ -138,7 +138,7 @@ readFile _ =
 writeFile : String -> String -> Task Error ()
 writeFile _ _ =
     jsCode "require('fs/promises').writeFile(_v0, _v1)"
-        |> andThenDecode (Decode.succeed ())
+        |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To copy file.
@@ -146,4 +146,4 @@ writeFile _ _ =
 copyFile : String -> String -> Task Error ()
 copyFile _ _ =
     jsCode "require('fs/promises').copyFile(_v0, _v1)"
-        |> andThenDecode (Decode.succeed ())
+        |> Task_.andThenDecode (Decode.succeed ())

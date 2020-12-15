@@ -10,7 +10,7 @@ import Interop.JsCode exposing (..)
 import Parser exposing (deadEndsToString)
 import Regex
 import Task exposing (Task)
-import Utils.Task_ exposing (..)
+import Utils.Task_ as Task_
 import Utils.Utils exposing (regexReplace)
 
 
@@ -96,9 +96,9 @@ processFile path =
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)
     in
-    andThen2
+    Task_.andThen2
         (\a b ->
-            andThen2
+            Task_.andThen2
                 (\c d ->
                     generateTask a b c d
                 )
@@ -121,7 +121,7 @@ srcFolderPath path =
 {-| -}
 srcFolderPathTask : String -> Task Error String
 srcFolderPathTask a =
-    a |> srcFolderPath |> fromMaybe "Elm file must be inside \"src\" folder."
+    a |> srcFolderPath |> Task_.fromMaybe "Elm file must be inside \"src\" folder."
 
 
 {-| -}
@@ -134,7 +134,7 @@ readAndParseElmFile a =
                 v
                     |> Elm.Parser.parse
                     |> Result.mapError (\vv -> "I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
-                    |> fromResult
+                    |> Task_.fromResult
             )
 
 
