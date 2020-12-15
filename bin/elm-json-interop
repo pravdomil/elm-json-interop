@@ -3559,10 +3559,6 @@ var $author$project$Generators$Decode$tupleFn = function (len) {
 var $author$project$Utils$Utils$wrapInParentheses = function (a) {
 	return '(' + (a + ')');
 };
-var $author$project$Generators$Decode$fromElementAt = F2(
-	function (i, a) {
-		return '(D.index ' + ($elm$core$String$fromInt(i) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(a) + ')')));
-	});
 var $author$project$Generators$Decode$fromRecord = function (a) {
 	var parameters = A2(
 		$elm$core$String$join,
@@ -3611,10 +3607,15 @@ var $author$project$Generators$Decode$fromRecordField = function (_v5) {
 	return '(' + (decoder + (' ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(b) + ')')))));
 };
 var $author$project$Generators$Decode$fromTuple = function (a) {
+	var toDecoder = F2(
+		function (i, b) {
+			return '(D.field ' + ($author$project$Utils$Utils$toJsonString(
+				$author$project$Utils$Utils$letterByInt(i)) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(b) + ')')));
+		});
 	var _arguments = A2(
 		$elm$core$String$join,
 		' ',
-		A2($elm$core$List$indexedMap, $author$project$Generators$Decode$fromElementAt, a));
+		A2($elm$core$List$indexedMap, toDecoder, a));
 	return $author$project$Generators$Decode$mapFn(
 		$elm$core$List$length(a)) + (' ' + ($author$project$Generators$Decode$tupleFn(
 		$elm$core$List$length(a)) + (' ' + _arguments)));
@@ -4034,12 +4035,13 @@ var $author$project$Generators$Encode$fromTuple = F2(
 				a));
 		var toEncoder = F2(
 			function (i, b) {
-				return A2(
+				return '( ' + ($author$project$Utils$Utils$toJsonString(
+					$author$project$Utils$Utils$letterByInt(i)) + (', ' + (A2(
 					$author$project$Generators$Encode$fromTypeAnnotation,
 					parameterFromInt(i),
-					b);
+					b) + ' )')));
 			});
-		return '(\\( ' + (parameters + (' ) -> E.list identity [ ' + (A2(
+		return '(\\( ' + (parameters + (' ) -> E.object [ ' + (A2(
 			$elm$core$String$join,
 			', ',
 			A2($elm$core$List$indexedMap, toEncoder, a)) + (' ])' + $author$project$Generators$Encode$parameterToString(parameter)))));
