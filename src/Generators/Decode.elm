@@ -173,8 +173,9 @@ fromTypeAnnotation a =
         Record b ->
             fromRecord b
 
-        GenericRecord _ (Node _ b) ->
-            fromRecord b
+        GenericRecord _ _ ->
+            -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
+            "Debug.todo \"I don't know how to decode extensible record.\""
 
         FunctionTypeAnnotation _ _ ->
             "Debug.todo \"I don't know how to decode function.\""
