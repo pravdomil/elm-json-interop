@@ -40,10 +40,10 @@ run =
             in
             String.fromInt len
                 ++ (if len == 1 then
-                        " file"
+                        " module"
 
                     else
-                        " files"
+                        " modules"
                    )
     in
     Task.andThen
