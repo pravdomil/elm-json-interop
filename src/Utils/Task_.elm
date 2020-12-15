@@ -8,8 +8,8 @@ import Task exposing (..)
 
 
 {-| -}
-maybeToTask : x -> Maybe a -> Task x a
-maybeToTask x a =
+fromMaybe : x -> Maybe a -> Task x a
+fromMaybe x a =
     case a of
         Just b ->
             Task.succeed b
@@ -19,8 +19,8 @@ maybeToTask x a =
 
 
 {-| -}
-resultToTask : Result x a -> Task x a
-resultToTask a =
+fromResult : Result x a -> Task x a
+fromResult a =
     case a of
         Ok b ->
             Task.succeed b
@@ -42,7 +42,7 @@ andThenDecode decoder a =
                 v
                     |> Decode.decodeValue decoder
                     |> Result.mapError Decode.errorToString
-                    |> resultToTask
+                    |> fromResult
             )
 
 

@@ -121,7 +121,7 @@ srcFolderPath path =
 {-| -}
 srcFolderPathTask : String -> Task Error String
 srcFolderPathTask a =
-    a |> srcFolderPath |> maybeToTask "Elm file must be inside \"src\" folder."
+    a |> srcFolderPath |> fromMaybe "Elm file must be inside \"src\" folder."
 
 
 {-| -}
@@ -134,7 +134,7 @@ readAndParseElmFile a =
                 v
                     |> Elm.Parser.parse
                     |> Result.mapError (\vv -> "I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
-                    |> resultToTask
+                    |> fromResult
             )
 
 
