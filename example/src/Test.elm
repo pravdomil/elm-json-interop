@@ -26,7 +26,9 @@ msg =
           , string = "a"
 
           --
-          , tuple = ( a, b )
+          , unit = ()
+          , tuple2 = ( a, b )
+          , tuple3 = ( a, b, b )
           , list = [ { a = a, b = b } ]
           , array = Array.fromList [ { a = a, b = b } ]
           , record = {}

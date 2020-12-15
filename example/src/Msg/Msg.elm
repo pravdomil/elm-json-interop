@@ -28,7 +28,9 @@ type alias Type a b =
     , string : String
 
     --
-    , tuple : ( a, b )
+    , unit : ()
+    , tuple2 : ( a, b )
+    , tuple3 : ( a, b, b )
     , list : List { a : a, b : b }
     , array : Array { a : a, b : b }
     , record : {}
