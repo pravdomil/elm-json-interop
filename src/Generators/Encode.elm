@@ -259,13 +259,13 @@ fromTuple parameter a =
 
         toEncoder : Int -> Node TypeAnnotation -> String
         toEncoder i b =
-            b |> fromTypeAnnotation (parameterFromInt i)
+            "( " ++ toJsonString (letterByInt i) ++ ", " ++ fromTypeAnnotation (parameterFromInt i) b ++ " )"
 
         parameterFromInt : Int -> String
         parameterFromInt i =
             (parameter |> String.replace "." "_") ++ "_" ++ letterByInt i
     in
-    "(\\( " ++ parameters ++ " ) -> E.list identity [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
+    "(\\( " ++ parameters ++ " ) -> E.object [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
 
 
 {-| To get encoder from record.

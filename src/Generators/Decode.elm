@@ -267,16 +267,13 @@ fromTuple a =
     let
         arguments : String
         arguments =
-            a |> List.indexedMap fromElementAt |> join " "
+            a |> List.indexedMap toDecoder |> join " "
+
+        toDecoder : Int -> Node TypeAnnotation -> String
+        toDecoder i b =
+            "(D.field " ++ toJsonString (letterByInt i) ++ " " ++ fromTypeAnnotation b ++ ")"
     in
     mapFn (List.length a) ++ " " ++ tupleFn (List.length a) ++ " " ++ arguments
-
-
-{-| To get decoder for decoding element at index.
--}
-fromElementAt : Int -> Node TypeAnnotation -> String
-fromElementAt i a =
-    "(D.index " ++ String.fromInt i ++ " " ++ fromTypeAnnotation a ++ ")"
 
 
 {-| To get decoder from record.
