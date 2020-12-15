@@ -3,6 +3,7 @@ module Utils.Utils exposing (..)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.Node as Node exposing (Node(..))
+import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Json.Encode as Encode
 import Regex
 import String exposing (join)
@@ -20,6 +21,17 @@ fileToModuleName a =
 wrapInParentheses : String -> String
 wrapInParentheses a =
     "(" ++ a ++ ")"
+
+
+{-| -}
+isIdType : Node TypeAnnotation -> Bool
+isIdType a =
+    case a of
+        Node _ (Typed (Node _ ( _, "Id" )) _) ->
+            True
+
+        _ ->
+            False
 
 
 

@@ -10,7 +10,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import String exposing (join, replace)
 import Utils.Imports as Imports
-import Utils.Utils exposing (dropLast, fileToModuleName, firstToUpper, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
+import Utils.Utils exposing (dropLast, fileToModuleName, firstToUpper, isIdType, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 
 {-| To get Elm module for encoding types in file.
@@ -273,12 +273,11 @@ fromRecordField parameter (Node _ ( Node _ a, b )) =
     let
         fieldName : String
         fieldName =
-            case ( a, Node.value b ) of
-                ( "id", Typed (Node _ ( _, "Id" )) _ ) ->
-                    "_id"
+            if a == "id" && isIdType b then
+                "_id"
 
-                _ ->
-                    a
+            else
+                a
     in
     "( " ++ toJsonString fieldName ++ ", " ++ fromTypeAnnotation (parameter ++ "." ++ a) b ++ " )"
 
