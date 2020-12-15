@@ -4058,7 +4058,7 @@ var $author$project$Generators$Encode$fromTypeAnnotation = F2(
 						var c = _v4.b;
 						return A3($author$project$Generators$Encode$fromTyped, parameter, b, c);
 					case 2:
-						return '(\\_ -> E.list identity [])' + $author$project$Generators$Encode$parameterToString(parameter);
+						return '(\\_ -> E.object [])' + $author$project$Generators$Encode$parameterToString(parameter);
 					case 3:
 						var b = _v4.a;
 						return A2($author$project$Generators$Encode$fromTuple, parameter, b);
