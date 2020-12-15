@@ -91,7 +91,16 @@ fromCustomTypeConstructor i (Node _ a) =
 
         argToEncoder : Int -> Node TypeAnnotation -> String
         argToEncoder i_ b =
-            "( " ++ toJsonString (letterByInt i_) ++ ", " ++ fromTypeAnnotation (letterByInt (i_ + 1)) b ++ " )"
+            let
+                fieldName : String
+                fieldName =
+                    if isIdType b then
+                        "_id"
+
+                    else
+                        letterByInt i_
+            in
+            "( " ++ toJsonString fieldName ++ ", " ++ fromTypeAnnotation (letterByInt (i_ + 1)) b ++ " )"
     in
     "A." ++ name ++ arguments ++ " -> E.object [ " ++ encoder ++ " ]"
 

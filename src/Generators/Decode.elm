@@ -88,7 +88,16 @@ fromCustomTypeConstructor i (Node _ a) =
             a.arguments
                 |> List.indexedMap
                     (\i_ v ->
-                        fromRecordField (Node emptyRange ( Node emptyRange (letterByInt i_), v ))
+                        let
+                            fieldName : String
+                            fieldName =
+                                if isIdType v then
+                                    "_id"
+
+                                else
+                                    letterByInt i_
+                        in
+                        fromRecordField (Node emptyRange ( Node emptyRange fieldName, v ))
                     )
                 |> join " "
 
