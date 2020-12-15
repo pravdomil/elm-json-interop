@@ -3249,6 +3249,16 @@ var $author$project$Interop$JsCode$cliProgram = function (init) {
 		});
 };
 var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $elm$core$Task$fail = _Scheduler_fail;
+var $author$project$Utils$Task_$fromResult = function (a) {
+	if (!a.$) {
+		var b = a.a;
+		return $elm$core$Task$succeed(b);
+	} else {
+		var b = a.a;
+		return $elm$core$Task$fail(b);
+	}
+};
 var $elm$core$Result$mapError = F2(
 	function (f, result) {
 		if (!result.$) {
@@ -3260,22 +3270,12 @@ var $elm$core$Result$mapError = F2(
 				f(e));
 		}
 	});
-var $elm$core$Task$fail = _Scheduler_fail;
-var $author$project$Utils$TaskUtils$resultToTask = function (a) {
-	if (!a.$) {
-		var b = a.a;
-		return $elm$core$Task$succeed(b);
-	} else {
-		var b = a.a;
-		return $elm$core$Task$fail(b);
-	}
-};
-var $author$project$Utils$TaskUtils$andThenDecode = F2(
+var $author$project$Utils$Task_$andThenDecode = F2(
 	function (decoder, a) {
 		return A2(
 			$elm$core$Task$andThen,
 			function (v) {
-				return $author$project$Utils$TaskUtils$resultToTask(
+				return $author$project$Utils$Task_$fromResult(
 					A2(
 						$elm$core$Result$mapError,
 						$elm$json$Json$Decode$errorToString,
@@ -3289,19 +3289,19 @@ var $author$project$Interop$JsCode$jsCode = function (_v0) {
 var $elm$json$Json$Decode$succeed = _Json_succeed;
 var $author$project$Interop$JsCode$consoleError = function (_v0) {
 	return A2(
-		$author$project$Utils$TaskUtils$andThenDecode,
+		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await console.error(_v0)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Interop$JsCode$consoleLog = function (_v0) {
 	return A2(
-		$author$project$Utils$TaskUtils$andThenDecode,
+		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await console.log(_v0)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
 var $author$project$Interop$JsCode$processExit = function (_v0) {
 	return A2(
-		$author$project$Utils$TaskUtils$andThenDecode,
+		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await process.exit(_v0)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
@@ -3329,13 +3329,27 @@ var $elm$core$List$drop = F2(
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Interop$JsCode$getArguments = A2(
-	$author$project$Utils$TaskUtils$andThenDecode,
+	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await process.argv))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
+var $author$project$Utils$Task_$andThen2 = F3(
+	function (fn, a, b) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (a_) {
+				return A2(
+					$elm$core$Task$andThen,
+					function (b_) {
+						return A2(fn, a_, b_);
+					},
+					b);
+			},
+			a);
+	});
 var $author$project$Interop$JsCode$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
-			$author$project$Utils$TaskUtils$andThenDecode,
+			$author$project$Utils$Task_$andThenDecode,
 			$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').copyFile(_v0, _v1)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
@@ -3394,7 +3408,7 @@ var $author$project$Main$dirname = function (a) {
 		a);
 };
 var $author$project$Interop$JsCode$dirname__ = A2(
-	$author$project$Utils$TaskUtils$andThenDecode,
+	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$string,
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await __dirname))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 var $author$project$Utils$Utils$dropLast = function (a) {
@@ -4277,7 +4291,7 @@ var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $stil4m$elm_syntax$Elm$Processing$init = $elm$core$Dict$empty;
 var $author$project$Interop$JsCode$mkDir = function (_v0) {
 	return A2(
-		$author$project$Utils$TaskUtils$andThenDecode,
+		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').mkdir(_v0, { recursive: true })))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
@@ -10643,7 +10657,7 @@ var $stil4m$elm_syntax$Elm$Parser$parse = function (input) {
 };
 var $author$project$Interop$JsCode$readFile = function (_v0) {
 	return A2(
-		$author$project$Utils$TaskUtils$andThenDecode,
+		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$string,
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').readFile(_v0, 'utf8')))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
@@ -10651,7 +10665,7 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 	return A2(
 		$elm$core$Task$andThen,
 		function (v) {
-			return $author$project$Utils$TaskUtils$resultToTask(
+			return $author$project$Utils$Task_$fromResult(
 				A2(
 					$elm$core$Result$mapError,
 					function (vv) {
@@ -10663,11 +10677,11 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 };
 var $author$project$Interop$JsCode$realPath = function (_v0) {
 	return A2(
-		$author$project$Utils$TaskUtils$andThenDecode,
+		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$string,
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').realpath(_v0, 'utf8')))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 };
-var $author$project$Utils$TaskUtils$maybeToTask = F2(
+var $author$project$Utils$Task_$fromMaybe = F2(
 	function (x, a) {
 		if (!a.$) {
 			var b = a.a;
@@ -10694,28 +10708,14 @@ var $author$project$Main$srcFolderPath = function (path) {
 };
 var $author$project$Main$srcFolderPathTask = function (a) {
 	return A2(
-		$author$project$Utils$TaskUtils$maybeToTask,
+		$author$project$Utils$Task_$fromMaybe,
 		'Elm file must be inside \"src\" folder.',
 		$author$project$Main$srcFolderPath(a));
 };
-var $author$project$Utils$TaskUtils$taskAndThen2 = F3(
-	function (fn, a, b) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (a_) {
-				return A2(
-					$elm$core$Task$andThen,
-					function (b_) {
-						return A2(fn, a_, b_);
-					},
-					b);
-			},
-			a);
-	});
 var $author$project$Interop$JsCode$writeFile = F2(
 	function (_v0, _v1) {
 		return A2(
-			$author$project$Utils$TaskUtils$andThenDecode,
+			$author$project$Utils$Task_$andThenDecode,
 			$elm$json$Json$Decode$succeed(0),
 _Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').writeFile(_v0, _v1)))) } catch (e) { callback( _Scheduler_fail(String(e))) } }));
 	});
@@ -10746,11 +10746,11 @@ var $author$project$Main$processFile = function (path) {
 						])));
 		});
 	return A3(
-		$author$project$Utils$TaskUtils$taskAndThen2,
+		$author$project$Utils$Task_$andThen2,
 		F2(
 			function (a, b) {
 				return A3(
-					$author$project$Utils$TaskUtils$taskAndThen2,
+					$author$project$Utils$Task_$andThen2,
 					F2(
 						function (c, d) {
 							return A4(generateTask, a, b, c, d);
