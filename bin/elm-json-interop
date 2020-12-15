@@ -3560,7 +3560,7 @@ var $author$project$Generators$Decode$fromRecord = function (a) {
 		A2(
 			$elm$core$List$indexedMap,
 			F2(
-				function (i, _v16) {
+				function (i, _v15) {
 					return $author$project$Utils$Utils$letterByInt(i);
 				}),
 			a));
@@ -3582,29 +3582,29 @@ var $author$project$Generators$Decode$fromRecord = function (a) {
 		' ',
 		A2($elm$core$List$map, $author$project$Generators$Decode$fromRecordField, a))))));
 };
-var $author$project$Generators$Decode$fromRecordField = function (_v6) {
-	var _v7 = _v6.b;
-	var _v8 = _v7.a;
-	var a = _v8.b;
-	var b = _v7.b;
+var $author$project$Generators$Decode$fromRecordField = function (_v5) {
+	var _v6 = _v5.b;
+	var _v7 = _v6.a;
+	var a = _v7.b;
+	var b = _v6.b;
 	var fieldName = function () {
-		var _v12 = _Utils_Tuple2(
+		var _v11 = _Utils_Tuple2(
 			a,
 			$stil4m$elm_syntax$Elm$Syntax$Node$value(b));
-		if (((_v12.a === 'id') && (_v12.b.$ === 1)) && (_v12.b.a.b.b === 'Id')) {
-			var _v13 = _v12.b;
-			var _v14 = _v13.a;
-			var _v15 = _v14.b;
+		if (((_v11.a === 'id') && (_v11.b.$ === 1)) && (_v11.b.a.b.b === 'Id')) {
+			var _v12 = _v11.b;
+			var _v13 = _v12.a;
+			var _v14 = _v13.b;
 			return '_id';
 		} else {
 			return a;
 		}
 	}();
 	var decoder = function () {
-		var _v9 = $stil4m$elm_syntax$Elm$Syntax$Node$value(b);
-		if ((_v9.$ === 1) && (_v9.a.b.b === 'Maybe')) {
-			var _v10 = _v9.a;
-			var _v11 = _v10.b;
+		var _v8 = $stil4m$elm_syntax$Elm$Syntax$Node$value(b);
+		if ((_v8.$ === 1) && (_v8.a.b.b === 'Maybe')) {
+			var _v9 = _v8.a;
+			var _v10 = _v9.b;
 			return 'BD.maybeField';
 		} else {
 			return 'D.field';
@@ -3642,9 +3642,7 @@ var $author$project$Generators$Decode$fromTypeAnnotation = function (a) {
 					var b = _v4.a;
 					return $author$project$Generators$Decode$fromRecord(b);
 				case 5:
-					var _v5 = _v4.b;
-					var b = _v5.b;
-					return $author$project$Generators$Decode$fromRecord(b);
+					return 'Debug.todo \"I don\'t know how to decode extensible record.\"';
 				default:
 					return 'Debug.todo \"I don\'t know how to decode function.\"';
 			}
@@ -4015,19 +4013,19 @@ var $author$project$Generators$Encode$fromRecord = F2(
 				a)) + ' ]');
 	});
 var $author$project$Generators$Encode$fromRecordField = F2(
-	function (parameter, _v7) {
-		var _v8 = _v7.b;
-		var _v9 = _v8.a;
-		var a = _v9.b;
-		var b = _v8.b;
+	function (parameter, _v6) {
+		var _v7 = _v6.b;
+		var _v8 = _v7.a;
+		var a = _v8.b;
+		var b = _v7.b;
 		var fieldName = function () {
-			var _v10 = _Utils_Tuple2(
+			var _v9 = _Utils_Tuple2(
 				a,
 				$stil4m$elm_syntax$Elm$Syntax$Node$value(b));
-			if (((_v10.a === 'id') && (_v10.b.$ === 1)) && (_v10.b.a.b.b === 'Id')) {
-				var _v11 = _v10.b;
-				var _v12 = _v11.a;
-				var _v13 = _v12.b;
+			if (((_v9.a === 'id') && (_v9.b.$ === 1)) && (_v9.b.a.b.b === 'Id')) {
+				var _v10 = _v9.b;
+				var _v11 = _v10.a;
+				var _v12 = _v11.b;
 				return '_id';
 			} else {
 				return a;
@@ -4046,7 +4044,7 @@ var $author$project$Generators$Encode$fromTuple = F2(
 			A2(
 				$elm$core$List$indexedMap,
 				F2(
-					function (i, _v6) {
+					function (i, _v5) {
 						return parameterFromInt(i);
 					}),
 				a));
@@ -4084,9 +4082,7 @@ var $author$project$Generators$Encode$fromTypeAnnotation = F2(
 						var b = _v4.a;
 						return A2($author$project$Generators$Encode$fromRecord, parameter, b);
 					case 5:
-						var _v5 = _v4.b;
-						var b = _v5.b;
-						return A2($author$project$Generators$Encode$fromRecord, parameter, b);
+						return 'Debug.todo \"I don\'t know how to encode extensible record.\"';
 					default:
 						return 'Debug.todo \"I don\'t know how to encode function.\"';
 				}
