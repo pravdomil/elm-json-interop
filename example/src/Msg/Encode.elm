@@ -6,7 +6,7 @@ module Msg.Encode exposing (..)
 import Json.Encode as E
 import Msg.Msg as A
 import User.Encode as User_User exposing (user)
-import Utils.Basics.Encode_ as BE
+import Utils.Basics.Encode_ as E_
 
 
 msg : A.Msg -> E.Value
@@ -26,4 +26,4 @@ msg a =
 
 
 type_ encodeA encodeB a =
-    E.object [ ( "bool", E.bool a.bool ), ( "int", E.int a.int ), ( "float", E.float a.float ), ( "char", BE.char a.char ), ( "string", E.string a.string ), ( "unit", BE.unit a.unit ), ( "tuple2", BE.tuple (\a_tuple2_ -> encodeA a_tuple2_) (\a_tuple2_ -> encodeB a_tuple2_) a.tuple2 ), ( "tuple3", BE.tuple3 (\a_tuple3_ -> encodeA a_tuple3_) (\a_tuple3_ -> encodeB a_tuple3_) (\a_tuple3_ -> encodeB a_tuple3_) a.tuple3 ), ( "list", E.list (\a_list_ -> E.object [ ( "a", encodeA a_list_.a ), ( "b", encodeB a_list_.b ) ]) a.list ), ( "array", E.array (\a_array_ -> E.object [ ( "a", encodeA a_array_.a ), ( "b", encodeB a_array_.b ) ]) a.array ), ( "record", E.object [] ), ( "maybe", BE.maybe (\a_maybe_ -> encodeA a_maybe_) a.maybe ), ( "result", BE.result (\a_result_ -> E.int a_result_) (\a_result_ -> encodeA a_result_) a.result ), ( "set", E.set (\a_set_ -> E.int a_set_) a.set ), ( "dict", BE.dict (\a_dict_ -> E.int a_dict_) (\a_dict_ -> encodeA a_dict_) a.dict ) ]
+    E.object [ ( "bool", E.bool a.bool ), ( "int", E.int a.int ), ( "float", E.float a.float ), ( "char", E_.char a.char ), ( "string", E.string a.string ), ( "unit", E_.unit a.unit ), ( "tuple2", E_.tuple (\a_tuple2_ -> encodeA a_tuple2_) (\a_tuple2_ -> encodeB a_tuple2_) a.tuple2 ), ( "tuple3", E_.tuple3 (\a_tuple3_ -> encodeA a_tuple3_) (\a_tuple3_ -> encodeB a_tuple3_) (\a_tuple3_ -> encodeB a_tuple3_) a.tuple3 ), ( "list", E.list (\a_list_ -> E.object [ ( "a", encodeA a_list_.a ), ( "b", encodeB a_list_.b ) ]) a.list ), ( "array", E.array (\a_array_ -> E.object [ ( "a", encodeA a_array_.a ), ( "b", encodeB a_array_.b ) ]) a.array ), ( "record", E.object [] ), ( "maybe", E_.maybe (\a_maybe_ -> encodeA a_maybe_) a.maybe ), ( "result", E_.result (\a_result_ -> E.int a_result_) (\a_result_ -> encodeA a_result_) a.result ), ( "set", E.set (\a_set_ -> E.int a_set_) a.set ), ( "dict", E_.dict (\a_dict_ -> E.int a_dict_) (\a_dict_ -> encodeA a_dict_) a.dict ) ]

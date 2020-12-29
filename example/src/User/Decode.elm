@@ -5,7 +5,7 @@ module User.Decode exposing (..)
 
 import Json.Decode as D exposing (Decoder)
 import User.User as A
-import Utils.Basics.Decode_ as BD
+import Utils.Basics.Decode_ as D_
 
 
 user : Decoder A.User
