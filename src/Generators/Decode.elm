@@ -212,7 +212,7 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                     "D.string"
 
                 "Maybe" ->
-                    "D.nullable"
+                    "BD.maybe"
 
                 "List" ->
                     "D.list"

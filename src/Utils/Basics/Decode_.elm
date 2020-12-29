@@ -42,6 +42,12 @@ tuple3 a b c =
     D.map3 (\a_ b_ c_ -> ( a_, b_, c_ )) (D.field "a" a) (D.field "b" b) (D.field "c" c)
 
 
+{-| -}
+maybe : Decoder a -> Decoder (Maybe a)
+maybe =
+    D.nullable
+
+
 {-| To decode set.
 -}
 set : Decoder comparable -> Decoder (Set comparable)
