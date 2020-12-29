@@ -3560,16 +3560,6 @@ var $author$project$Utils$Utils$toJsonString = function (a) {
 		0,
 		$elm$json$Json$Encode$string(a));
 };
-var $author$project$Generators$Decode$tupleFn = function (len) {
-	switch (len) {
-		case 2:
-			return 'Tuple.pair';
-		case 3:
-			return '(\\a b c -> (a, b, c))';
-		default:
-			return '';
-	}
-};
 var $author$project$Utils$Utils$wrapInParentheses = function (a) {
 	return '(' + (a + ')');
 };
@@ -3621,18 +3611,11 @@ var $author$project$Generators$Decode$fromRecordField = function (_v5) {
 	return '(' + (decoder + (' ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(b) + ')')))));
 };
 var $author$project$Generators$Decode$fromTuple = function (a) {
-	var toDecoder = F2(
-		function (i, b) {
-			return '(D.field ' + ($author$project$Utils$Utils$toJsonString(
-				$author$project$Utils$Utils$letterByInt(i)) + (' ' + ($author$project$Generators$Decode$fromTypeAnnotation(b) + ')')));
-		});
-	var _arguments = A2(
+	var fn = (2 === $elm$core$List$length(a)) ? 'BD.tuple' : 'BD.tuple3';
+	return fn + (' ' + A2(
 		$elm$core$String$join,
 		' ',
-		A2($elm$core$List$indexedMap, toDecoder, a));
-	return $author$project$Generators$Decode$mapFn(
-		$elm$core$List$length(a)) + (' ' + ($author$project$Generators$Decode$tupleFn(
-		$elm$core$List$length(a)) + (' ' + _arguments)));
+		A2($elm$core$List$map, $author$project$Generators$Decode$fromTypeAnnotation, a)));
 };
 var $author$project$Generators$Decode$fromTypeAnnotation = function (a) {
 	return $author$project$Utils$Utils$wrapInParentheses(
@@ -3647,7 +3630,7 @@ var $author$project$Generators$Decode$fromTypeAnnotation = function (a) {
 					var c = _v4.b;
 					return A2($author$project$Generators$Decode$fromTyped, b, c);
 				case 2:
-					return 'D.succeed ()';
+					return 'BD.unit';
 				case 3:
 					var nodes = _v4.a;
 					return $author$project$Generators$Decode$fromTuple(nodes);
@@ -3871,22 +3854,20 @@ var $author$project$Utils$Imports$fromTopLevelExpose = function (a) {
 			}
 		}());
 };
-var $author$project$Utils$Imports$fromExposing = function (c) {
-	return function (v) {
-		return ' exposing (' + (v + ')');
-	}(
-		function () {
-			var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(c);
-			if (!_v0.$) {
-				return '..';
-			} else {
-				var d = _v0.a;
-				return A2(
-					$elm$core$String$join,
-					', ',
-					A2($elm$core$List$filterMap, $author$project$Utils$Imports$fromTopLevelExpose, d));
-			}
-		}());
+var $author$project$Utils$Imports$fromExposing = function (a) {
+	var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
+	if (!_v0.$) {
+		return ' exposing (..)';
+	} else {
+		var b = _v0.a;
+		var _v1 = A2($elm$core$List$filterMap, $author$project$Utils$Imports$fromTopLevelExpose, b);
+		if (!_v1.b) {
+			return '';
+		} else {
+			var c = _v1;
+			return ' exposing (' + (A2($elm$core$String$join, ', ', c) + ')');
+		}
+	}
 };
 var $author$project$Utils$Imports$fromImport = F2(
 	function (suffix, _v0) {
@@ -4013,6 +3994,27 @@ var $elm$core$String$replace = F3(
 			after,
 			A2($elm$core$String$split, before, string));
 	});
+var $author$project$Generators$Encode$call = F3(
+	function (fn, parameter, a) {
+		var nextParameter = A3($elm$core$String$replace, '.', '_', parameter) + '_';
+		var encoders = A2(
+			$elm$core$String$join,
+			' ',
+			A2(
+				$elm$core$List$map,
+				function (v) {
+					return '(\\' + (nextParameter + (' -> ' + (v + ' )')));
+				},
+				A2(
+					$elm$core$List$map,
+					$author$project$Generators$Encode$fromTypeAnnotation(nextParameter),
+					a)));
+		return _Utils_ap(
+			fn,
+			_Utils_ap(
+				encoders,
+				$author$project$Generators$Encode$parameterToString(parameter)));
+	});
 var $author$project$Generators$Encode$fromRecord = F2(
 	function (parameter, a) {
 		return 'E.object [ ' + (A2(
@@ -4024,62 +4026,39 @@ var $author$project$Generators$Encode$fromRecord = F2(
 				a)) + ' ]');
 	});
 var $author$project$Generators$Encode$fromRecordField = F2(
-	function (parameter, _v6) {
-		var _v7 = _v6.b;
-		var _v8 = _v7.a;
-		var a = _v8.b;
-		var b = _v7.b;
+	function (parameter, _v4) {
+		var _v5 = _v4.b;
+		var _v6 = _v5.a;
+		var a = _v6.b;
+		var b = _v5.b;
 		var fieldName = ((a === 'id') && $author$project$Utils$Utils$isIdType(b)) ? '_id' : a;
 		return '( ' + ($author$project$Utils$Utils$toJsonString(fieldName) + (', ' + (A2($author$project$Generators$Encode$fromTypeAnnotation, parameter + ('.' + a), b) + ' )')));
 	});
 var $author$project$Generators$Encode$fromTuple = F2(
 	function (parameter, a) {
-		var parameterFromInt = function (i) {
-			return A3($elm$core$String$replace, '.', '_', parameter) + ('_' + $author$project$Utils$Utils$letterByInt(i));
-		};
-		var parameters = A2(
-			$elm$core$String$join,
-			', ',
-			A2(
-				$elm$core$List$indexedMap,
-				F2(
-					function (i, _v5) {
-						return parameterFromInt(i);
-					}),
-				a));
-		var toEncoder = F2(
-			function (i, b) {
-				return '( ' + ($author$project$Utils$Utils$toJsonString(
-					$author$project$Utils$Utils$letterByInt(i)) + (', ' + (A2(
-					$author$project$Generators$Encode$fromTypeAnnotation,
-					parameterFromInt(i),
-					b) + ' )')));
-			});
-		return '(\\( ' + (parameters + (' ) -> E.object [ ' + (A2(
-			$elm$core$String$join,
-			', ',
-			A2($elm$core$List$indexedMap, toEncoder, a)) + (' ])' + $author$project$Generators$Encode$parameterToString(parameter)))));
+		var fn = (2 === $elm$core$List$length(a)) ? 'BE.tuple' : 'BE.tuple3';
+		return A3($author$project$Generators$Encode$call, fn, parameter, a);
 	});
 var $author$project$Generators$Encode$fromTypeAnnotation = F2(
 	function (parameter, a) {
 		return $author$project$Utils$Utils$wrapInParentheses(
 			function () {
-				var _v4 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
-				switch (_v4.$) {
+				var _v3 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
+				switch (_v3.$) {
 					case 0:
-						var b = _v4.a;
+						var b = _v3.a;
 						return 'encode' + ($author$project$Utils$Utils$firstToUpper(b) + $author$project$Generators$Encode$parameterToString(parameter));
 					case 1:
-						var b = _v4.a;
-						var c = _v4.b;
+						var b = _v3.a;
+						var c = _v3.b;
 						return A3($author$project$Generators$Encode$fromTyped, parameter, b, c);
 					case 2:
-						return '(\\_ -> E.object [])' + $author$project$Generators$Encode$parameterToString(parameter);
+						return 'BE.unit' + $author$project$Generators$Encode$parameterToString(parameter);
 					case 3:
-						var b = _v4.a;
+						var b = _v3.a;
 						return A2($author$project$Generators$Encode$fromTuple, parameter, b);
 					case 4:
-						var b = _v4.a;
+						var b = _v3.a;
 						return A2($author$project$Generators$Encode$fromRecord, parameter, b);
 					case 5:
 						return 'Debug.todo \"I don\'t know how to encode extensible record.\"';
@@ -4089,19 +4068,19 @@ var $author$project$Generators$Encode$fromTypeAnnotation = F2(
 			}());
 	});
 var $author$project$Generators$Encode$fromTyped = F3(
-	function (parameter, _v0, _arguments) {
+	function (parameter, _v0, a) {
 		var _v1 = _v0.b;
 		var moduleName = _v1.a;
 		var name = _v1.b;
 		var fn = function () {
-			var _v3 = A2(
+			var _v2 = A2(
 				$elm$core$String$join,
 				'.',
 				_Utils_ap(
 					moduleName,
 					_List_fromArray(
 						[name])));
-			switch (_v3) {
+			switch (_v2) {
 				case 'Bool':
 					return 'E.bool';
 				case 'Int':
@@ -4134,30 +4113,7 @@ var $author$project$Generators$Encode$fromTyped = F3(
 						$author$project$Utils$Utils$toFunctionName(name));
 			}
 		}();
-		var arguments_ = function () {
-			if (!_arguments.b) {
-				return '';
-			} else {
-				var nextParameter = A3($elm$core$String$replace, '.', '_', parameter) + '_';
-				return A2(
-					$elm$core$String$join,
-					' ',
-					A2(
-						$elm$core$List$map,
-						function (v) {
-							return '(\\' + (nextParameter + (' -> ' + (v + ' )')));
-						},
-						A2(
-							$elm$core$List$map,
-							$author$project$Generators$Encode$fromTypeAnnotation(nextParameter),
-							_arguments)));
-			}
-		}();
-		return _Utils_ap(
-			fn,
-			_Utils_ap(
-				arguments_,
-				$author$project$Generators$Encode$parameterToString(parameter)));
+		return A3($author$project$Generators$Encode$call, fn, parameter, a);
 	});
 var $author$project$Generators$Encode$fromCustomTypeConstructor = F2(
 	function (i, _v0) {
