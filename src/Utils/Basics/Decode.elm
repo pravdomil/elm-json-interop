@@ -24,6 +24,24 @@ char =
             )
 
 
+{-| -}
+unit : Decoder ()
+unit =
+    D.succeed ()
+
+
+{-| -}
+tuple : Decoder a -> Decoder b -> Decoder ( a, b )
+tuple a b =
+    D.map2 Tuple.pair (D.field "a" a) (D.field "b" b)
+
+
+{-| -}
+tuple3 : Decoder a -> Decoder b -> Decoder c -> Decoder ( a, b, c )
+tuple3 a b c =
+    D.map3 (\a_ b_ c_ -> ( a_, b_, c_ )) (D.field "a" a) (D.field "b" b) (D.field "c" c)
+
+
 {-| To decode set.
 -}
 set : Decoder comparable -> Decoder (Set comparable)

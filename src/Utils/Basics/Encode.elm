@@ -14,6 +14,24 @@ char a =
     String.fromChar a |> E.string
 
 
+{-| -}
+unit : () -> E.Value
+unit _ =
+    E.object []
+
+
+{-| -}
+tuple : (a -> E.Value) -> (b -> E.Value) -> ( a, b ) -> E.Value
+tuple encodeA encodeB ( a, b ) =
+    E.object [ ( "a", encodeA a ), ( "b", encodeB b ) ]
+
+
+{-| -}
+tuple3 : (a -> E.Value) -> (b -> E.Value) -> (c -> E.Value) -> ( a, b, c ) -> E.Value
+tuple3 encodeA encodeB encodeC ( a, b, c ) =
+    E.object [ ( "a", encodeA a ), ( "b", encodeB b ), ( "c", encodeC c ) ]
+
+
 {-| To encode maybe.
 -}
 maybe : (a -> E.Value) -> Maybe a -> E.Value
