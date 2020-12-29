@@ -265,15 +265,15 @@ fromTyped (Node _ ( moduleName, name )) arguments =
 fromTuple : List (Node TypeAnnotation) -> String
 fromTuple a =
     let
-        arguments : String
-        arguments =
-            a |> List.indexedMap toDecoder |> join " "
+        fn : String
+        fn =
+            if a |> List.length |> (==) 2 then
+                "BD.tuple"
 
-        toDecoder : Int -> Node TypeAnnotation -> String
-        toDecoder i b =
-            "(D.field " ++ toJsonString (letterByInt i) ++ " " ++ fromTypeAnnotation b ++ ")"
+            else
+                "BD.tuple3"
     in
-    mapFn (List.length a) ++ " " ++ tupleFn (List.length a) ++ " " ++ arguments
+    fn ++ " " ++ (a |> List.map fromTypeAnnotation |> join " ")
 
 
 {-| To get decoder from record.
@@ -331,21 +331,6 @@ fromRecordField (Node _ ( Node _ a, b )) =
 
 
 --
-
-
-{-| To get function for constructing tuples by number.
--}
-tupleFn : Int -> String
-tupleFn len =
-    case len of
-        2 ->
-            "Tuple.pair"
-
-        3 ->
-            "(\\a b c -> (a, b, c))"
-
-        _ ->
-            ""
 
 
 {-| To get map function name by argument count.
