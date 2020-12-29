@@ -6,7 +6,7 @@ module Msg.Decode exposing (..)
 import Json.Decode as D exposing (Decoder)
 import Msg.Msg as A
 import User.Decode as User_User exposing (user)
-import Utils.Basics.Decode as BD
+import Utils.Basics.Decode_ as BD
 
 
 msg : Decoder A.Msg

@@ -6,7 +6,7 @@ module Msg.Encode exposing (..)
 import Json.Encode as E
 import Msg.Msg as A
 import User.Encode as User_User exposing (user)
-import Utils.Basics.Encode as BE
+import Utils.Basics.Encode_ as BE
 
 
 msg : A.Msg -> E.Value
