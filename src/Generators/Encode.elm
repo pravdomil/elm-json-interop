@@ -22,7 +22,7 @@ fromFile a =
     , "-}"
     , ""
     , "import " ++ (a |> fileToModuleName |> String.join ".") ++ " as A"
-    , "import Utils.Basics.Encode_ as BE"
+    , "import Utils.Basics.Encode_ as E_"
     , "import Json.Encode as E"
     , a.imports |> Imports.fromList "Encode"
     , ""
@@ -150,7 +150,7 @@ fromTypeAnnotation parameter a =
             fromTyped parameter b c
 
         Unit ->
-            "BE.unit" ++ parameterToString parameter
+            "E_.unit" ++ parameterToString parameter
 
         Tupled b ->
             fromTuple parameter b
@@ -189,7 +189,7 @@ fromTyped parameter (Node _ ( moduleName, name )) a =
                     "E.string"
 
                 "Maybe" ->
-                    "BE.maybe"
+                    "E_.maybe"
 
                 "List" ->
                     "E.list"
@@ -198,16 +198,16 @@ fromTyped parameter (Node _ ( moduleName, name )) a =
                     "E.array"
 
                 "Char" ->
-                    "BE.char"
+                    "E_.char"
 
                 "Result" ->
-                    "BE.result"
+                    "E_.result"
 
                 "Set" ->
                     "E.set"
 
                 "Dict" ->
-                    "BE.dict"
+                    "E_.dict"
 
                 "Encode.Value" ->
                     "identity"
@@ -235,10 +235,10 @@ fromTuple parameter a =
         fn : String
         fn =
             if a |> List.length |> (==) 2 then
-                "BE.tuple"
+                "E_.tuple"
 
             else
-                "BE.tuple3"
+                "E_.tuple3"
     in
     call fn parameter a
 

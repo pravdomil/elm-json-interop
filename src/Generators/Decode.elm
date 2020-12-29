@@ -23,7 +23,7 @@ fromFile a =
     , "-}"
     , ""
     , "import " ++ (a |> fileToModuleName |> String.join ".") ++ " as A"
-    , "import Utils.Basics.Decode_ as BD"
+    , "import Utils.Basics.Decode_ as D_"
     , "import Json.Decode as D exposing (Decoder)"
     , a.imports |> Imports.fromList "Decode"
     , ""
@@ -173,7 +173,7 @@ fromTypeAnnotation a =
             fromTyped b c
 
         Unit ->
-            "BD.unit"
+            "D_.unit"
 
         Tupled nodes ->
             fromTuple nodes
@@ -212,7 +212,7 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                     "D.string"
 
                 "Maybe" ->
-                    "BD.maybe"
+                    "D_.maybe"
 
                 "List" ->
                     "D.list"
@@ -221,16 +221,16 @@ fromTyped (Node _ ( moduleName, name )) arguments =
                     "D.array"
 
                 "Char" ->
-                    "BD.char"
+                    "D_.char"
 
                 "Result" ->
-                    "BD.result"
+                    "D_.result"
 
                 "Set" ->
-                    "BD.set"
+                    "D_.set"
 
                 "Dict" ->
-                    "BD.dict"
+                    "D_.dict"
 
                 "Encode.Value" ->
                     "D.value"
@@ -267,10 +267,10 @@ fromTuple a =
         fn : String
         fn =
             if a |> List.length |> (==) 2 then
-                "BD.tuple"
+                "D_.tuple"
 
             else
-                "BD.tuple3"
+                "D_.tuple3"
     in
     fn ++ " " ++ (a |> List.map fromTypeAnnotation |> String.join " ")
 
@@ -312,7 +312,7 @@ fromRecordField (Node _ ( Node _ a, b )) =
         decoder =
             case Node.value b of
                 Typed (Node _ ( _, "Maybe" )) _ ->
-                    "BD.maybeField"
+                    "D_.maybeField"
 
                 _ ->
                     "D.field"
@@ -343,4 +343,4 @@ mapFn a =
         "D.map" ++ String.fromInt a
 
     else
-        "BD.map" ++ String.fromInt a
+        "D_.map" ++ String.fromInt a
