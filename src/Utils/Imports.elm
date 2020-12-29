@@ -35,17 +35,18 @@ fromImport suffix (Node _ a) =
 
 {-| -}
 fromExposing : Node Exposing -> String
-fromExposing c =
-    (case c |> Node.value of
+fromExposing a =
+    case a |> Node.value of
         All _ ->
-            ".."
+            " exposing (..)"
 
-        Explicit d ->
-            d
-                |> List.filterMap fromTopLevelExpose
-                |> join ", "
-    )
-        |> (\v -> " exposing (" ++ v ++ ")")
+        Explicit b ->
+            case b |> List.filterMap fromTopLevelExpose of
+                [] ->
+                    ""
+
+                c ->
+                    " exposing (" ++ (c |> join ", ") ++ ")"
 
 
 {-| -}
