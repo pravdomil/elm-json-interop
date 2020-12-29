@@ -11,25 +11,30 @@ fromList : String -> List (Node Import) -> String
 fromList suffix a =
     a
         |> List.filter shouldImport
-        |> List.map (fromImport suffix)
+        |> List.filterMap (fromImport suffix)
         |> String.join "\n"
 
 
 {-| -}
-fromImport : String -> Node Import -> String
+fromImport : String -> Node Import -> Maybe String
 fromImport suffix (Node _ a) =
-    [ "import"
-    , " "
-    , ((a.moduleName |> Node.value |> dropLast) ++ [ suffix ]) |> String.join "."
-    , " "
-    , a.moduleAlias
-        |> Maybe.withDefault a.moduleName
-        |> (\v -> "as " ++ (v |> Node.value |> String.join "_"))
-    , a.exposingList
-        |> Maybe.map fromExposing
-        |> Maybe.withDefault ""
-    ]
-        |> String.join ""
+    if a.moduleName |> Node.value |> List.length |> (==) 1 then
+        Nothing
+
+    else
+        [ "import"
+        , " "
+        , ((a.moduleName |> Node.value |> dropLast) ++ [ suffix ]) |> String.join "."
+        , " "
+        , a.moduleAlias
+            |> Maybe.withDefault a.moduleName
+            |> (\v -> "as " ++ (v |> Node.value |> String.join "_"))
+        , a.exposingList
+            |> Maybe.map fromExposing
+            |> Maybe.withDefault ""
+        ]
+            |> String.join ""
+            |> Just
 
 
 {-| -}
