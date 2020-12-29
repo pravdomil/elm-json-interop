@@ -151,7 +151,7 @@ fromTypeAnnotation parameter a =
             fromTyped parameter b c
 
         Unit ->
-            "(\\_ -> E.object [])" ++ parameterToString parameter
+            "BE.unit" ++ parameterToString parameter
 
         Tupled b ->
             fromTuple parameter b

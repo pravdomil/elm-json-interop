@@ -174,7 +174,7 @@ fromTypeAnnotation a =
             fromTyped b c
 
         Unit ->
-            "D.succeed ()"
+            "BD.unit"
 
         Tupled nodes ->
             fromTuple nodes
