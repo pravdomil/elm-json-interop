@@ -88,8 +88,8 @@ processFile path =
                     rawFile |> Processing.process Processing.init
             in
             [ mkDir (srcFolder ++ "Utils/Basics")
-            , copyFile (binPath ++ "/../src/Utils/Basics/Encode.elm") (srcFolder ++ "Utils/Basics/Encode.elm")
-            , copyFile (binPath ++ "/../src/Utils/Basics/Decode.elm") (srcFolder ++ "Utils/Basics/Decode.elm")
+            , copyFile (binPath ++ "/../src/Utils/Basics/Encode_.elm") (srcFolder ++ "Utils/Basics/Encode_.elm")
+            , copyFile (binPath ++ "/../src/Utils/Basics/Decode_.elm") (srcFolder ++ "Utils/Basics/Decode_.elm")
             , writeFile (folderPath ++ "/Encode.elm") (Encode.fromFile file)
             , writeFile (folderPath ++ "/Decode.elm") (Decode.fromFile file)
             ]
