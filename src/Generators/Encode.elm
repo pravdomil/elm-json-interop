@@ -172,7 +172,7 @@ fromTypeAnnotation parameter a =
 {-| To get encoder from typed.
 -}
 fromTyped : String -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
-fromTyped parameter (Node _ ( moduleName, name )) arguments =
+fromTyped parameter (Node _ ( moduleName, name )) a =
     let
         fn : String
         fn =
@@ -224,28 +224,8 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
                         (moduleName |> join "_") ++ "."
                     )
                         ++ toFunctionName name
-
-        arguments_ : String
-        arguments_ =
-            case arguments of
-                [] ->
-                    ""
-
-                _ ->
-                    let
-                        nextParameter : String
-                        nextParameter =
-                            (parameter |> replace "." "_") ++ "_"
-                    in
-                    arguments
-                        |> List.map (fromTypeAnnotation nextParameter)
-                        |> List.map
-                            (\v ->
-                                "(\\" ++ nextParameter ++ " -> " ++ v ++ " )"
-                            )
-                        |> join " "
     in
-    fn ++ arguments_ ++ parameterToString parameter
+    call fn parameter a
 
 
 {-| To get encoder for tuple.
@@ -253,19 +233,15 @@ fromTyped parameter (Node _ ( moduleName, name )) arguments =
 fromTuple : String -> List (Node TypeAnnotation) -> String
 fromTuple parameter a =
     let
-        parameters : String
-        parameters =
-            a |> List.indexedMap (\i _ -> parameterFromInt i) |> join ", "
+        fn : String
+        fn =
+            if a |> List.length |> (==) 2 then
+                "BE.tuple"
 
-        toEncoder : Int -> Node TypeAnnotation -> String
-        toEncoder i b =
-            "( " ++ toJsonString (letterByInt i) ++ ", " ++ fromTypeAnnotation (parameterFromInt i) b ++ " )"
-
-        parameterFromInt : Int -> String
-        parameterFromInt i =
-            (parameter |> String.replace "." "_") ++ "_" ++ letterByInt i
+            else
+                "BE.tuple3"
     in
-    "(\\( " ++ parameters ++ " ) -> E.object [ " ++ (a |> List.indexedMap toEncoder |> join ", ") ++ " ])" ++ parameterToString parameter
+    call fn parameter a
 
 
 {-| To get encoder from record.
@@ -293,6 +269,24 @@ fromRecordField parameter (Node _ ( Node _ a, b )) =
 
 
 --
+
+
+{-| -}
+call : String -> String -> List (Node TypeAnnotation) -> String
+call fn parameter a =
+    let
+        encoders : String
+        encoders =
+            a
+                |> List.map (fromTypeAnnotation nextParameter)
+                |> List.map (\v -> "(\\" ++ nextParameter ++ " -> " ++ v ++ " )")
+                |> join " "
+
+        nextParameter : String
+        nextParameter =
+            (parameter |> replace "." "_") ++ "_"
+    in
+    fn ++ encoders ++ parameterToString parameter
 
 
 {-| To convert parameter to string.
