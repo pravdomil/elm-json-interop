@@ -3,7 +3,6 @@ module Utils.Imports exposing (..)
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import String exposing (join)
 import Utils.Utils exposing (dropLast, firstToLower)
 
 
@@ -13,7 +12,7 @@ fromList suffix a =
     a
         |> List.filter shouldImport
         |> List.map (fromImport suffix)
-        |> join "\n"
+        |> String.join "\n"
 
 
 {-| -}
@@ -21,16 +20,16 @@ fromImport : String -> Node Import -> String
 fromImport suffix (Node _ a) =
     [ "import"
     , " "
-    , ((a.moduleName |> Node.value |> dropLast) ++ [ suffix ]) |> join "."
+    , ((a.moduleName |> Node.value |> dropLast) ++ [ suffix ]) |> String.join "."
     , " "
     , a.moduleAlias
         |> Maybe.withDefault a.moduleName
-        |> (\v -> "as " ++ (v |> Node.value |> join "_"))
+        |> (\v -> "as " ++ (v |> Node.value |> String.join "_"))
     , a.exposingList
         |> Maybe.map fromExposing
         |> Maybe.withDefault ""
     ]
-        |> join ""
+        |> String.join ""
 
 
 {-| -}
@@ -46,7 +45,7 @@ fromExposing a =
                     ""
 
                 c ->
-                    " exposing (" ++ (c |> join ", ") ++ ")"
+                    " exposing (" ++ (c |> String.join ", ") ++ ")"
 
 
 {-| -}

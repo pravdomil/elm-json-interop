@@ -6,7 +6,6 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Json.Encode as Encode
 import Regex
-import String exposing (join)
 
 
 {-| To get module name from file.
