@@ -14,8 +14,8 @@ elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 gsed -i -E "
                1s/^/#!\/usr\/bin\/env node\n/
   /^.*JsCode\\\$eval\('/s/\\\'/'/g
-                s/[^ ]*JsCode\\\$eval\('(.*)'\)/_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await \1))) } catch (e) { callback( _Scheduler_fail(String(e))) } })/g
-              \$s/$/\nthis.Elm.Main.init();/
+                        s/[^ ]*JsCode\\\$eval\('(.*)'\)/_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await \1))) } catch (e) { callback( _Scheduler_fail(String(e))) } })/g
+                      \$s/$/\nthis.Elm.Main.init();/
   " bin/elm-json-interop.js
 mv bin/elm-json-interop.js bin/elm-json-interop
 chmod +x bin/elm-json-interop
