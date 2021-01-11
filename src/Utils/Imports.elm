@@ -88,5 +88,11 @@ shouldImport b =
         [ "Json", "Encode" ] ->
             False
 
+        [ "Utils", "Basics", "Decode_" ] ->
+            False
+
+        [ "Utils", "Basics", "Encode_" ] ->
+            False
+
         _ ->
             True
