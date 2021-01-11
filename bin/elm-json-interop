@@ -10757,7 +10757,7 @@ var $author$project$Main$run = function () {
 				return A2(
 					$elm$core$Task$map,
 					function (v) {
-						return 'I have generated JSON encoders/decoders for ' + (fileCount(v) + '.');
+						return 'JSON encoders/decoders have been generated for ' + (fileCount(v) + '.');
 					},
 					$elm$core$Task$sequence(
 						A2($elm$core$List$map, $author$project$Main$processFile, a)));
