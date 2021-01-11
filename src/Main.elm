@@ -58,7 +58,7 @@ run =
                         |> Task.sequence
                         |> Task.map
                             (\v ->
-                                "I have generated JSON encoders/decoders for " ++ fileCount v ++ "."
+                                "JSON encoders/decoders have been generated for " ++ fileCount v ++ "."
                             )
         )
         getArguments
