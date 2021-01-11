@@ -31,8 +31,8 @@ cliProgram init =
 
 {-| To run JavaScript code. Function implementation gets replaced by actual function in build step.
 -}
-jsCode : String -> Task String Decode.Value
-jsCode _ =
+eval : String -> Task String Decode.Value
+eval _ =
     Task.fail "Function is not implemented."
 
 
@@ -45,7 +45,7 @@ jsCode _ =
 -}
 getArguments : Task Error (List String)
 getArguments =
-    jsCode "process.argv"
+    eval "process.argv"
         |> Task_.andThenDecode (Decode.list Decode.string)
 
 
@@ -53,7 +53,7 @@ getArguments =
 -}
 getStdin : Task Error (Maybe String)
 getStdin =
-    jsCode "process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8')"
+    eval "process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8')"
         |> Task_.andThenDecode (Decode.nullable Decode.string)
 
 
@@ -65,7 +65,7 @@ getStdin =
 -}
 consoleLog : String -> Task Error ()
 consoleLog _ =
-    jsCode "console.log(_v0)"
+    eval "console.log(_v0)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -73,7 +73,7 @@ consoleLog _ =
 -}
 consoleError : String -> Task Error ()
 consoleError _ =
-    jsCode "console.error(_v0)"
+    eval "console.error(_v0)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -81,7 +81,7 @@ consoleError _ =
 -}
 processExit : Int -> Task Error ()
 processExit _ =
-    jsCode "process.exit(_v0)"
+    eval "process.exit(_v0)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -93,7 +93,7 @@ processExit _ =
 -}
 filename__ : Task Error String
 filename__ =
-    jsCode "__filename"
+    eval "__filename"
         |> Task_.andThenDecode Decode.string
 
 
@@ -101,7 +101,7 @@ filename__ =
 -}
 dirname__ : Task Error String
 dirname__ =
-    jsCode "__dirname"
+    eval "__dirname"
         |> Task_.andThenDecode Decode.string
 
 
@@ -109,7 +109,7 @@ dirname__ =
 -}
 realPath : String -> Task Error String
 realPath _ =
-    jsCode "require('fs/promises').realpath(_v0, 'utf8')"
+    eval "require('fs/promises').realpath(_v0, 'utf8')"
         |> Task_.andThenDecode Decode.string
 
 
@@ -121,7 +121,7 @@ realPath _ =
 -}
 mkDir : String -> Task Error ()
 mkDir _ =
-    jsCode "require('fs/promises').mkdir(_v0, { recursive: true })"
+    eval "require('fs/promises').mkdir(_v0, { recursive: true })"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -129,7 +129,7 @@ mkDir _ =
 -}
 readFile : String -> Task Error String
 readFile _ =
-    jsCode "require('fs/promises').readFile(_v0, 'utf8')"
+    eval "require('fs/promises').readFile(_v0, 'utf8')"
         |> Task_.andThenDecode Decode.string
 
 
@@ -137,7 +137,7 @@ readFile _ =
 -}
 writeFile : String -> String -> Task Error ()
 writeFile _ _ =
-    jsCode "require('fs/promises').writeFile(_v0, _v1)"
+    eval "require('fs/promises').writeFile(_v0, _v1)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -145,5 +145,5 @@ writeFile _ _ =
 -}
 copyFile : String -> String -> Task Error ()
 copyFile _ _ =
-    jsCode "require('fs/promises').copyFile(_v0, _v1)"
+    eval "require('fs/promises').copyFile(_v0, _v1)"
         |> Task_.andThenDecode (Decode.succeed ())
