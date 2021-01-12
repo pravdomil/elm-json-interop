@@ -3228,26 +3228,6 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$core$Platform$worker = _Platform_worker;
-var $author$project$Interop$JsCode$cliProgram = function (init) {
-	return $elm$core$Platform$worker(
-		{
-			br: function (_v0) {
-				return _Utils_Tuple2(0, init);
-			},
-			bJ: function (_v1) {
-				return $elm$core$Platform$Sub$none;
-			},
-			bM: F2(
-				function (_v2, _v3) {
-					return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
-				})
-		});
-};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$core$Task$fail = _Scheduler_fail;
 var $author$project$Utils$Task_$fromResult = function (a) {
@@ -3287,23 +3267,23 @@ var $author$project$Interop$JsCode$eval = function (_v0) {
 	return $elm$core$Task$fail('Function is not implemented.');
 };
 var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $author$project$Interop$JsCode$consoleError = function (_v0) {
+var $author$project$Interop$NodeJs$consoleError = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await console.error(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(console.error(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 };
-var $author$project$Interop$JsCode$consoleLog = function (_v0) {
+var $author$project$Interop$NodeJs$consoleLog = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await console.log(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(console.log(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 };
-var $author$project$Interop$JsCode$processExit = function (_v0) {
+var $author$project$Interop$NodeJs$processExit = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await process.exit(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.exit(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 };
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -3328,10 +3308,10 @@ var $elm$core$List$drop = F2(
 	});
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Interop$JsCode$getArguments = A2(
+var $author$project$Interop$NodeJs$getArguments = A2(
 	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await process.argv))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.argv))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 var $author$project$Utils$Task_$andThen2 = F3(
 	function (fn, a, b) {
 		return A2(
@@ -3346,7 +3326,7 @@ var $author$project$Utils$Task_$andThen2 = F3(
 			},
 			a);
 	});
-var $author$project$Interop$JsCode$copyFile = F2(
+var $author$project$Interop$NodeJs$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
 			$author$project$Utils$Task_$andThenDecode,
@@ -3407,10 +3387,10 @@ var $author$project$Main$dirname = function (a) {
 		$elm$core$Basics$always(''),
 		a);
 };
-var $author$project$Interop$JsCode$dirname__ = A2(
+var $author$project$Interop$NodeJs$dirname__ = A2(
 	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$string,
-	_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await __dirname))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(__dirname))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 var $author$project$Utils$Utils$dropLast = function (a) {
 	return $elm$core$List$reverse(
 		A2(
@@ -4266,7 +4246,7 @@ var $stil4m$elm_syntax$Elm$Processing$ProcessContext = $elm$core$Basics$identity
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $stil4m$elm_syntax$Elm$Processing$init = $elm$core$Dict$empty;
-var $author$project$Interop$JsCode$mkDir = function (_v0) {
+var $author$project$Interop$NodeJs$mkDir = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
@@ -10632,7 +10612,7 @@ var $stil4m$elm_syntax$Elm$Parser$parse = function (input) {
 		return $elm$core$Result$Err(s);
 	}
 };
-var $author$project$Interop$JsCode$readFile = function (_v0) {
+var $author$project$Interop$NodeJs$readFile = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$string,
@@ -10650,9 +10630,9 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 					},
 					$stil4m$elm_syntax$Elm$Parser$parse(v)));
 		},
-		$author$project$Interop$JsCode$readFile(a));
+		$author$project$Interop$NodeJs$readFile(a));
 };
-var $author$project$Interop$JsCode$realPath = function (_v0) {
+var $author$project$Interop$NodeJs$realPath = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$string,
@@ -10689,7 +10669,7 @@ var $author$project$Main$srcFolderPathTask = function (a) {
 		'Elm file must be inside \"src\" folder.',
 		$author$project$Main$srcFolderPath(a));
 };
-var $author$project$Interop$JsCode$writeFile = F2(
+var $author$project$Interop$NodeJs$writeFile = F2(
 	function (_v0, _v1) {
 		return A2(
 			$author$project$Utils$Task_$andThenDecode,
@@ -10709,15 +10689,15 @@ var $author$project$Main$processFile = function (path) {
 				$elm$core$Task$sequence(
 					_List_fromArray(
 						[
-							$author$project$Interop$JsCode$mkDir(srcFolder + 'Utils/Basics'),
-							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Utils/Basics/Encode_.elm', srcFolder + 'Utils/Basics/Encode_.elm'),
-							A2($author$project$Interop$JsCode$copyFile, binPath + '/../src/Utils/Basics/Decode_.elm', srcFolder + 'Utils/Basics/Decode_.elm'),
+							$author$project$Interop$NodeJs$mkDir(srcFolder + 'Utils/Basics'),
+							A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Basics/Encode_.elm', srcFolder + 'Utils/Basics/Encode_.elm'),
+							A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Basics/Decode_.elm', srcFolder + 'Utils/Basics/Decode_.elm'),
 							A2(
-							$author$project$Interop$JsCode$writeFile,
+							$author$project$Interop$NodeJs$writeFile,
 							folderPath + '/Encode.elm',
 							$author$project$Generators$Encode$fromFile(file)),
 							A2(
-							$author$project$Interop$JsCode$writeFile,
+							$author$project$Interop$NodeJs$writeFile,
 							folderPath + '/Decode.elm',
 							$author$project$Generators$Decode$fromFile(file))
 						])));
@@ -10735,8 +10715,8 @@ var $author$project$Main$processFile = function (path) {
 					$author$project$Main$srcFolderPathTask(b),
 					$author$project$Main$readAndParseElmFile(b));
 			}),
-		$author$project$Interop$JsCode$dirname__,
-		$author$project$Interop$JsCode$realPath(path));
+		$author$project$Interop$NodeJs$dirname__,
+		$author$project$Interop$NodeJs$realPath(path));
 };
 var $author$project$Main$usage = 'Usage: elm-json-interop <File.elm>...';
 var $author$project$Main$run = function () {
@@ -10763,25 +10743,42 @@ var $author$project$Main$run = function () {
 						A2($elm$core$List$map, $author$project$Main$processFile, a)));
 			}
 		},
-		$author$project$Interop$JsCode$getArguments);
+		$author$project$Interop$NodeJs$getArguments);
 }();
-var $author$project$Main$main = $author$project$Interop$JsCode$cliProgram(
+var $author$project$Main$init = A2(
+	$elm$core$Task$attempt,
+	function (_v1) {
+		return 0;
+	},
 	A2(
-		$elm$core$Task$attempt,
-		function (_v1) {
-			return 0;
+		$elm$core$Task$onError,
+		function (v) {
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v0) {
+					return $author$project$Interop$NodeJs$processExit(1);
+				},
+				$author$project$Interop$NodeJs$consoleError(v));
 		},
-		A2(
-			$elm$core$Task$onError,
-			function (v) {
-				return A2(
-					$elm$core$Task$andThen,
-					function (_v0) {
-						return $author$project$Interop$JsCode$processExit(1);
-					},
-					$author$project$Interop$JsCode$consoleError(v));
-			},
-			A2($elm$core$Task$andThen, $author$project$Interop$JsCode$consoleLog, $author$project$Main$run))));
+		A2($elm$core$Task$andThen, $author$project$Interop$NodeJs$consoleLog, $author$project$Main$run)));
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $elm$core$Platform$worker = _Platform_worker;
+var $author$project$Main$main = $elm$core$Platform$worker(
+	{
+		br: function (_v0) {
+			return _Utils_Tuple2(0, $author$project$Main$init);
+		},
+		bJ: function (_v1) {
+			return $elm$core$Platform$Sub$none;
+		},
+		bM: F2(
+			function (_v2, _v3) {
+				return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
+			})
+	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
 this.Elm.Main.init();
