@@ -6,7 +6,7 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.Decode as Decode
 import Generators.Encode as Encode
-import Interop.JsCode exposing (..)
+import Interop.NodeJs as NodeJs
 import Parser exposing (deadEndsToString)
 import Regex
 import Task exposing (Task)
@@ -18,17 +18,25 @@ import Utils.Utils exposing (regexReplace)
 -}
 main : Program () () ()
 main =
-    cliProgram
-        (run
-            |> Task.andThen consoleLog
-            |> Task.onError (\v -> consoleError v |> Task.andThen (\_ -> processExit 1))
-            |> Task.attempt (\_ -> ())
-        )
+    Platform.worker
+        { init = \_ -> ( (), init )
+        , update = \_ _ -> ( (), Cmd.none )
+        , subscriptions = \_ -> Sub.none
+        }
+
+
+{-| -}
+init : Cmd ()
+init =
+    run
+        |> Task.andThen NodeJs.consoleLog
+        |> Task.onError (\v -> NodeJs.consoleError v |> Task.andThen (\_ -> NodeJs.processExit 1))
+        |> Task.attempt (\_ -> ())
 
 
 {-| To show usage or process input files.
 -}
-run : Task Error String
+run : Task String String
 run =
     let
         fileCount : List a -> String
@@ -61,7 +69,7 @@ run =
                                 "JSON encoders/decoders have been generated for " ++ fileCount v ++ "."
                             )
         )
-        getArguments
+        NodeJs.getArguments
 
 
 {-| To get program usage.
@@ -73,10 +81,10 @@ usage =
 
 {-| To process file.
 -}
-processFile : String -> Task Error String
+processFile : String -> Task String String
 processFile path =
     let
-        generateTask : String -> String -> String -> RawFile -> Task Error String
+        generateTask : String -> String -> String -> RawFile -> Task String String
         generateTask binPath fullPath srcFolder rawFile =
             let
                 folderPath : String
@@ -87,11 +95,11 @@ processFile path =
                 file =
                     rawFile |> Processing.process Processing.init
             in
-            [ mkDir (srcFolder ++ "Utils/Basics")
-            , copyFile (binPath ++ "/../src/Utils/Basics/Encode_.elm") (srcFolder ++ "Utils/Basics/Encode_.elm")
-            , copyFile (binPath ++ "/../src/Utils/Basics/Decode_.elm") (srcFolder ++ "Utils/Basics/Decode_.elm")
-            , writeFile (folderPath ++ "/Encode.elm") (Encode.fromFile file)
-            , writeFile (folderPath ++ "/Decode.elm") (Decode.fromFile file)
+            [ NodeJs.mkDir (srcFolder ++ "Utils/Basics")
+            , NodeJs.copyFile (binPath ++ "/../src/Utils/Basics/Encode_.elm") (srcFolder ++ "Utils/Basics/Encode_.elm")
+            , NodeJs.copyFile (binPath ++ "/../src/Utils/Basics/Decode_.elm") (srcFolder ++ "Utils/Basics/Decode_.elm")
+            , NodeJs.writeFile (folderPath ++ "/Encode.elm") (Encode.fromFile file)
+            , NodeJs.writeFile (folderPath ++ "/Decode.elm") (Decode.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)
@@ -105,8 +113,8 @@ processFile path =
                 (srcFolderPathTask b)
                 (readAndParseElmFile b)
         )
-        dirname__
-        (realPath path)
+        NodeJs.dirname__
+        (NodeJs.realPath path)
 
 
 {-| -}
@@ -119,16 +127,16 @@ srcFolderPath path =
 
 
 {-| -}
-srcFolderPathTask : String -> Task Error String
+srcFolderPathTask : String -> Task String String
 srcFolderPathTask a =
     a |> srcFolderPath |> Task_.fromMaybe "Elm file must be inside \"src\" folder."
 
 
 {-| -}
-readAndParseElmFile : String -> Task Error RawFile
+readAndParseElmFile : String -> Task String RawFile
 readAndParseElmFile a =
     a
-        |> readFile
+        |> NodeJs.readFile
         |> Task.andThen
             (\v ->
                 v
