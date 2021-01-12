@@ -19,7 +19,7 @@ getArguments =
 -}
 getStdin : Task String (Maybe String)
 getStdin =
-    JsCode.eval "process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8')"
+    JsCode.eval "await (process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8'))"
         |> Task_.andThenDecode (Decode.nullable Decode.string)
 
 
@@ -75,7 +75,7 @@ dirname__ =
 -}
 realPath : String -> Task String String
 realPath _ =
-    JsCode.eval "require('fs/promises').realpath(_v0, 'utf8')"
+    JsCode.eval "await require('fs/promises').realpath(_v0, 'utf8')"
         |> Task_.andThenDecode Decode.string
 
 
@@ -87,7 +87,7 @@ realPath _ =
 -}
 mkDir : String -> Task String ()
 mkDir _ =
-    JsCode.eval "require('fs/promises').mkdir(_v0, { recursive: true })"
+    JsCode.eval "await require('fs/promises').mkdir(_v0, { recursive: true })"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -95,7 +95,7 @@ mkDir _ =
 -}
 readFile : String -> Task String String
 readFile _ =
-    JsCode.eval "require('fs/promises').readFile(_v0, 'utf8')"
+    JsCode.eval "await require('fs/promises').readFile(_v0, 'utf8')"
         |> Task_.andThenDecode Decode.string
 
 
@@ -103,7 +103,7 @@ readFile _ =
 -}
 writeFile : String -> String -> Task String ()
 writeFile _ _ =
-    JsCode.eval "require('fs/promises').writeFile(_v0, _v1)"
+    JsCode.eval "await require('fs/promises').writeFile(_v0, _v1)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -111,5 +111,5 @@ writeFile _ _ =
 -}
 copyFile : String -> String -> Task String ()
 copyFile _ _ =
-    JsCode.eval "require('fs/promises').copyFile(_v0, _v1)"
+    JsCode.eval "await require('fs/promises').copyFile(_v0, _v1)"
         |> Task_.andThenDecode (Decode.succeed ())
