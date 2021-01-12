@@ -11,7 +11,7 @@ cd "${0%/*}/.."
 
 # To compile our app.
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
-elm-ffi --shebang --run --async bin/elm-json-interop.js
+elm-ffi --shebang --run bin/elm-json-interop.js
 mv bin/elm-json-interop.js bin/elm-json-interop
 chmod +x bin/elm-json-interop
 
