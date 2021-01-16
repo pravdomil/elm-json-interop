@@ -95,9 +95,9 @@ processFile path =
                 file =
                     rawFile |> Processing.process Processing.init
             in
-            [ NodeJs.mkDir (srcFolder ++ "Utils/Basics")
-            , NodeJs.copyFile (binPath ++ "/../src/Utils/Basics/Encode_.elm") (srcFolder ++ "Utils/Basics/Encode_.elm")
-            , NodeJs.copyFile (binPath ++ "/../src/Utils/Basics/Decode_.elm") (srcFolder ++ "Utils/Basics/Decode_.elm")
+            [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
+            , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
+            , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
             , NodeJs.writeFile (folderPath ++ "/Encode.elm") (Encode.fromFile file)
             , NodeJs.writeFile (folderPath ++ "/Decode.elm") (Decode.fromFile file)
             ]

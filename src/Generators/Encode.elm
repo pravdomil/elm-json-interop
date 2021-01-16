@@ -22,7 +22,7 @@ fromFile a =
     , "-}"
     , ""
     , "import " ++ (a |> fileToModuleName |> String.join ".") ++ " as A"
-    , "import Utils.Basics.Encode_ as E_"
+    , "import Utils.Json.Encode_ as E_"
     , "import Json.Encode as E"
     , a.imports |> Imports.fromList "Encode"
     , ""

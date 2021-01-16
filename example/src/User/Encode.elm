@@ -5,7 +5,7 @@ module User.Encode exposing (..)
 
 import Json.Encode as E
 import User.User as A
-import Utils.Basics.Encode_ as E_
+import Utils.Json.Encode_ as E_
 
 
 user : A.User -> E.Value
