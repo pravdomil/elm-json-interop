@@ -104,17 +104,19 @@ processFile path =
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)
     in
-    Task_.andThen2
+    Task.map2
         (\a b ->
-            Task_.andThen2
+            Task.map2
                 (\c d ->
                     generateTask a b c d
                 )
                 (srcFolderPathTask b)
                 (readAndParseElmFile b)
+                |> Task.andThen identity
         )
         NodeJs.dirname__
         (NodeJs.realPath path)
+        |> Task.andThen identity
 
 
 {-| -}
