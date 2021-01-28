@@ -3312,20 +3312,6 @@ var $author$project$Interop$NodeJs$getArguments = A2(
 	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
 	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.argv))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
-var $author$project$Utils$Task_$andThen2 = F3(
-	function (fn, a, b) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (a_) {
-				return A2(
-					$elm$core$Task$andThen,
-					function (b_) {
-						return A2(fn, a_, b_);
-					},
-					b);
-			},
-			a);
-	});
 var $author$project$Interop$NodeJs$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
@@ -3486,11 +3472,15 @@ var $elm$core$String$dropLeft = F2(
 			$elm$core$String$length(string),
 			string);
 	});
+var $elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3($elm$core$String$slice, 0, n, string);
+	});
 var $author$project$Utils$Utils$mapFirstLetter = F2(
 	function (fn, a) {
 		return _Utils_ap(
 			fn(
-				A3($elm$core$String$slice, 0, 1, a)),
+				A2($elm$core$String$left, 1, a)),
 			A2($elm$core$String$dropLeft, 1, a));
 	});
 var $elm$core$String$toLower = _String_toLower;
@@ -10702,21 +10692,27 @@ var $author$project$Main$processFile = function (path) {
 							$author$project$Generators$Decode$fromFile(file))
 						])));
 		});
-	return A3(
-		$author$project$Utils$Task_$andThen2,
-		F2(
-			function (a, b) {
-				return A3(
-					$author$project$Utils$Task_$andThen2,
-					F2(
-						function (c, d) {
-							return A4(generateTask, a, b, c, d);
-						}),
-					$author$project$Main$srcFolderPathTask(b),
-					$author$project$Main$readAndParseElmFile(b));
-			}),
-		$author$project$Interop$NodeJs$dirname__,
-		$author$project$Interop$NodeJs$realPath(path));
+	return A2(
+		$elm$core$Task$andThen,
+		$elm$core$Basics$identity,
+		A3(
+			$elm$core$Task$map2,
+			F2(
+				function (a, b) {
+					return A2(
+						$elm$core$Task$andThen,
+						$elm$core$Basics$identity,
+						A3(
+							$elm$core$Task$map2,
+							F2(
+								function (c, d) {
+									return A4(generateTask, a, b, c, d);
+								}),
+							$author$project$Main$srcFolderPathTask(b),
+							$author$project$Main$readAndParseElmFile(b)));
+				}),
+			$author$project$Interop$NodeJs$dirname__,
+			$author$project$Interop$NodeJs$realPath(path)));
 };
 var $author$project$Main$usage = 'Usage: elm-json-interop <File.elm>...';
 var $author$project$Main$run = function () {
@@ -10780,5 +10776,4 @@ var $author$project$Main$main = $elm$core$Platform$worker(
 			})
 	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
-this.Elm.Main.init();
+	$elm$json$Json$Decode$succeed(0))(0)()}});}(this));
