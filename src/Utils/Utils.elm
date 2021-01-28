@@ -61,7 +61,7 @@ firstToLower a =
 {-| -}
 mapFirstLetter : (String -> String) -> String -> String
 mapFirstLetter fn a =
-    (a |> String.slice 0 1 |> fn) ++ (a |> String.dropLeft 1)
+    (a |> String.left 1 |> fn) ++ (a |> String.dropLeft 1)
 
 
 
