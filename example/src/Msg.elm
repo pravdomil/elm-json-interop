@@ -11,7 +11,7 @@ import User exposing (User)
 type Msg
     = PressedEnter
     | ChangedDraft String
-    | ReceivedMessages (List (Type User String))
+    | ReceivedMessages (List (Message User String))
     | ClickedExit
 
 
@@ -20,7 +20,7 @@ type Msg
 
 
 {-| -}
-type alias Type a b =
+type alias Message a b =
     { bool : Bool
     , int : Int
     , float : Float
@@ -29,7 +29,7 @@ type alias Type a b =
 
     --
     , unit : ()
-    , tuple2 : ( a, b )
+    , tuple : ( a, b )
     , tuple3 : ( a, b, b )
     , list : List { a : a, b : b }
     , array : Array { a : a, b : b }

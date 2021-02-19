@@ -25,28 +25,35 @@ sample =
     let
         ( a, b ) =
             ( Anonymous, "hello" )
+
+        message : Message User String
+        message =
+            { -- Sum Types
+              unit = ()
+            , bool = True
+            , int = 1
+            , float = pi
+            , char = 'a'
+            , string = "a"
+
+            --
+            , list = [ { a = a, b = b } ]
+            , array = Array.fromList [ { a = a, b = b } ]
+
+            --
+            , maybe = Just a
+            , result = Ok a
+
+            --
+            , set = Set.fromList [ 1 ]
+            , dict = Dict.fromList [ ( 1, a ) ]
+
+            -- Product Types
+            , tuple = ( a, b )
+            , tuple3 = ( a, b, b )
+            , record = {}
+            }
     in
     ReceivedMessages
-        [ { bool = True
-          , int = 1
-          , float = 1.2
-          , char = 'a'
-          , string = "a"
-
-          --
-          , unit = ()
-          , tuple2 = ( a, b )
-          , tuple3 = ( a, b, b )
-          , list = [ { a = a, b = b } ]
-          , array = Array.fromList [ { a = a, b = b } ]
-          , record = {}
-
-          --
-          , maybe = Just a
-          , result = Ok a
-
-          --
-          , set = Set.fromList [ 1 ]
-          , dict = Dict.fromList [ ( 1, a ) ]
-          }
+        [ message
         ]
