@@ -13,15 +13,15 @@ import User exposing (..)
 
 test : Result Decode.Error Bool
 test =
-    sample
+    msg
         |> Msg.Encode.msg
         |> Encode.encode 0
         |> Decode.decodeString Msg.Decode.msg
-        |> Result.map ((==) sample)
+        |> Result.map ((==) msg)
 
 
-sample : Msg
-sample =
+msg : Msg
+msg =
     ReceivedMessages
         [ message
         ]
