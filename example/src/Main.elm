@@ -1,14 +1,14 @@
-module Test exposing (..)
+module Main exposing (..)
 
 import Array
 import Dict
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Msg exposing (..)
 import Msg.Decode as MsgDecode
 import Msg.Encode as MsgEncode
-import Msg.Msg exposing (Msg(..))
 import Set
-import User.User exposing (User(..))
+import User exposing (..)
 
 
 {-| -}

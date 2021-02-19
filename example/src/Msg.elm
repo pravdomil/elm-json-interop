@@ -1,9 +1,9 @@
-module Msg.Msg exposing (..)
+module Msg exposing (..)
 
 import Array exposing (Array)
 import Dict exposing (Dict)
 import Set exposing (Set)
-import User.User exposing (User)
+import User exposing (User)
 
 
 {-| To define what can happen.
