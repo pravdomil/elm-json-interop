@@ -5,15 +5,14 @@ import Dict
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Msg exposing (..)
-import Msg.Decode as MsgDecode
-import Msg.Encode as MsgEncode
+import Msg.Decode
+import Msg.Encode
 import Set
 import User exposing (..)
 
 
-{-| -}
-msg : Msg
-msg =
+sample : Msg
+sample =
     let
         ( a, b ) =
             ( Anonymous, "hello" )
@@ -44,11 +43,10 @@ msg =
         ]
 
 
-{-| -}
 test : Result Decode.Error Bool
 test =
-    msg
-        |> MsgEncode.msg
+    sample
+        |> Msg.Encode.msg
         |> Encode.encode 0
-        |> Decode.decodeString MsgDecode.msg
-        |> Result.map ((==) msg)
+        |> Decode.decodeString Msg.Decode.msg
+        |> Result.map ((==) sample)
