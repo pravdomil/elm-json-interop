@@ -91,15 +91,6 @@ regexReplace regex replacement a =
 --
 
 
-dropLast : List a -> List a
-dropLast a =
-    a |> List.reverse |> List.drop 1 |> List.reverse
-
-
-
---
-
-
 toFunctionName : String -> String
 toFunctionName a =
     a

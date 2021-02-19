@@ -90,6 +90,10 @@ processFile path =
                 folderPath =
                     fullPath |> dirname
 
+                basename_ : String
+                basename_ =
+                    fullPath |> basename ".elm"
+
                 file : File
                 file =
                     rawFile |> Processing.process Processing.init
@@ -97,8 +101,9 @@ processFile path =
             [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
             , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
             , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
-            , NodeJs.writeFile (folderPath ++ "/Encode.elm") (Encode.fromFile file)
-            , NodeJs.writeFile (folderPath ++ "/Decode.elm") (Decode.fromFile file)
+            , NodeJs.mkDir (srcFolder ++ "/" ++ basename_)
+            , NodeJs.writeFile (folderPath ++ "/" ++ basename_ ++ "/Encode.elm") (Encode.fromFile file)
+            , NodeJs.writeFile (folderPath ++ "/" ++ basename_ ++ "/Decode.elm") (Decode.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)

@@ -3,7 +3,7 @@ module Generators.Imports exposing (..)
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import Utils.Utils exposing (dropLast, firstToLower)
+import Utils.Utils exposing (firstToLower)
 
 
 fromList : String -> List (Node Import) -> String
@@ -16,23 +16,19 @@ fromList suffix a =
 
 fromImport : String -> Node Import -> Maybe String
 fromImport suffix (Node _ a) =
-    if a.moduleName |> Node.value |> List.length |> (==) 1 then
-        Nothing
-
-    else
-        [ "import"
-        , " "
-        , ((a.moduleName |> Node.value |> dropLast) ++ [ suffix ]) |> String.join "."
-        , " "
-        , a.moduleAlias
-            |> Maybe.withDefault a.moduleName
-            |> (\v -> "as " ++ (v |> Node.value |> String.join "_"))
-        , a.exposingList
-            |> Maybe.map fromExposing
-            |> Maybe.withDefault ""
-        ]
-            |> String.join ""
-            |> Just
+    [ "import"
+    , " "
+    , ((a.moduleName |> Node.value) ++ [ suffix ]) |> String.join "."
+    , " "
+    , a.moduleAlias
+        |> Maybe.withDefault a.moduleName
+        |> (\v -> "as " ++ (v |> Node.value |> String.join "_"))
+    , a.exposingList
+        |> Maybe.map fromExposing
+        |> Maybe.withDefault ""
+    ]
+        |> String.join ""
+        |> Just
 
 
 fromExposing : Node Exposing -> String
