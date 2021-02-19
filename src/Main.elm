@@ -11,7 +11,6 @@ import Parser exposing (deadEndsToString)
 import Regex
 import Task exposing (Task)
 import Utils.Task_ as Task_
-import Utils.Utils exposing (regexReplace)
 
 
 {-| To define main entry point.
