@@ -21,6 +21,7 @@ wrapInParentheses a =
     "(" ++ a ++ ")"
 
 
+{-| -}
 isIdType : Node TypeAnnotation -> Bool
 isIdType a =
     case a of
@@ -72,6 +73,7 @@ toJsonString a =
     Encode.string a |> Encode.encode 0
 
 
+{-| -}
 toFunctionName : String -> String
 toFunctionName a =
     a
