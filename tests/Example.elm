@@ -1,23 +1,29 @@
-module Main exposing (..)
+module Example exposing (..)
 
 import Array
 import Dict
+import Expect
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Msg exposing (..)
 import Msg.Decode
 import Msg.Encode
 import Set
+import Test exposing (..)
 import User exposing (..)
 
 
-test : Result Decode.Error Bool
-test =
-    msg
-        |> Msg.Encode.msg
-        |> Encode.encode 0
-        |> Decode.decodeString Msg.Decode.msg
-        |> Result.map ((==) msg)
+suite : Test
+suite =
+    test "Encodes and decodes sample." <|
+        \_ ->
+            Expect.equal (Ok True)
+                (msg
+                    |> Msg.Encode.msg
+                    |> Encode.encode 0
+                    |> Decode.decodeString Msg.Decode.msg
+                    |> Result.map ((==) msg)
+                )
 
 
 msg : Msg
