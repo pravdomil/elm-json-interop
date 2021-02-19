@@ -119,8 +119,13 @@ processFile path =
 
 srcFolderPath : String -> Maybe String
 srcFolderPath path =
+    let
+        regex : Regex.Regex
+        regex =
+            Regex.fromString "^.*/src/" |> Maybe.withDefault Regex.never
+    in
     path
-        |> Regex.find ("^.*/src/" |> Regex.fromString |> Maybe.withDefault Regex.never)
+        |> Regex.find regex
         |> List.head
         |> Maybe.map .match
 
