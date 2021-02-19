@@ -10628,19 +10628,17 @@ var $elm$regex$Regex$fromString = function (string) {
 };
 var $elm$regex$Regex$never = _Regex_never;
 var $author$project$Main$srcFolderPath = function (path) {
+	var regex = A2(
+		$elm$core$Maybe$withDefault,
+		$elm$regex$Regex$never,
+		$elm$regex$Regex$fromString('^.*/src/'));
 	return A2(
 		$elm$core$Maybe$map,
 		function ($) {
 			return $.bv;
 		},
 		$elm$core$List$head(
-			A2(
-				$elm$regex$Regex$find,
-				A2(
-					$elm$core$Maybe$withDefault,
-					$elm$regex$Regex$never,
-					$elm$regex$Regex$fromString('^.*/src/')),
-				path)));
+			A2($elm$regex$Regex$find, regex, path)));
 };
 var $author$project$Main$srcFolderPathTask = function (a) {
 	return A2(
