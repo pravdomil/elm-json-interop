@@ -2359,107 +2359,6 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 }
 
 
-// CREATE
-
-var _Regex_never = /.^/;
-
-var _Regex_fromStringWith = F2(function(options, string)
-{
-	var flags = 'g';
-	if (options.by) { flags += 'm'; }
-	if (options.a9) { flags += 'i'; }
-
-	try
-	{
-		return $elm$core$Maybe$Just(new RegExp(string, flags));
-	}
-	catch(error)
-	{
-		return $elm$core$Maybe$Nothing;
-	}
-});
-
-
-// USE
-
-var _Regex_contains = F2(function(re, string)
-{
-	return string.match(re) !== null;
-});
-
-
-var _Regex_findAtMost = F3(function(n, re, str)
-{
-	var out = [];
-	var number = 0;
-	var string = str;
-	var lastIndex = re.lastIndex;
-	var prevLastIndex = -1;
-	var result;
-	while (number++ < n && (result = re.exec(string)))
-	{
-		if (prevLastIndex == re.lastIndex) break;
-		var i = result.length - 1;
-		var subs = new Array(i);
-		while (i > 0)
-		{
-			var submatch = result[i];
-			subs[--i] = submatch
-				? $elm$core$Maybe$Just(submatch)
-				: $elm$core$Maybe$Nothing;
-		}
-		out.push(A4($elm$regex$Regex$Match, result[0], result.index, number, _List_fromArray(subs)));
-		prevLastIndex = re.lastIndex;
-	}
-	re.lastIndex = lastIndex;
-	return _List_fromArray(out);
-});
-
-
-var _Regex_replaceAtMost = F4(function(n, re, replacer, string)
-{
-	var count = 0;
-	function jsReplacer(match)
-	{
-		if (count++ >= n)
-		{
-			return match;
-		}
-		var i = arguments.length - 3;
-		var submatches = new Array(i);
-		while (i > 0)
-		{
-			var submatch = arguments[i];
-			submatches[--i] = submatch
-				? $elm$core$Maybe$Just(submatch)
-				: $elm$core$Maybe$Nothing;
-		}
-		return replacer(A4($elm$regex$Regex$Match, match, arguments[arguments.length - 2], count, _List_fromArray(submatches)));
-	}
-	return string.replace(re, jsReplacer);
-});
-
-var _Regex_splitAtMost = F3(function(n, re, str)
-{
-	var string = str;
-	var out = [];
-	var start = re.lastIndex;
-	var restoreLastIndex = re.lastIndex;
-	while (n--)
-	{
-		var result = re.exec(string);
-		if (!result) break;
-		out.push(string.slice(start, result.index));
-		start = re.lastIndex;
-	}
-	out.push(string.slice(start));
-	re.lastIndex = restoreLastIndex;
-	return _List_fromArray(out);
-});
-
-var _Regex_infinity = Infinity;
-
-
 
 
 // STRINGS
@@ -2588,6 +2487,107 @@ var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString
 
 	return _Utils_Tuple3(newOffset, row, col);
 });
+
+
+// CREATE
+
+var _Regex_never = /.^/;
+
+var _Regex_fromStringWith = F2(function(options, string)
+{
+	var flags = 'g';
+	if (options.by) { flags += 'm'; }
+	if (options.a9) { flags += 'i'; }
+
+	try
+	{
+		return $elm$core$Maybe$Just(new RegExp(string, flags));
+	}
+	catch(error)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+});
+
+
+// USE
+
+var _Regex_contains = F2(function(re, string)
+{
+	return string.match(re) !== null;
+});
+
+
+var _Regex_findAtMost = F3(function(n, re, str)
+{
+	var out = [];
+	var number = 0;
+	var string = str;
+	var lastIndex = re.lastIndex;
+	var prevLastIndex = -1;
+	var result;
+	while (number++ < n && (result = re.exec(string)))
+	{
+		if (prevLastIndex == re.lastIndex) break;
+		var i = result.length - 1;
+		var subs = new Array(i);
+		while (i > 0)
+		{
+			var submatch = result[i];
+			subs[--i] = submatch
+				? $elm$core$Maybe$Just(submatch)
+				: $elm$core$Maybe$Nothing;
+		}
+		out.push(A4($elm$regex$Regex$Match, result[0], result.index, number, _List_fromArray(subs)));
+		prevLastIndex = re.lastIndex;
+	}
+	re.lastIndex = lastIndex;
+	return _List_fromArray(out);
+});
+
+
+var _Regex_replaceAtMost = F4(function(n, re, replacer, string)
+{
+	var count = 0;
+	function jsReplacer(match)
+	{
+		if (count++ >= n)
+		{
+			return match;
+		}
+		var i = arguments.length - 3;
+		var submatches = new Array(i);
+		while (i > 0)
+		{
+			var submatch = arguments[i];
+			submatches[--i] = submatch
+				? $elm$core$Maybe$Just(submatch)
+				: $elm$core$Maybe$Nothing;
+		}
+		return replacer(A4($elm$regex$Regex$Match, match, arguments[arguments.length - 2], count, _List_fromArray(submatches)));
+	}
+	return string.replace(re, jsReplacer);
+});
+
+var _Regex_splitAtMost = F3(function(n, re, str)
+{
+	var string = str;
+	var out = [];
+	var start = re.lastIndex;
+	var restoreLastIndex = re.lastIndex;
+	while (n--)
+	{
+		var result = re.exec(string);
+		if (!result) break;
+		out.push(string.slice(start, result.index));
+		start = re.lastIndex;
+	}
+	out.push(string.slice(start));
+	re.lastIndex = restoreLastIndex;
+	return _List_fromArray(out);
+});
+
+var _Regex_infinity = Infinity;
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
@@ -3319,71 +3319,10 @@ var $author$project$Interop$NodeJs$copyFile = F2(
 			$elm$json$Json$Decode$succeed(0),
 			_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').copyFile(_v0, _v1)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 	});
-var $elm$core$Basics$always = F2(
-	function (a, _v0) {
-		return a;
-	});
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var $elm$regex$Regex$Match = F4(
-	function (match, index, number, submatches) {
-		return {bq: index, bv: match, bz: number, bI: submatches};
-	});
-var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
-var $elm$regex$Regex$fromString = function (string) {
-	return A2(
-		$elm$regex$Regex$fromStringWith,
-		{a9: false, by: false},
-		string);
-};
-var $elm$regex$Regex$never = _Regex_never;
-var $elm$regex$Regex$replace = _Regex_replaceAtMost(_Regex_infinity);
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Utils$Utils$regexReplace = F3(
-	function (regex, replacement, a) {
-		return A3(
-			$elm$regex$Regex$replace,
-			A2(
-				$elm$core$Maybe$withDefault,
-				$elm$regex$Regex$never,
-				$elm$regex$Regex$fromString(regex)),
-			A2(
-				$elm$core$Basics$composeR,
-				function ($) {
-					return $.bv;
-				},
-				replacement),
-			a);
-	});
-var $author$project$Main$dirname = function (a) {
-	return A3(
-		$author$project$Utils$Utils$regexReplace,
-		'/[^/]+$',
-		$elm$core$Basics$always(''),
-		a);
-};
 var $author$project$Interop$NodeJs$dirname__ = A2(
 	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$string,
 	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(__dirname))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
-var $author$project$Utils$Utils$dropLast = function (a) {
-	return $elm$core$List$reverse(
-		A2(
-			$elm$core$List$drop,
-			1,
-			$elm$core$List$reverse(a)));
-};
 var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
 	var v = _v0.b;
 	return v;
@@ -3392,13 +3331,13 @@ var $stil4m$elm_syntax$Elm$Syntax$Module$moduleName = function (m) {
 	switch (m.$) {
 		case 0:
 			var x = m.a;
-			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.O);
+			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.S);
 		case 1:
 			var x = m.a;
-			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.O);
+			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.S);
 		default:
 			var x = m.a;
-			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.O);
+			return $stil4m$elm_syntax$Elm$Syntax$Node$value(x.S);
 	}
 };
 var $author$project$Utils$Utils$fileToModuleName = function (a) {
@@ -3692,14 +3631,14 @@ var $author$project$Generators$Decode$fromCustomTypeConstructor = F2(
 									A2($stil4m$elm_syntax$Elm$Syntax$Node$Node, $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange, fieldName),
 									v)));
 					}),
-				a.P));
+				a.O));
 		var decoder = function () {
-			var _v1 = a.P;
+			var _v1 = a.O;
 			if (!_v1.b) {
 				return 'D.succeed A.' + name;
 			} else {
 				return $author$project$Generators$Decode$mapFn(
-					$elm$core$List$length(a.P)) + (' A.' + (name + (' ' + _arguments)));
+					$elm$core$List$length(a.O)) + (' A.' + (name + (' ' + _arguments)));
 			}
 		}();
 		return $elm$core$String$fromInt(i) + (' -> ' + decoder);
@@ -3715,11 +3654,20 @@ var $elm$core$Maybe$map = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Generators$Decode$fromType = F2(
 	function (body, a) {
 		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
 		var signature = function () {
-			var _v2 = a.R;
+			var _v2 = a.Q;
 			if (!_v2.b) {
 				return $author$project$Utils$Utils$toFunctionName(name) + (' : Decoder A.' + (name + '\n'));
 			} else {
@@ -3747,7 +3695,7 @@ var $author$project$Generators$Decode$fromType = F2(
 			}
 		};
 		var generics = function () {
-			var _v0 = a.R;
+			var _v0 = a.Q;
 			if (!_v0.b) {
 				return '';
 			} else {
@@ -3759,7 +3707,7 @@ var $author$project$Generators$Decode$fromType = F2(
 						function (v) {
 							return $stil4m$elm_syntax$Elm$Syntax$Node$value(v) + 'Decoder';
 						},
-						a.R));
+						a.Q));
 			}
 		}();
 		var declaration = $author$project$Utils$Utils$toFunctionName(name) + (generics + (' =' + maybeWrapInLazy(body)));
@@ -3806,7 +3754,7 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $author$project$Utils$Imports$fromTopLevelExpose = function (a) {
+var $author$project$Generators$Imports$fromTopLevelExpose = function (a) {
 	return A2(
 		$elm$core$Maybe$map,
 		$author$project$Utils$Utils$firstToLower,
@@ -3824,13 +3772,13 @@ var $author$project$Utils$Imports$fromTopLevelExpose = function (a) {
 			}
 		}());
 };
-var $author$project$Utils$Imports$fromExposing = function (a) {
+var $author$project$Generators$Imports$fromExposing = function (a) {
 	var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(a);
 	if (!_v0.$) {
 		return ' exposing (..)';
 	} else {
 		var b = _v0.a;
-		var _v1 = A2($elm$core$List$filterMap, $author$project$Utils$Imports$fromTopLevelExpose, b);
+		var _v1 = A2($elm$core$List$filterMap, $author$project$Generators$Imports$fromTopLevelExpose, b);
 		if (!_v1.b) {
 			return '';
 		} else {
@@ -3839,11 +3787,10 @@ var $author$project$Utils$Imports$fromExposing = function (a) {
 		}
 	}
 };
-var $author$project$Utils$Imports$fromImport = F2(
+var $author$project$Generators$Imports$fromImport = F2(
 	function (suffix, _v0) {
 		var a = _v0.b;
-		return (1 === $elm$core$List$length(
-			$stil4m$elm_syntax$Elm$Syntax$Node$value(a.O))) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+		return $elm$core$Maybe$Just(
 			A2(
 				$elm$core$String$join,
 				'',
@@ -3855,8 +3802,7 @@ var $author$project$Utils$Imports$fromImport = F2(
 						$elm$core$String$join,
 						'.',
 						_Utils_ap(
-							$author$project$Utils$Utils$dropLast(
-								$stil4m$elm_syntax$Elm$Syntax$Node$value(a.O)),
+							$stil4m$elm_syntax$Elm$Syntax$Node$value(a.S),
 							_List_fromArray(
 								[suffix]))),
 						' ',
@@ -3866,16 +3812,16 @@ var $author$project$Utils$Imports$fromImport = F2(
 							'_',
 							$stil4m$elm_syntax$Elm$Syntax$Node$value(v));
 					}(
-						A2($elm$core$Maybe$withDefault, a.O, a.bw)),
+						A2($elm$core$Maybe$withDefault, a.S, a.bw)),
 						A2(
 						$elm$core$Maybe$withDefault,
 						'',
-						A2($elm$core$Maybe$map, $author$project$Utils$Imports$fromExposing, a.bl))
+						A2($elm$core$Maybe$map, $author$project$Generators$Imports$fromExposing, a.bl))
 					])));
 	});
-var $author$project$Utils$Imports$shouldImport = function (b) {
+var $author$project$Generators$Imports$shouldImport = function (b) {
 	var _v0 = $stil4m$elm_syntax$Elm$Syntax$Node$value(
-		$stil4m$elm_syntax$Elm$Syntax$Node$value(b).O);
+		$stil4m$elm_syntax$Elm$Syntax$Node$value(b).S);
 	_v0$7:
 	while (true) {
 		if (_v0.b) {
@@ -3931,15 +3877,15 @@ var $author$project$Utils$Imports$shouldImport = function (b) {
 	}
 	return true;
 };
-var $author$project$Utils$Imports$fromList = F2(
+var $author$project$Generators$Imports$fromList = F2(
 	function (suffix, a) {
 		return A2(
 			$elm$core$String$join,
 			'\n',
 			A2(
 				$elm$core$List$filterMap,
-				$author$project$Utils$Imports$fromImport(suffix),
-				A2($elm$core$List$filter, $author$project$Utils$Imports$shouldImport, a)));
+				$author$project$Generators$Imports$fromImport(suffix),
+				A2($elm$core$List$filter, $author$project$Generators$Imports$shouldImport, a)));
 	});
 var $author$project$Generators$Decode$fromFile = function (a) {
 	return A2(
@@ -3950,8 +3896,7 @@ var $author$project$Generators$Decode$fromFile = function (a) {
 				'module ' + (A2(
 				$elm$core$String$join,
 				'.',
-				$author$project$Utils$Utils$dropLast(
-					$author$project$Utils$Utils$fileToModuleName(a))) + '.Decode exposing (..)'),
+				$author$project$Utils$Utils$fileToModuleName(a)) + '.Decode exposing (..)'),
 				'',
 				'{-| Generated by elm-json-interop.',
 				'-}',
@@ -3962,7 +3907,7 @@ var $author$project$Generators$Decode$fromFile = function (a) {
 				$author$project$Utils$Utils$fileToModuleName(a)) + ' as A'),
 				'import Utils.Json.Decode_ as D_',
 				'import Json.Decode as D exposing (Decoder)',
-				A2($author$project$Utils$Imports$fromList, 'Decode', a.bp),
+				A2($author$project$Generators$Imports$fromList, 'Decode', a.bp),
 				'',
 				A2(
 				$elm$core$String$join,
@@ -4111,7 +4056,7 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = F2(
 		var a = _v0.b;
 		var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
 		var _arguments = function () {
-			var _v1 = a.P;
+			var _v1 = a.O;
 			if (!_v1.b) {
 				return '';
 			} else {
@@ -4124,7 +4069,7 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = F2(
 							function (i_, _v2) {
 								return $author$project$Utils$Utils$letterByInt(i_ + 1);
 							}),
-						a.P));
+						a.O));
 			}
 		}();
 		var argToEncoder = F2(
@@ -4141,13 +4086,13 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = F2(
 			A2(
 				$elm$core$List$cons,
 				'( \"_\", E.int ' + ($elm$core$String$fromInt(i) + ' )'),
-				A2($elm$core$List$indexedMap, argToEncoder, a.P)));
+				A2($elm$core$List$indexedMap, argToEncoder, a.O)));
 		return 'A.' + (name + (_arguments + (' -> E.object [ ' + (encoder + ' ]'))));
 	});
 var $author$project$Generators$Encode$fromType = function (a) {
 	var name = $stil4m$elm_syntax$Elm$Syntax$Node$value(a.T);
 	var signature = function () {
-		var _v1 = a.R;
+		var _v1 = a.Q;
 		if (!_v1.b) {
 			return $author$project$Utils$Utils$toFunctionName(name) + (' : A.' + (name + ' -> E.Value\n'));
 		} else {
@@ -4155,7 +4100,7 @@ var $author$project$Generators$Encode$fromType = function (a) {
 		}
 	}();
 	var generics = function () {
-		var _v0 = a.R;
+		var _v0 = a.Q;
 		if (!_v0.b) {
 			return '';
 		} else {
@@ -4168,7 +4113,7 @@ var $author$project$Generators$Encode$fromType = function (a) {
 						return 'encode' + $author$project$Utils$Utils$firstToUpper(
 							$stil4m$elm_syntax$Elm$Syntax$Node$value(v));
 					},
-					a.R));
+					a.Q));
 		}
 	}();
 	var declaration = $author$project$Utils$Utils$toFunctionName(name) + (generics + ' a =');
@@ -4211,8 +4156,7 @@ var $author$project$Generators$Encode$fromFile = function (a) {
 				'module ' + (A2(
 				$elm$core$String$join,
 				'.',
-				$author$project$Utils$Utils$dropLast(
-					$author$project$Utils$Utils$fileToModuleName(a))) + '.Encode exposing (..)'),
+				$author$project$Utils$Utils$fileToModuleName(a)) + '.Encode exposing (..)'),
 				'',
 				'{-| Generated by elm-json-interop.',
 				'-}',
@@ -4223,7 +4167,7 @@ var $author$project$Generators$Encode$fromFile = function (a) {
 				$author$project$Utils$Utils$fileToModuleName(a)) + ' as A'),
 				'import Utils.Json.Encode_ as E_',
 				'import Json.Encode as E',
-				A2($author$project$Utils$Imports$fromList, 'Encode', a.bp),
+				A2($author$project$Generators$Imports$fromList, 'Encode', a.bp),
 				'',
 				A2(
 				$elm$core$String$join,
@@ -4420,6 +4364,11 @@ var $stil4m$elm_syntax$Elm$Processing$findNextSplit = F2(
 							$elm$core$List$drop,
 							$elm$core$List$length(prefix),
 							exps)))));
+	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
 	});
 var $elm$core$Dict$Black = 1;
 var $elm$core$Dict$RBNode_elm_builtin = F5(
@@ -5040,7 +4989,7 @@ var $stil4m$elm_syntax$Elm$Inspector$inspectValueConstructor = F3(
 			$elm$core$List$foldl,
 			$stil4m$elm_syntax$Elm$Inspector$inspectTypeAnnotation(config),
 			context,
-			valueConstructor.P);
+			valueConstructor.O);
 	});
 var $stil4m$elm_syntax$Elm$Inspector$inspectTypeInner = F3(
 	function (config, typeDecl, context) {
@@ -5362,7 +5311,7 @@ var $stil4m$elm_syntax$Elm$Processing$buildSingle = F2(
 							_List_Nil,
 							A2(
 								$elm$core$Dict$get,
-								$stil4m$elm_syntax$Elm$Syntax$Node$value(imp.O),
+								$stil4m$elm_syntax$Elm$Syntax$Node$value(imp.S),
 								moduleIndex))));
 			} else {
 				var _v2 = _v0.a;
@@ -5390,7 +5339,7 @@ var $stil4m$elm_syntax$Elm$Processing$buildSingle = F2(
 								_List_Nil,
 								A2(
 									$elm$core$Dict$get,
-									$stil4m$elm_syntax$Elm$Syntax$Node$value(imp.O),
+									$stil4m$elm_syntax$Elm$Syntax$Node$value(imp.S),
 									moduleIndex)))));
 			}
 		}
@@ -5436,7 +5385,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 				$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 				$stil4m$elm_syntax$Elm$Syntax$Exposing$All($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5461,7 +5410,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 							$stil4m$elm_syntax$Elm$Syntax$Exposing$InfixExpose('::'))
 						])))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5485,7 +5434,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 									$elm$core$Maybe$Just($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange))))
 						])))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5509,7 +5458,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 									$elm$core$Maybe$Just($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange))))
 						])))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5518,7 +5467,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 		{
 		bl: $elm$core$Maybe$Nothing,
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5527,7 +5476,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 		{
 		bl: $elm$core$Maybe$Nothing,
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5536,7 +5485,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 		{
 		bl: $elm$core$Maybe$Nothing,
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5557,7 +5506,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 								A2($stil4m$elm_syntax$Elm$Syntax$Exposing$ExposedType, 'Program', $elm$core$Maybe$Nothing)))
 						])))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5582,7 +5531,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 							$stil4m$elm_syntax$Elm$Syntax$Exposing$InfixExpose('!'))
 						])))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -5603,7 +5552,7 @@ var $stil4m$elm_syntax$Elm$DefaultImports$defaults = _List_fromArray(
 								A2($stil4m$elm_syntax$Elm$Syntax$Exposing$ExposedType, 'Sub', $elm$core$Maybe$Nothing)))
 						])))),
 		bw: $elm$core$Maybe$Nothing,
-		O: A2(
+		S: A2(
 			$stil4m$elm_syntax$Elm$Syntax$Node$Node,
 			$stil4m$elm_syntax$Elm$Syntax$Range$emptyRange,
 			_List_fromArray(
@@ -6094,7 +6043,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$Function = F3(
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Expression$FunctionImplementation = F3(
 	function (name, _arguments, expression) {
-		return {P: _arguments, N: expression, T: name};
+		return {O: _arguments, N: expression, T: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Expression$Lambda = F2(
 	function (args, expression) {
@@ -6117,6 +6066,10 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$PrefixOperator = function (a) {
 	return {$: 5, a: a};
 };
 var $stil4m$elm_syntax$Elm$Syntax$Expression$UnitExpr = {$: 0};
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
 var $stil4m$elm_syntax$Combine$andThen = F2(
 	function (f, _v0) {
 		var p = _v0;
@@ -6923,7 +6876,7 @@ var $stil4m$elm_syntax$Elm$Syntax$Pattern$ParenthesizedPattern = function (a) {
 };
 var $stil4m$elm_syntax$Elm$Syntax$Pattern$QualifiedNameRef = F2(
 	function (moduleName, name) {
-		return {O: moduleName, T: name};
+		return {S: moduleName, T: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Pattern$StringPattern = function (a) {
 	return {$: 3, a: a};
@@ -9891,11 +9844,11 @@ var $stil4m$elm_syntax$Elm$Parser$Typings$DefinedType = F2(
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Type$Type = F4(
 	function (documentation, name, generics, constructors) {
-		return {bc: constructors, bh: documentation, R: generics, T: name};
+		return {bc: constructors, bh: documentation, Q: generics, T: name};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$TypeAlias$TypeAlias = F4(
 	function (documentation, name, generics, typeAnnotation) {
-		return {bh: documentation, R: generics, T: name, bL: typeAnnotation};
+		return {bh: documentation, Q: generics, T: name, bL: typeAnnotation};
 	});
 var $stil4m$elm_syntax$Elm$Parser$Typings$genericList = $stil4m$elm_syntax$Combine$many(
 	A2(
@@ -9908,7 +9861,7 @@ var $stil4m$elm_syntax$Elm$Parser$Typings$typePrefix = A2(
 	$stil4m$elm_syntax$Combine$string('type'));
 var $stil4m$elm_syntax$Elm$Syntax$Type$ValueConstructor = F2(
 	function (name, _arguments) {
-		return {P: _arguments, T: name};
+		return {O: _arguments, T: name};
 	});
 var $stil4m$elm_syntax$Elm$Parser$TypeAnnotation$typeAnnotationNonGreedy = $stil4m$elm_syntax$Combine$choice(
 	_List_fromArray(
@@ -10111,7 +10064,7 @@ var $stil4m$elm_syntax$Elm$Parser$File$fileDeclarations = $stil4m$elm_syntax$Com
 		$stil4m$elm_syntax$Elm$Parser$Declarations$declaration));
 var $stil4m$elm_syntax$Elm$Syntax$Import$Import = F3(
 	function (moduleName, moduleAlias, exposingList) {
-		return {bl: exposingList, bw: moduleAlias, O: moduleName};
+		return {bl: exposingList, bw: moduleAlias, S: moduleName};
 	});
 var $stil4m$elm_syntax$Elm$Parser$Tokens$asToken = $stil4m$elm_syntax$Combine$fromCore(
 	$elm$parser$Parser$keyword('as'));
@@ -10248,7 +10201,7 @@ var $stil4m$elm_syntax$Elm$Parser$Imports$setupNode = F2(
 			[
 				$elm$core$Maybe$Just(start),
 				$elm$core$Maybe$Just(
-				$stil4m$elm_syntax$Elm$Syntax$Node$range(imp.O)),
+				$stil4m$elm_syntax$Elm$Syntax$Node$range(imp.S)),
 				A2($elm$core$Maybe$map, $stil4m$elm_syntax$Elm$Syntax$Node$range, imp.bl),
 				A2($elm$core$Maybe$map, $stil4m$elm_syntax$Elm$Syntax$Node$range, imp.bw)
 			]);
@@ -10330,7 +10283,7 @@ var $stil4m$elm_syntax$Elm$Parser$Modules$whereBlock = A2(
 	$stil4m$elm_syntax$Combine$map,
 	function (pairs) {
 		return {
-			Q: A2(
+			P: A2(
 				$elm$core$Maybe$map,
 				$elm$core$Tuple$second,
 				$elm$core$List$head(
@@ -10374,7 +10327,7 @@ var $stil4m$elm_syntax$Elm$Parser$Modules$effectModuleDefinition = function () {
 	var createEffectModule = F3(
 		function (name, whereClauses, exp) {
 			return $stil4m$elm_syntax$Elm$Syntax$Module$EffectModule(
-				{Q: whereClauses.Q, bl: exp, O: name, aq: whereClauses.aq});
+				{P: whereClauses.P, bl: exp, S: name, aq: whereClauses.aq});
 		});
 	return A2(
 		$stil4m$elm_syntax$Combine$andMap,
@@ -10407,7 +10360,7 @@ var $stil4m$elm_syntax$Elm$Parser$Modules$effectModuleDefinition = function () {
 }();
 var $stil4m$elm_syntax$Elm$Syntax$Module$DefaultModuleData = F2(
 	function (moduleName, exposingList) {
-		return {bl: exposingList, O: moduleName};
+		return {bl: exposingList, S: moduleName};
 	});
 var $stil4m$elm_syntax$Elm$Syntax$Module$NormalModule = function (a) {
 	return {$: 0, a: a};
@@ -10628,6 +10581,30 @@ var $author$project$Interop$NodeJs$realPath = function (_v0) {
 		$elm$json$Json$Decode$string,
 		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').realpath(_v0, 'utf8')))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 };
+var $author$project$Main$split = function (a) {
+	var _v0 = $elm$core$List$reverse(
+		A2($elm$core$String$split, '/', a));
+	if (_v0.b) {
+		var b = _v0.a;
+		var rest = _v0.b;
+		return _Utils_Tuple2(
+			A2(
+				$elm$core$String$join,
+				'/',
+				$elm$core$List$reverse(rest)),
+			A2(
+				$elm$core$String$join,
+				'.',
+				$elm$core$List$reverse(
+					A2(
+						$elm$core$List$drop,
+						1,
+						$elm$core$List$reverse(
+							A2($elm$core$String$split, '.', b))))));
+	} else {
+		return _Utils_Tuple2(a, '');
+	}
+};
 var $author$project$Utils$Task_$fromMaybe = F2(
 	function (x, a) {
 		if (!a.$) {
@@ -10637,7 +10614,19 @@ var $author$project$Utils$Task_$fromMaybe = F2(
 			return $elm$core$Task$fail(x);
 		}
 	});
+var $elm$regex$Regex$Match = F4(
+	function (match, index, number, submatches) {
+		return {bq: index, bv: match, bz: number, bI: submatches};
+	});
 var $elm$regex$Regex$find = _Regex_findAtMost(_Regex_infinity);
+var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
+var $elm$regex$Regex$fromString = function (string) {
+	return A2(
+		$elm$regex$Regex$fromStringWith,
+		{a9: false, by: false},
+		string);
+};
+var $elm$regex$Regex$never = _Regex_never;
 var $author$project$Main$srcFolderPath = function (path) {
 	return A2(
 		$elm$core$Maybe$map,
@@ -10669,11 +10658,13 @@ var $author$project$Interop$NodeJs$writeFile = F2(
 var $author$project$Main$processFile = function (path) {
 	var generateTask = F4(
 		function (binPath, fullPath, srcFolder, rawFile) {
-			var folderPath = $author$project$Main$dirname(fullPath);
 			var file = A2($stil4m$elm_syntax$Elm$Processing$process, $stil4m$elm_syntax$Elm$Processing$init, rawFile);
+			var _v0 = $author$project$Main$split(fullPath);
+			var dirname = _v0.a;
+			var basename = _v0.b;
 			return A2(
 				$elm$core$Task$map,
-				function (_v0) {
+				function (_v1) {
 					return fullPath;
 				},
 				$elm$core$Task$sequence(
@@ -10682,13 +10673,14 @@ var $author$project$Main$processFile = function (path) {
 							$author$project$Interop$NodeJs$mkDir(srcFolder + 'Utils/Json'),
 							A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Json/Encode_.elm', srcFolder + 'Utils/Json/Encode_.elm'),
 							A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Json/Decode_.elm', srcFolder + 'Utils/Json/Decode_.elm'),
+							$author$project$Interop$NodeJs$mkDir(dirname + ('/' + basename)),
 							A2(
 							$author$project$Interop$NodeJs$writeFile,
-							folderPath + '/Encode.elm',
+							dirname + ('/' + (basename + '/Encode.elm')),
 							$author$project$Generators$Encode$fromFile(file)),
 							A2(
 							$author$project$Interop$NodeJs$writeFile,
-							folderPath + '/Decode.elm',
+							dirname + ('/' + (basename + '/Decode.elm')),
 							$author$project$Generators$Decode$fromFile(file))
 						])));
 		});
