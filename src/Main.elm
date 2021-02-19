@@ -82,8 +82,8 @@ usage =
 processFile : String -> Task String String
 processFile path =
     let
-        generateTask : String -> String -> String -> RawFile -> Task String String
-        generateTask binPath fullPath srcFolder rawFile =
+        generateTask : String -> String -> RawFile -> Task String String
+        generateTask binPath fullPath rawFile =
             let
                 ( dirname, basename ) =
                     fullPath |> split
@@ -92,23 +92,29 @@ processFile path =
                 file =
                     rawFile |> Processing.process Processing.init
             in
-            [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
-            , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
-            , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
-            , NodeJs.mkDir (dirname ++ "/" ++ basename)
-            , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
-            , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
-            ]
+            (case fullPath |> srcFolderPath of
+                Just srcFolder ->
+                    [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
+                    , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
+                    , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
+                    ]
+
+                Nothing ->
+                    []
+            )
+                ++ [ NodeJs.mkDir (dirname ++ "/" ++ basename)
+                   , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
+                   , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
+                   ]
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)
     in
     Task.map2
         (\a b ->
-            Task.map2
-                (\c d ->
-                    generateTask a b c d
+            Task.map
+                (\c ->
+                    generateTask a b c
                 )
-                (srcFolderPathTask b)
                 (readAndParseElmFile b)
                 |> Task.andThen identity
         )
@@ -128,11 +134,6 @@ srcFolderPath path =
         |> Regex.find regex
         |> List.head
         |> Maybe.map .match
-
-
-srcFolderPathTask : String -> Task String String
-srcFolderPathTask a =
-    a |> srcFolderPath |> Task_.fromMaybe "Elm file must be inside \"src\" folder."
 
 
 readAndParseElmFile : String -> Task String RawFile
