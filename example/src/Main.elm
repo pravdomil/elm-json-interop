@@ -22,38 +22,39 @@ test =
 
 sample : Msg
 sample =
-    let
-        ( a, b ) =
-            ( Anonymous, "hello" )
-
-        message : Message User String
-        message =
-            { -- Sum Types
-              unit = ()
-            , bool = True
-            , int = 1
-            , float = pi
-            , char = 'a'
-            , string = "a"
-
-            --
-            , list = [ { a = a, b = b } ]
-            , array = Array.fromList [ { a = a, b = b } ]
-
-            --
-            , maybe = Just a
-            , result = Ok a
-
-            --
-            , set = Set.fromList [ 1 ]
-            , dict = Dict.fromList [ ( 1, a ) ]
-
-            -- Product Types
-            , tuple = ( a, b )
-            , tuple3 = ( a, b, b )
-            , record = {}
-            }
-    in
     ReceivedMessages
         [ message
         ]
+
+
+message : Message User String
+message =
+    let
+        ( a, b ) =
+            ( Anonymous, "hello" )
+    in
+    { -- Sum Types
+      unit = ()
+    , bool = True
+    , int = 1
+    , float = pi
+    , char = 'a'
+    , string = "a"
+
+    --
+    , list = [ { a = a, b = b } ]
+    , array = Array.fromList [ { a = a, b = b } ]
+
+    --
+    , maybe = Just a
+    , result = Ok a
+
+    --
+    , set = Set.fromList [ 1 ]
+    , dict = Dict.fromList [ ( 1, a ) ]
+
+    -- Product Types
+    , tuple = ( a, b )
+    , tuple3 = ( a, b, b )
+    , record = {}
+    }
