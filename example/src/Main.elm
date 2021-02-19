@@ -11,6 +11,15 @@ import Set
 import User exposing (..)
 
 
+test : Result Decode.Error Bool
+test =
+    sample
+        |> Msg.Encode.msg
+        |> Encode.encode 0
+        |> Decode.decodeString Msg.Decode.msg
+        |> Result.map ((==) sample)
+
+
 sample : Msg
 sample =
     let
@@ -41,12 +50,3 @@ sample =
           , dict = Dict.fromList [ ( 1, a ) ]
           }
         ]
-
-
-test : Result Decode.Error Bool
-test =
-    sample
-        |> Msg.Encode.msg
-        |> Encode.encode 0
-        |> Decode.decodeString Msg.Decode.msg
-        |> Result.map ((==) sample)
