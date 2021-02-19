@@ -14,4 +14,4 @@ npm i pravdomil/elm-json-interop -g
 elm-json-interop <File.elm>...
 ```
 
-For more information see [example folder](tests/src).
+For more information see [tests folder](tests).

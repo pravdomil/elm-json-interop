@@ -15,7 +15,7 @@ elm-ffi --shebang --run bin/elm-json-interop.js
 mv bin/elm-json-interop.js bin/elm-json-interop
 chmod +x bin/elm-json-interop
 
-# To build example.
+# To run tests.
 bin/elm-json-interop tests/Msg.elm
 bin/elm-json-interop tests/User.elm
 elm-format --yes tests/Msg/*.elm
