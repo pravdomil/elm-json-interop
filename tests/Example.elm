@@ -15,15 +15,17 @@ import User exposing (..)
 
 suite : Test
 suite =
-    test "Encodes and decodes sample." <|
-        \_ ->
-            Expect.equal (Ok True)
-                (msg
-                    |> Msg.Encode.msg
-                    |> Encode.encode 0
-                    |> Decode.decodeString Msg.Decode.msg
-                    |> Result.map ((==) msg)
-                )
+    describe "Sample test."
+        [ test "Encodes and decodes sample." <|
+            \_ ->
+                Expect.equal (Ok True)
+                    (msg
+                        |> Msg.Encode.msg
+                        |> Encode.encode 0
+                        |> Decode.decodeString Msg.Decode.msg
+                        |> Result.map ((==) msg)
+                    )
+        ]
 
 
 msg : Msg
