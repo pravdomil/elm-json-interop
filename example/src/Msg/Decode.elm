@@ -4,8 +4,8 @@ module Msg.Decode exposing (..)
 -}
 
 import Json.Decode as D exposing (Decoder)
-import Msg.Msg as A
-import User.Decode as User_User exposing (user)
+import Msg as A
+import User.Decode as User exposing (user)
 import Utils.Json.Decode_ as D_
 
 

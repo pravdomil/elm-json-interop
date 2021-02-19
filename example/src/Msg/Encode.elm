@@ -4,8 +4,8 @@ module Msg.Encode exposing (..)
 -}
 
 import Json.Encode as E
-import Msg.Msg as A
-import User.Encode as User_User exposing (user)
+import Msg as A
+import User.Encode as User exposing (user)
 import Utils.Json.Encode_ as E_
 
 

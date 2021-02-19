@@ -4,7 +4,7 @@ module User.Decode exposing (..)
 -}
 
 import Json.Decode as D exposing (Decoder)
-import User.User as A
+import User as A
 import Utils.Json.Decode_ as D_
 
 
