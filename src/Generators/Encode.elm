@@ -12,8 +12,6 @@ import Utils.Imports as Imports
 import Utils.Utils exposing (dropLast, fileToModuleName, firstToUpper, isIdType, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 
-{-| To get Elm module for encoding types in file.
--}
 fromFile : File -> String
 fromFile a =
     [ "module " ++ (a |> fileToModuleName |> dropLast |> String.join ".") ++ ".Encode exposing (..)"
@@ -32,8 +30,6 @@ fromFile a =
         |> String.join "\n"
 
 
-{-| To maybe get encoder from declaration.
--}
 fromDeclaration : Node Declaration -> Maybe String
 fromDeclaration a =
     case a |> Node.value of
@@ -47,15 +43,11 @@ fromDeclaration a =
             Nothing
 
 
-{-| To get encoder from type alias.
--}
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
     fromType a ++ " " ++ fromTypeAnnotation (letterByInt 0) a.typeAnnotation
 
 
-{-| To get encoder from custom type.
--}
 fromCustomType : Type -> String
 fromCustomType a =
     let
@@ -66,8 +58,6 @@ fromCustomType a =
     fromType a ++ "\n  case a of\n    " ++ cases
 
 
-{-| To get encoder from custom type constructor.
--}
 fromCustomTypeConstructor : Int -> Node ValueConstructor -> String
 fromCustomTypeConstructor i (Node _ a) =
     let
@@ -104,8 +94,6 @@ fromCustomTypeConstructor i (Node _ a) =
     "A." ++ name ++ arguments ++ " -> E.object [ " ++ encoder ++ " ]"
 
 
-{-| To get encoder from type.
--}
 fromType : { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 fromType a =
     let
@@ -138,8 +126,6 @@ fromType a =
     signature ++ declaration
 
 
-{-| To get encoder from type annotation.
--}
 fromTypeAnnotation : String -> Node TypeAnnotation -> String
 fromTypeAnnotation parameter a =
     (case a |> Node.value of
@@ -168,8 +154,6 @@ fromTypeAnnotation parameter a =
         |> wrapInParentheses
 
 
-{-| To get encoder from typed.
--}
 fromTyped : String -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 fromTyped parameter (Node _ ( moduleName, name )) a =
     let
@@ -227,8 +211,6 @@ fromTyped parameter (Node _ ( moduleName, name )) a =
     call fn parameter a
 
 
-{-| To get encoder for tuple.
--}
 fromTuple : String -> List (Node TypeAnnotation) -> String
 fromTuple parameter a =
     let
@@ -243,15 +225,11 @@ fromTuple parameter a =
     call fn parameter a
 
 
-{-| To get encoder from record.
--}
 fromRecord : String -> RecordDefinition -> String
 fromRecord parameter a =
     "E.object [ " ++ (a |> List.map (fromRecordField parameter) |> String.join ", ") ++ " ]"
 
 
-{-| To get encoder from record field.
--}
 fromRecordField : String -> Node RecordField -> String
 fromRecordField parameter (Node _ ( Node _ a, b )) =
     let
@@ -270,7 +248,6 @@ fromRecordField parameter (Node _ ( Node _ a, b )) =
 --
 
 
-{-| -}
 call : String -> String -> List (Node TypeAnnotation) -> String
 call fn parameter a =
     let
@@ -288,8 +265,6 @@ call fn parameter a =
     fn ++ encoders ++ parameterToString parameter
 
 
-{-| To convert parameter to string.
--}
 parameterToString : String -> String
 parameterToString a =
     " " ++ (a |> wrapInParentheses)

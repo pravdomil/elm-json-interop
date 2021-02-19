@@ -6,7 +6,6 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Utils.Utils exposing (dropLast, firstToLower)
 
 
-{-| -}
 fromList : String -> List (Node Import) -> String
 fromList suffix a =
     a
@@ -15,7 +14,6 @@ fromList suffix a =
         |> String.join "\n"
 
 
-{-| -}
 fromImport : String -> Node Import -> Maybe String
 fromImport suffix (Node _ a) =
     if a.moduleName |> Node.value |> List.length |> (==) 1 then
@@ -37,7 +35,6 @@ fromImport suffix (Node _ a) =
             |> Just
 
 
-{-| -}
 fromExposing : Node Exposing -> String
 fromExposing a =
     case a |> Node.value of
@@ -53,7 +50,6 @@ fromExposing a =
                     " exposing (" ++ (c |> String.join ", ") ++ ")"
 
 
-{-| -}
 fromTopLevelExpose : Node TopLevelExpose -> Maybe String
 fromTopLevelExpose a =
     (case a |> Node.value of
@@ -69,7 +65,6 @@ fromTopLevelExpose a =
         |> Maybe.map firstToLower
 
 
-{-| -}
 shouldImport : Node Import -> Bool
 shouldImport b =
     case b |> Node.value |> .moduleName |> Node.value of

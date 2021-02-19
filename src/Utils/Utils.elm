@@ -22,7 +22,6 @@ wrapInParentheses a =
     "(" ++ a ++ ")"
 
 
-{-| -}
 isIdType : Node TypeAnnotation -> Bool
 isIdType a =
     case a of
@@ -58,7 +57,6 @@ firstToLower a =
     a |> mapFirstLetter String.toLower
 
 
-{-| -}
 mapFirstLetter : (String -> String) -> String -> String
 mapFirstLetter fn a =
     (a |> String.left 1 |> fn) ++ (a |> String.dropLeft 1)
@@ -93,7 +91,6 @@ regexReplace regex replacement a =
 --
 
 
-{-| -}
 dropLast : List a -> List a
 dropLast a =
     a |> List.reverse |> List.drop 1 |> List.reverse
@@ -103,7 +100,6 @@ dropLast a =
 --
 
 
-{-| -}
 toFunctionName : String -> String
 toFunctionName a =
     a

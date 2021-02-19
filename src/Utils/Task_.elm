@@ -1,12 +1,9 @@
 module Utils.Task_ exposing (..)
 
-{-| -}
-
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (..)
 
 
-{-| -}
 fromMaybe : x -> Maybe a -> Task x a
 fromMaybe x a =
     case a of
@@ -17,7 +14,6 @@ fromMaybe x a =
             Task.fail x
 
 
-{-| -}
 fromResult : Result x a -> Task x a
 fromResult a =
     case a of
@@ -32,7 +28,6 @@ fromResult a =
 --
 
 
-{-| -}
 andThenDecode : Decoder a -> Task String Decode.Value -> Task String a
 andThenDecode decoder a =
     a
@@ -45,7 +40,6 @@ andThenDecode decoder a =
             )
 
 
-{-| -}
 andThenMaybe : (a -> Task x (Maybe b)) -> Task x (Maybe a) -> Task x (Maybe b)
 andThenMaybe fn a =
     a
@@ -60,7 +54,6 @@ andThenMaybe fn a =
             )
 
 
-{-| -}
 andThenList : (a -> Task x b) -> Task x (List a) -> Task x (List b)
 andThenList fn a =
     a
@@ -76,7 +69,6 @@ andThenList fn a =
 --
 
 
-{-| -}
 apply : Task x a -> Task x (a -> b) -> Task x b
 apply task a =
     Task.map2 (\fn v -> fn v) a task

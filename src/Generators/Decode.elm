@@ -13,8 +13,6 @@ import Utils.Imports as Imports
 import Utils.Utils exposing (dropLast, fileToModuleName, isIdType, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 
-{-| To get Elm module for decoding types in file.
--}
 fromFile : File -> String
 fromFile a =
     [ "module " ++ (a |> fileToModuleName |> dropLast |> String.join ".") ++ ".Decode exposing (..)"
@@ -33,8 +31,6 @@ fromFile a =
         |> String.join "\n"
 
 
-{-| To maybe get decoder from declaration.
--}
 fromDeclaration : Node Declaration -> Maybe String
 fromDeclaration a =
     case a |> Node.value of
@@ -48,15 +44,11 @@ fromDeclaration a =
             Nothing
 
 
-{-| To get decoder from type alias.
--}
 fromTypeAlias : TypeAlias -> String
 fromTypeAlias a =
     a |> fromType ("\n  " ++ fromTypeAnnotation a.typeAnnotation)
 
 
-{-| To get decoder from custom type.
--}
 fromCustomType : Type -> String
 fromCustomType a =
     let
@@ -73,8 +65,6 @@ fromCustomType a =
     a |> fromType ("\n  D.field \"_\" D.int |> D.andThen (\\i___ -> case i___ of\n    " ++ cases ++ fail ++ "\n  )")
 
 
-{-| To get decoder from custom type constructor.
--}
 fromCustomTypeConstructor : Int -> Node ValueConstructor -> String
 fromCustomTypeConstructor i (Node _ a) =
     let
@@ -112,8 +102,6 @@ fromCustomTypeConstructor i (Node _ a) =
     String.fromInt i ++ " -> " ++ decoder
 
 
-{-| To get decoder from type.
--}
 fromType : String -> { a | documentation : Maybe (Node Documentation), name : Node String, generics : List (Node String) } -> String
 fromType body a =
     let
@@ -161,8 +149,6 @@ fromType body a =
     signature ++ declaration
 
 
-{-| To get decoder from type annotation.
--}
 fromTypeAnnotation : Node TypeAnnotation -> String
 fromTypeAnnotation a =
     (case a |> Node.value of
@@ -191,8 +177,6 @@ fromTypeAnnotation a =
         |> wrapInParentheses
 
 
-{-| To get decoder from typed.
--}
 fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> String
 fromTyped (Node _ ( moduleName, name )) arguments =
     let
@@ -259,8 +243,6 @@ fromTyped (Node _ ( moduleName, name )) arguments =
     fn ++ arguments_
 
 
-{-| To get decoder from tuple.
--}
 fromTuple : List (Node TypeAnnotation) -> String
 fromTuple a =
     let
@@ -275,8 +257,6 @@ fromTuple a =
     fn ++ " " ++ (a |> List.map fromTypeAnnotation |> String.join " ")
 
 
-{-| To get decoder from record.
--}
 fromRecord : RecordDefinition -> String
 fromRecord a =
     let
@@ -303,8 +283,6 @@ fromRecord a =
         mapFn (List.length a) ++ " " ++ constructorFn ++ " " ++ (a |> List.map fromRecordField |> String.join " ")
 
 
-{-| To get decoder from record field.
--}
 fromRecordField : Node RecordField -> String
 fromRecordField (Node _ ( Node _ a, b )) =
     let
@@ -332,8 +310,6 @@ fromRecordField (Node _ ( Node _ a, b )) =
 --
 
 
-{-| To get map function name by argument count.
--}
 mapFn : Int -> String
 mapFn a =
     if a == 1 then

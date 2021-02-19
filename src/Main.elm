@@ -25,7 +25,6 @@ main =
         }
 
 
-{-| -}
 init : Cmd ()
 init =
     run
@@ -119,7 +118,6 @@ processFile path =
         |> Task.andThen identity
 
 
-{-| -}
 srcFolderPath : String -> Maybe String
 srcFolderPath path =
     path
@@ -128,13 +126,11 @@ srcFolderPath path =
         |> Maybe.map .match
 
 
-{-| -}
 srcFolderPathTask : String -> Task String String
 srcFolderPathTask a =
     a |> srcFolderPath |> Task_.fromMaybe "Elm file must be inside \"src\" folder."
 
 
-{-| -}
 readAndParseElmFile : String -> Task String RawFile
 readAndParseElmFile a =
     a
