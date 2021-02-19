@@ -5,7 +5,6 @@ import Elm.Syntax.Module as Module exposing (Module)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Json.Encode as Encode
-import Regex
 
 
 {-| To get module name from file.
@@ -71,24 +70,6 @@ mapFirstLetter fn a =
 toJsonString : String -> String
 toJsonString a =
     Encode.string a |> Encode.encode 0
-
-
-
---
-
-
-{-| To do simple regular expression replace.
--}
-regexReplace : String -> (String -> String) -> String -> String
-regexReplace regex replacement a =
-    a
-        |> Regex.replace
-            (regex |> Regex.fromString |> Maybe.withDefault Regex.never)
-            (.match >> replacement)
-
-
-
---
 
 
 toFunctionName : String -> String
