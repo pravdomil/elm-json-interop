@@ -25,13 +25,13 @@ suite =
                         |> Decode.decodeString Msg.Decode.msg
                         |> Result.map ((==) msg)
                     )
-        , test "Decoding snapshot matches sample." <|
+        , test "Snapshot matches sample." <|
             \_ ->
                 Expect.equal (Ok msg)
                     (snapshot
                         |> Decode.decodeString Msg.Decode.msg
                     )
-        , test "Encoding sample matches snapshot." <|
+        , test "Sample matches snapshot." <|
             \_ ->
                 Expect.equal snapshot
                     (msg
