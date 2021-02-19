@@ -86,13 +86,8 @@ processFile path =
         generateTask : String -> String -> String -> RawFile -> Task String String
         generateTask binPath fullPath srcFolder rawFile =
             let
-                folderPath : String
-                folderPath =
-                    fullPath |> dirname
-
-                basename_ : String
-                basename_ =
-                    fullPath |> basename ".elm"
+                ( dirname, basename ) =
+                    fullPath |> split
 
                 file : File
                 file =
@@ -101,9 +96,9 @@ processFile path =
             [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
             , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
             , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
-            , NodeJs.mkDir (srcFolder ++ "/" ++ basename_)
-            , NodeJs.writeFile (folderPath ++ "/" ++ basename_ ++ "/Encode.elm") (Encode.fromFile file)
-            , NodeJs.writeFile (folderPath ++ "/" ++ basename_ ++ "/Decode.elm") (Decode.fromFile file)
+            , NodeJs.mkDir (dirname ++ "/" ++ basename)
+            , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
+            , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
             ]
                 |> Task.sequence
                 |> Task.map (\_ -> fullPath)
@@ -153,23 +148,15 @@ readAndParseElmFile a =
 --
 
 
-{-| To get basename.
+{-| To get dirname and basename.
 -}
-basename : String -> String -> String
-basename extension a =
-    a
-        |> regexReplace "^.*/" (always "")
-        |> (\v ->
-                if v |> String.endsWith extension then
-                    v |> String.dropRight (extension |> String.length)
+split : String -> ( String, String )
+split a =
+    case a |> String.split "/" |> List.reverse of
+        b :: rest ->
+            ( rest |> List.reverse |> String.join "/"
+            , b |> String.split "." |> List.reverse |> List.drop 1 |> List.reverse |> String.join "."
+            )
 
-                else
-                    v
-           )
-
-
-{-| To get dirname.
--}
-dirname : String -> String
-dirname a =
-    a |> regexReplace "/[^/]+$" (always "")
+        _ ->
+            ( a, "" )
