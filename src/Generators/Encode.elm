@@ -8,7 +8,7 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
-import Utils.Imports as Imports
+import Generators.Imports as Imports
 import Utils.Utils exposing (dropLast, fileToModuleName, firstToUpper, isIdType, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 

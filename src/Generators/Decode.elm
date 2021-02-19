@@ -9,7 +9,7 @@ import Elm.Syntax.Range exposing (emptyRange)
 import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
-import Utils.Imports as Imports
+import Generators.Imports as Imports
 import Utils.Utils exposing (dropLast, fileToModuleName, isIdType, letterByInt, toFunctionName, toJsonString, wrapInParentheses)
 
 
