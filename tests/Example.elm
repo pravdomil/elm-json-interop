@@ -19,30 +19,30 @@ suite =
         [ test "Encodes and decodes sample." <|
             \_ ->
                 Expect.equal (Ok True)
-                    (msg
+                    (sample
                         |> Msg.Encode.msg
                         |> Encode.encode 0
                         |> Decode.decodeString Msg.Decode.msg
-                        |> Result.map ((==) msg)
+                        |> Result.map ((==) sample)
                     )
         , test "Snapshot matches sample." <|
             \_ ->
-                Expect.equal (Ok msg)
+                Expect.equal (Ok sample)
                     (snapshot
                         |> Decode.decodeString Msg.Decode.msg
                     )
         , test "Sample matches snapshot." <|
             \_ ->
                 Expect.equal snapshot
-                    (msg
+                    (sample
                         |> Msg.Encode.msg
                         |> Encode.encode 2
                     )
         ]
 
 
-msg : Msg
-msg =
+sample : Msg
+sample =
     ReceivedMessages
         [ message
         ]
