@@ -13,8 +13,6 @@ import Task exposing (Task)
 import Utils.Task_ as Task_
 
 
-{-| To define main entry point.
--}
 main : Program () () ()
 main =
     Platform.worker

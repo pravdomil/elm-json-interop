@@ -7,8 +7,6 @@ import Json.Decode as Decode
 import Task exposing (Task)
 
 
-{-| To define exception.
--}
 type alias Exception =
     String
 
