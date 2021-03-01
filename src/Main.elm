@@ -25,8 +25,17 @@ main =
 mainCmd : Cmd ()
 mainCmd =
     mainTask
-        |> Task.andThen NodeJs.consoleLog
-        |> Task.onError (\v -> NodeJs.consoleError v |> Task.andThen (\_ -> NodeJs.processExit 1))
+        |> Task.andThen
+            (\v ->
+                v |> NodeJs.consoleLog
+            )
+        |> Task.onError
+            (\v ->
+                v
+                    |> (++) "elm-json-interop failed: "
+                    |> NodeJs.consoleError
+                    |> Task.andThen (\_ -> NodeJs.processExit 1)
+            )
         |> Task.attempt (\_ -> ())
 
 
