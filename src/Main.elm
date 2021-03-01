@@ -94,39 +94,11 @@ mainTask =
 
 processFile : String -> Task Exception String
 processFile path =
-    let
-        task : String -> String -> RawFile -> Task Exception String
-        task binPath fullPath rawFile =
-            let
-                ( dirname, basename ) =
-                    fullPath |> split
-
-                file : File
-                file =
-                    rawFile |> Processing.process Processing.init
-            in
-            (case fullPath |> srcFolderPath of
-                Just srcFolder ->
-                    [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
-                    , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
-                    , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
-                    ]
-
-                Nothing ->
-                    []
-            )
-                ++ [ NodeJs.mkDir (dirname ++ "/" ++ basename)
-                   , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
-                   , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
-                   ]
-                |> Task.sequence
-                |> Task.map (\_ -> fullPath)
-    in
     Task.map2
         (\a b ->
             Task.map
                 (\c ->
-                    task a b c
+                    processFile_ a b c
                 )
                 (readAndParseElmFile b)
                 |> Task.andThen identity
@@ -134,6 +106,38 @@ processFile path =
         NodeJs.dirname__
         (NodeJs.realPath path)
         |> Task.andThen identity
+
+
+processFile_ : String -> String -> RawFile -> Task Exception String
+processFile_ binPath fullPath rawFile =
+    let
+        ( dirname, basename ) =
+            fullPath |> split
+
+        file : File
+        file =
+            rawFile |> Processing.process Processing.init
+    in
+    (case fullPath |> srcFolderPath of
+        Just srcFolder ->
+            [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
+            , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
+            , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
+            ]
+
+        Nothing ->
+            []
+    )
+        ++ [ NodeJs.mkDir (dirname ++ "/" ++ basename)
+           , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
+           , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
+           ]
+        |> Task.sequence
+        |> Task.map (\_ -> fullPath)
+
+
+
+--
 
 
 srcFolderPath : String -> Maybe String
@@ -163,10 +167,6 @@ readAndParseElmFile a =
                         )
                     |> Task_.fromResult
             )
-
-
-
---
 
 
 {-| To get dirname and basename.
