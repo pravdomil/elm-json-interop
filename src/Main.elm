@@ -23,28 +23,35 @@ main =
         }
 
 
+type Error
+    = BadArguments
+    | Exception JavaScript.Exception
+
+
 mainCmd : Cmd ()
 mainCmd =
     mainTask
         |> Task.andThen
             (\v ->
-                case v of
-                    Ok vv ->
-                        NodeJs.consoleLog vv
-
-                    Err vv ->
-                        NodeJs.consoleLog vv
-                            |> Task.andThen (\_ -> NodeJs.processExit 1)
+                NodeJs.consoleLog v
+                    |> Task.mapError Exception
             )
         |> Task.onError
             (\v ->
-                NodeJs.consoleError ("elm-json-interop failed: " ++ JavaScript.exceptionToString v)
+                (case v of
+                    BadArguments ->
+                        usage
+
+                    Exception vv ->
+                        "elm-json-interop failed: " ++ JavaScript.exceptionToString vv
+                )
+                    |> NodeJs.consoleError
                     |> Task.andThen (\_ -> NodeJs.processExit 1)
             )
         |> Task.attempt (\_ -> ())
 
 
-mainTask : Task Exception (Result String String)
+mainTask : Task Error String
 mainTask =
     let
         fileCount : List a -> String
@@ -68,7 +75,7 @@ mainTask =
         (\args ->
             case args |> List.drop 2 of
                 [] ->
-                    Task.fail usage
+                    Task.fail BadArguments
 
                 a ->
                     a
@@ -78,8 +85,11 @@ mainTask =
                             (\v ->
                                 "JSON encoders/decoders have been generated for " ++ fileCount v ++ "."
                             )
+                        |> Task.mapError Exception
         )
-        NodeJs.getArguments
+        (NodeJs.getArguments
+            |> Task.mapError Exception
+        )
 
 
 usage : String
@@ -87,10 +97,10 @@ usage =
     "Usage: elm-json-interop <File.elm>..."
 
 
-processFile : String -> Task String String
+processFile : String -> Task Exception String
 processFile path =
     let
-        generateTask : String -> String -> RawFile -> Task String String
+        generateTask : String -> String -> RawFile -> Task Exception String
         generateTask binPath fullPath rawFile =
             let
                 ( dirname, basename ) =
@@ -144,7 +154,7 @@ srcFolderPath path =
         |> Maybe.map .match
 
 
-readAndParseElmFile : String -> Task String RawFile
+readAndParseElmFile : String -> Task Exception RawFile
 readAndParseElmFile a =
     a
         |> NodeJs.readFile
@@ -152,7 +162,10 @@ readAndParseElmFile a =
             (\v ->
                 v
                     |> Elm.Parser.parse
-                    |> Result.mapError (\vv -> "I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
+                    |> Result.mapError
+                        (\vv ->
+                            JavaScript.Exception ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
+                        )
                     |> Task_.fromResult
             )
 
