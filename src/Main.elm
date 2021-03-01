@@ -6,6 +6,7 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.Decode as Decode
 import Generators.Encode as Encode
+import Interop.JavaScript as JavaScript exposing (Exception)
 import Interop.NodeJs as NodeJs
 import Parser exposing (deadEndsToString)
 import Regex
@@ -27,19 +28,23 @@ mainCmd =
     mainTask
         |> Task.andThen
             (\v ->
-                v |> NodeJs.consoleLog
+                case v of
+                    Ok vv ->
+                        NodeJs.consoleLog vv
+
+                    Err vv ->
+                        NodeJs.consoleLog vv
+                            |> Task.andThen (\_ -> NodeJs.processExit 1)
             )
         |> Task.onError
             (\v ->
-                v
-                    |> (++) "elm-json-interop failed: "
-                    |> NodeJs.consoleError
+                NodeJs.consoleError ("elm-json-interop failed: " ++ JavaScript.exceptionToString v)
                     |> Task.andThen (\_ -> NodeJs.processExit 1)
             )
         |> Task.attempt (\_ -> ())
 
 
-mainTask : Task String String
+mainTask : Task Exception (Result String String)
 mainTask =
     let
         fileCount : List a -> String
