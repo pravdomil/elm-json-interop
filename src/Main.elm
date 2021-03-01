@@ -40,7 +40,7 @@ mainCmd =
             (\v ->
                 (case v of
                     BadArguments ->
-                        usage
+                        "Usage: elm-json-interop <File.elm>..."
 
                     Exception vv ->
                         "elm-json-interop failed: " ++ JavaScript.exceptionToString vv
@@ -90,11 +90,6 @@ mainTask =
         (NodeJs.getArguments
             |> Task.mapError Exception
         )
-
-
-usage : String
-usage =
-    "Usage: elm-json-interop <File.elm>..."
 
 
 processFile : String -> Task Exception String
