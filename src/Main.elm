@@ -8,7 +8,7 @@ import Generators.Decode as Decode
 import Generators.Encode as Encode
 import Interop.JavaScript as JavaScript exposing (Exception)
 import Interop.NodeJs as NodeJs
-import Parser exposing (deadEndsToString)
+import Parser
 import Regex
 import Task exposing (Task)
 import Utils.Task_ as Task_
@@ -145,7 +145,7 @@ readAndParseElmFile a =
                     |> Elm.Parser.parse
                     |> Result.mapError
                         (\vv ->
-                            JavaScript.Exception ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
+                            JavaScript.Exception ("I can't parse \"" ++ a ++ "\", because: " ++ Parser.deadEndsToString vv ++ ".")
                         )
                     |> Task_.fromResult
             )
