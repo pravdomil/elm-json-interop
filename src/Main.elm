@@ -16,24 +16,22 @@ import Utils.Task_ as Task_
 main : Program () () ()
 main =
     Platform.worker
-        { init = \_ -> ( (), init )
+        { init = \_ -> ( (), mainCmd )
         , update = \_ _ -> ( (), Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
 
 
-init : Cmd ()
-init =
-    run
+mainCmd : Cmd ()
+mainCmd =
+    mainTask
         |> Task.andThen NodeJs.consoleLog
         |> Task.onError (\v -> NodeJs.consoleError v |> Task.andThen (\_ -> NodeJs.processExit 1))
         |> Task.attempt (\_ -> ())
 
 
-{-| To show usage or process input files.
--}
-run : Task String String
-run =
+mainTask : Task String String
+mainTask =
     let
         fileCount : List a -> String
         fileCount b =
