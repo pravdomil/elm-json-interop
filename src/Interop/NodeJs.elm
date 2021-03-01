@@ -1,6 +1,6 @@
 module Interop.NodeJs exposing (..)
 
-import Interop.JsCode as JsCode
+import Interop.JavaScript as JavaScript exposing (Exception)
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
 import Utils.Task_ as Task_
@@ -9,17 +9,17 @@ import Utils.Task_ as Task_
 {-| To get program arguments.
 <https://stackoverflow.com/questions/9725675/is-there-a-standard-format-for-command-line-shell-help-text>
 -}
-getArguments : Task String (List String)
+getArguments : Task Exception (List String)
 getArguments =
-    JsCode.eval "process.argv"
+    JavaScript.run "process.argv"
         |> Task_.andThenDecode (Decode.list Decode.string)
 
 
 {-| To get stdin.
 -}
-getStdin : Task String (Maybe String)
+getStdin : Task Exception (Maybe String)
 getStdin =
-    JsCode.eval "await (process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8'))"
+    JavaScript.run "await (process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8'))"
         |> Task_.andThenDecode (Decode.nullable Decode.string)
 
 
@@ -29,25 +29,25 @@ getStdin =
 
 {-| To call console.log function.
 -}
-consoleLog : String -> Task String ()
+consoleLog : String -> Task Exception ()
 consoleLog _ =
-    JsCode.eval "console.log(_v0)"
+    JavaScript.run "console.log(_v0)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To call console.error function.
 -}
-consoleError : String -> Task String ()
+consoleError : String -> Task Exception ()
 consoleError _ =
-    JsCode.eval "console.error(_v0)"
+    JavaScript.run "console.error(_v0)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To kill process with exit code.
 -}
-processExit : Int -> Task String ()
+processExit : Int -> Task Exception ()
 processExit _ =
-    JsCode.eval "process.exit(_v0)"
+    JavaScript.run "process.exit(_v0)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
@@ -57,25 +57,25 @@ processExit _ =
 
 {-| To get \_\_filename.
 -}
-filename__ : Task String String
+filename__ : Task Exception String
 filename__ =
-    JsCode.eval "__filename"
+    JavaScript.run "__filename"
         |> Task_.andThenDecode Decode.string
 
 
 {-| To get \_\_dirname.
 -}
-dirname__ : Task String String
+dirname__ : Task Exception String
 dirname__ =
-    JsCode.eval "__dirname"
+    JavaScript.run "__dirname"
         |> Task_.andThenDecode Decode.string
 
 
 {-| To get real path.
 -}
-realPath : String -> Task String String
+realPath : String -> Task Exception String
 realPath _ =
-    JsCode.eval "await require('fs/promises').realpath(_v0, 'utf8')"
+    JavaScript.run "await require('fs/promises').realpath(_v0, 'utf8')"
         |> Task_.andThenDecode Decode.string
 
 
@@ -85,31 +85,31 @@ realPath _ =
 
 {-| To create directory recursively.
 -}
-mkDir : String -> Task String ()
+mkDir : String -> Task Exception ()
 mkDir _ =
-    JsCode.eval "await require('fs/promises').mkdir(_v0, { recursive: true })"
+    JavaScript.run "await require('fs/promises').mkdir(_v0, { recursive: true })"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To read file.
 -}
-readFile : String -> Task String String
+readFile : String -> Task Exception String
 readFile _ =
-    JsCode.eval "await require('fs/promises').readFile(_v0, 'utf8')"
+    JavaScript.run "await require('fs/promises').readFile(_v0, 'utf8')"
         |> Task_.andThenDecode Decode.string
 
 
 {-| To write file.
 -}
-writeFile : String -> String -> Task String ()
+writeFile : String -> String -> Task Exception ()
 writeFile _ _ =
-    JsCode.eval "await require('fs/promises').writeFile(_v0, _v1)"
+    JavaScript.run "await require('fs/promises').writeFile(_v0, _v1)"
         |> Task_.andThenDecode (Decode.succeed ())
 
 
 {-| To copy file.
 -}
-copyFile : String -> String -> Task String ()
+copyFile : String -> String -> Task Exception ()
 copyFile _ _ =
-    JsCode.eval "await require('fs/promises').copyFile(_v0, _v1)"
+    JavaScript.run "await require('fs/promises').copyFile(_v0, _v1)"
         |> Task_.andThenDecode (Decode.succeed ())

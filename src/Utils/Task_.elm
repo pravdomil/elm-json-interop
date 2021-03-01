@@ -1,5 +1,6 @@
 module Utils.Task_ exposing (..)
 
+import Interop.JavaScript exposing (Exception)
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (..)
 
@@ -28,14 +29,14 @@ fromResult a =
 --
 
 
-andThenDecode : Decoder a -> Task String Decode.Value -> Task String a
+andThenDecode : Decoder a -> Task Exception Decode.Value -> Task Exception a
 andThenDecode decoder a =
     a
         |> Task.andThen
             (\v ->
                 v
                     |> Decode.decodeValue decoder
-                    |> Result.mapError Decode.errorToString
+                    |> Result.mapError (Decode.errorToString >> Exception)
                     |> fromResult
             )
 
