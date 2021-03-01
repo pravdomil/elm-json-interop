@@ -2359,6 +2359,107 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 }
 
 
+// CREATE
+
+var _Regex_never = /.^/;
+
+var _Regex_fromStringWith = F2(function(options, string)
+{
+	var flags = 'g';
+	if (options.b8) { flags += 'm'; }
+	if (options.bE) { flags += 'i'; }
+
+	try
+	{
+		return $elm$core$Maybe$Just(new RegExp(string, flags));
+	}
+	catch(error)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+});
+
+
+// USE
+
+var _Regex_contains = F2(function(re, string)
+{
+	return string.match(re) !== null;
+});
+
+
+var _Regex_findAtMost = F3(function(n, re, str)
+{
+	var out = [];
+	var number = 0;
+	var string = str;
+	var lastIndex = re.lastIndex;
+	var prevLastIndex = -1;
+	var result;
+	while (number++ < n && (result = re.exec(string)))
+	{
+		if (prevLastIndex == re.lastIndex) break;
+		var i = result.length - 1;
+		var subs = new Array(i);
+		while (i > 0)
+		{
+			var submatch = result[i];
+			subs[--i] = submatch
+				? $elm$core$Maybe$Just(submatch)
+				: $elm$core$Maybe$Nothing;
+		}
+		out.push(A4($elm$regex$Regex$Match, result[0], result.index, number, _List_fromArray(subs)));
+		prevLastIndex = re.lastIndex;
+	}
+	re.lastIndex = lastIndex;
+	return _List_fromArray(out);
+});
+
+
+var _Regex_replaceAtMost = F4(function(n, re, replacer, string)
+{
+	var count = 0;
+	function jsReplacer(match)
+	{
+		if (count++ >= n)
+		{
+			return match;
+		}
+		var i = arguments.length - 3;
+		var submatches = new Array(i);
+		while (i > 0)
+		{
+			var submatch = arguments[i];
+			submatches[--i] = submatch
+				? $elm$core$Maybe$Just(submatch)
+				: $elm$core$Maybe$Nothing;
+		}
+		return replacer(A4($elm$regex$Regex$Match, match, arguments[arguments.length - 2], count, _List_fromArray(submatches)));
+	}
+	return string.replace(re, jsReplacer);
+});
+
+var _Regex_splitAtMost = F3(function(n, re, str)
+{
+	var string = str;
+	var out = [];
+	var start = re.lastIndex;
+	var restoreLastIndex = re.lastIndex;
+	while (n--)
+	{
+		var result = re.exec(string);
+		if (!result) break;
+		out.push(string.slice(start, result.index));
+		start = re.lastIndex;
+	}
+	out.push(string.slice(start));
+	re.lastIndex = restoreLastIndex;
+	return _List_fromArray(out);
+});
+
+var _Regex_infinity = Infinity;
+
+
 
 
 // STRINGS
@@ -2487,107 +2588,6 @@ var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString
 
 	return _Utils_Tuple3(newOffset, row, col);
 });
-
-
-// CREATE
-
-var _Regex_never = /.^/;
-
-var _Regex_fromStringWith = F2(function(options, string)
-{
-	var flags = 'g';
-	if (options.b8) { flags += 'm'; }
-	if (options.bE) { flags += 'i'; }
-
-	try
-	{
-		return $elm$core$Maybe$Just(new RegExp(string, flags));
-	}
-	catch(error)
-	{
-		return $elm$core$Maybe$Nothing;
-	}
-});
-
-
-// USE
-
-var _Regex_contains = F2(function(re, string)
-{
-	return string.match(re) !== null;
-});
-
-
-var _Regex_findAtMost = F3(function(n, re, str)
-{
-	var out = [];
-	var number = 0;
-	var string = str;
-	var lastIndex = re.lastIndex;
-	var prevLastIndex = -1;
-	var result;
-	while (number++ < n && (result = re.exec(string)))
-	{
-		if (prevLastIndex == re.lastIndex) break;
-		var i = result.length - 1;
-		var subs = new Array(i);
-		while (i > 0)
-		{
-			var submatch = result[i];
-			subs[--i] = submatch
-				? $elm$core$Maybe$Just(submatch)
-				: $elm$core$Maybe$Nothing;
-		}
-		out.push(A4($elm$regex$Regex$Match, result[0], result.index, number, _List_fromArray(subs)));
-		prevLastIndex = re.lastIndex;
-	}
-	re.lastIndex = lastIndex;
-	return _List_fromArray(out);
-});
-
-
-var _Regex_replaceAtMost = F4(function(n, re, replacer, string)
-{
-	var count = 0;
-	function jsReplacer(match)
-	{
-		if (count++ >= n)
-		{
-			return match;
-		}
-		var i = arguments.length - 3;
-		var submatches = new Array(i);
-		while (i > 0)
-		{
-			var submatch = arguments[i];
-			submatches[--i] = submatch
-				? $elm$core$Maybe$Just(submatch)
-				: $elm$core$Maybe$Nothing;
-		}
-		return replacer(A4($elm$regex$Regex$Match, match, arguments[arguments.length - 2], count, _List_fromArray(submatches)));
-	}
-	return string.replace(re, jsReplacer);
-});
-
-var _Regex_splitAtMost = F3(function(n, re, str)
-{
-	var string = str;
-	var out = [];
-	var start = re.lastIndex;
-	var restoreLastIndex = re.lastIndex;
-	while (n--)
-	{
-		var result = re.exec(string);
-		if (!result) break;
-		out.push(string.slice(start, result.index));
-		start = re.lastIndex;
-	}
-	out.push(string.slice(start));
-	re.lastIndex = restoreLastIndex;
-	return _List_fromArray(out);
-});
-
-var _Regex_infinity = Infinity;
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
@@ -2668,11 +2668,15 @@ var $elm$core$Set$toList = function (_v0) {
 	return $elm$core$Dict$keys(dict);
 };
 var $elm$core$Basics$GT = 2;
+var $author$project$Main$Exception = function (a) {
+	return {$: 1, a: a};
+};
 var $elm$core$Task$andThen = _Scheduler_andThen;
 var $elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
+var $elm$core$Basics$append = _Utils_append;
 var $elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -2832,7 +2836,6 @@ var $elm$core$Maybe$Just = function (a) {
 var $elm$core$Maybe$Nothing = {$: 1};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
-var $elm$core$Basics$append = _Utils_append;
 var $elm$json$Json$Encode$encode = _Json_encode;
 var $elm$core$String$fromInt = _String_fromNumber;
 var $elm$core$String$join = F2(
@@ -3228,6 +3231,12 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
+var $author$project$Interop$JavaScript$Exception = $elm$core$Basics$identity;
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$core$Task$fail = _Scheduler_fail;
 var $author$project$Utils$Task_$fromResult = function (a) {
@@ -3258,12 +3267,12 @@ var $author$project$Utils$Task_$andThenDecode = F2(
 				return $author$project$Utils$Task_$fromResult(
 					A2(
 						$elm$core$Result$mapError,
-						$elm$json$Json$Decode$errorToString,
+						A2($elm$core$Basics$composeR, $elm$json$Json$Decode$errorToString, $elm$core$Basics$identity),
 						A2($elm$json$Json$Decode$decodeValue, decoder, v)));
 			},
 			a);
 	});
-var $author$project$Interop$JsCode$eval = function (_v0) {
+var $author$project$Interop$JavaScript$run = function (_v0) {
 	return $elm$core$Task$fail('Compiled file needs to be processed via elm-ffi command.');
 };
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -3271,20 +3280,19 @@ var $author$project$Interop$NodeJs$consoleError = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(console.error(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(console.error(_v0)))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 };
 var $author$project$Interop$NodeJs$consoleLog = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(console.log(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(console.log(_v0)))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 };
-var $author$project$Interop$NodeJs$processExit = function (_v0) {
-	return A2(
-		$author$project$Utils$Task_$andThenDecode,
-		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.exit(_v0)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+var $author$project$Interop$JavaScript$exceptionToString = function (_v0) {
+	var a = _v0;
+	return a;
 };
+var $author$project$Main$BadArguments = {$: 0};
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -3311,18 +3319,25 @@ var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Interop$NodeJs$getArguments = A2(
 	$author$project$Utils$Task_$andThenDecode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.argv))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.argv))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
+var $elm$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			$elm$core$Task$onError,
+			A2($elm$core$Basics$composeL, $elm$core$Task$fail, convert),
+			task);
+	});
+var $author$project$Interop$NodeJs$dirname__ = A2(
+	$author$project$Utils$Task_$andThenDecode,
+	$elm$json$Json$Decode$string,
+	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(__dirname))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 var $author$project$Interop$NodeJs$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
 			$author$project$Utils$Task_$andThenDecode,
 			$elm$json$Json$Decode$succeed(0),
-			_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').copyFile(_v0, _v1)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+			_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').copyFile(_v0, _v1)))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 	});
-var $author$project$Interop$NodeJs$dirname__ = A2(
-	$author$project$Utils$Task_$andThenDecode,
-	$elm$json$Json$Decode$string,
-	_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(__dirname))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
 var $stil4m$elm_syntax$Elm$Syntax$Node$value = function (_v0) {
 	var v = _v0.b;
 	return v;
@@ -4184,7 +4199,7 @@ var $author$project$Interop$NodeJs$mkDir = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').mkdir(_v0, { recursive: true })))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').mkdir(_v0, { recursive: true })))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 };
 var $stil4m$elm_syntax$Elm$Syntax$Expression$Application = function (a) {
 	return {$: 1, a: a};
@@ -4364,11 +4379,6 @@ var $stil4m$elm_syntax$Elm$Processing$findNextSplit = F2(
 							$elm$core$List$drop,
 							$elm$core$List$length(prefix),
 							exps)))));
-	});
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
 	});
 var $elm$core$Dict$Black = 1;
 var $elm$core$Dict$RBNode_elm_builtin = F5(
@@ -5843,6 +5853,103 @@ var $stil4m$elm_syntax$Elm$Processing$process = F2(
 			file);
 		var documentationFixed = $stil4m$elm_syntax$Elm$Processing$Documentation$postProcess(operatorFixed);
 		return documentationFixed;
+	});
+var $author$project$Main$split = function (a) {
+	var _v0 = $elm$core$List$reverse(
+		A2($elm$core$String$split, '/', a));
+	if (_v0.b) {
+		var b = _v0.a;
+		var rest = _v0.b;
+		return _Utils_Tuple2(
+			A2(
+				$elm$core$String$join,
+				'/',
+				$elm$core$List$reverse(rest)),
+			A2(
+				$elm$core$String$join,
+				'.',
+				$elm$core$List$reverse(
+					A2(
+						$elm$core$List$drop,
+						1,
+						$elm$core$List$reverse(
+							A2($elm$core$String$split, '.', b))))));
+	} else {
+		return _Utils_Tuple2(a, '');
+	}
+};
+var $elm$regex$Regex$Match = F4(
+	function (match, index, number, submatches) {
+		return {b$: index, b4: match, ch: number, cs: submatches};
+	});
+var $elm$regex$Regex$find = _Regex_findAtMost(_Regex_infinity);
+var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
+var $elm$regex$Regex$fromString = function (string) {
+	return A2(
+		$elm$regex$Regex$fromStringWith,
+		{bE: false, b8: false},
+		string);
+};
+var $elm$regex$Regex$never = _Regex_never;
+var $author$project$Main$srcFolderPath = function (path) {
+	var regex = A2(
+		$elm$core$Maybe$withDefault,
+		$elm$regex$Regex$never,
+		$elm$regex$Regex$fromString('^.*/src/'));
+	return A2(
+		$elm$core$Maybe$map,
+		function ($) {
+			return $.b4;
+		},
+		$elm$core$List$head(
+			A2($elm$regex$Regex$find, regex, path)));
+};
+var $author$project$Interop$NodeJs$writeFile = F2(
+	function (_v0, _v1) {
+		return A2(
+			$author$project$Utils$Task_$andThenDecode,
+			$elm$json$Json$Decode$succeed(0),
+			_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').writeFile(_v0, _v1)))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
+	});
+var $author$project$Main$processFile_ = F3(
+	function (binPath, fullPath, rawFile) {
+		var file = A2($stil4m$elm_syntax$Elm$Processing$process, $stil4m$elm_syntax$Elm$Processing$init, rawFile);
+		var _v0 = $author$project$Main$split(fullPath);
+		var dirname = _v0.a;
+		var basename = _v0.b;
+		return A2(
+			$elm$core$Task$map,
+			function (_v2) {
+				return fullPath;
+			},
+			$elm$core$Task$sequence(
+				_Utils_ap(
+					function () {
+						var _v1 = $author$project$Main$srcFolderPath(fullPath);
+						if (!_v1.$) {
+							var srcFolder = _v1.a;
+							return _List_fromArray(
+								[
+									$author$project$Interop$NodeJs$mkDir(srcFolder + 'Utils/Json'),
+									A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Json/Encode_.elm', srcFolder + 'Utils/Json/Encode_.elm'),
+									A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Json/Decode_.elm', srcFolder + 'Utils/Json/Decode_.elm')
+								]);
+						} else {
+							return _List_Nil;
+						}
+					}(),
+					_List_fromArray(
+						[
+							$author$project$Interop$NodeJs$mkDir(dirname + ('/' + basename)),
+							A2(
+							$author$project$Interop$NodeJs$writeFile,
+							dirname + ('/' + (basename + '/Encode.elm')),
+							$author$project$Generators$Encode$fromFile(file)),
+							A2(
+							$author$project$Interop$NodeJs$writeFile,
+							dirname + ('/' + (basename + '/Decode.elm')),
+							$author$project$Generators$Decode$fromFile(file))
+						]))));
 	});
 var $elm$parser$Parser$deadEndsToString = function (deadEnds) {
 	return 'TODO deadEndsToString';
@@ -10559,7 +10666,7 @@ var $author$project$Interop$NodeJs$readFile = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$string,
-		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').readFile(_v0, 'utf8')))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').readFile(_v0, 'utf8')))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 };
 var $author$project$Main$readAndParseElmFile = function (a) {
 	return A2(
@@ -10579,106 +10686,9 @@ var $author$project$Interop$NodeJs$realPath = function (_v0) {
 	return A2(
 		$author$project$Utils$Task_$andThenDecode,
 		$elm$json$Json$Decode$string,
-		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').realpath(_v0, 'utf8')))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
+		_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').realpath(_v0, 'utf8')))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
 };
-var $author$project$Main$split = function (a) {
-	var _v0 = $elm$core$List$reverse(
-		A2($elm$core$String$split, '/', a));
-	if (_v0.b) {
-		var b = _v0.a;
-		var rest = _v0.b;
-		return _Utils_Tuple2(
-			A2(
-				$elm$core$String$join,
-				'/',
-				$elm$core$List$reverse(rest)),
-			A2(
-				$elm$core$String$join,
-				'.',
-				$elm$core$List$reverse(
-					A2(
-						$elm$core$List$drop,
-						1,
-						$elm$core$List$reverse(
-							A2($elm$core$String$split, '.', b))))));
-	} else {
-		return _Utils_Tuple2(a, '');
-	}
-};
-var $elm$regex$Regex$Match = F4(
-	function (match, index, number, submatches) {
-		return {b$: index, b4: match, ch: number, cs: submatches};
-	});
-var $elm$regex$Regex$find = _Regex_findAtMost(_Regex_infinity);
-var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
-var $elm$regex$Regex$fromString = function (string) {
-	return A2(
-		$elm$regex$Regex$fromStringWith,
-		{bE: false, b8: false},
-		string);
-};
-var $elm$regex$Regex$never = _Regex_never;
-var $author$project$Main$srcFolderPath = function (path) {
-	var regex = A2(
-		$elm$core$Maybe$withDefault,
-		$elm$regex$Regex$never,
-		$elm$regex$Regex$fromString('^.*/src/'));
-	return A2(
-		$elm$core$Maybe$map,
-		function ($) {
-			return $.b4;
-		},
-		$elm$core$List$head(
-			A2($elm$regex$Regex$find, regex, path)));
-};
-var $author$project$Interop$NodeJs$writeFile = F2(
-	function (_v0, _v1) {
-		return A2(
-			$author$project$Utils$Task_$andThenDecode,
-			$elm$json$Json$Decode$succeed(0),
-			_Scheduler_binding(async (callback) => { try { callback(_Scheduler_succeed(_Json_wrap(await require('fs/promises').writeFile(_v0, _v1)))) } catch (e) { callback(_Scheduler_fail(String(e))) } }));
-	});
 var $author$project$Main$processFile = function (path) {
-	var generateTask = F3(
-		function (binPath, fullPath, rawFile) {
-			var file = A2($stil4m$elm_syntax$Elm$Processing$process, $stil4m$elm_syntax$Elm$Processing$init, rawFile);
-			var _v0 = $author$project$Main$split(fullPath);
-			var dirname = _v0.a;
-			var basename = _v0.b;
-			return A2(
-				$elm$core$Task$map,
-				function (_v2) {
-					return fullPath;
-				},
-				$elm$core$Task$sequence(
-					_Utils_ap(
-						function () {
-							var _v1 = $author$project$Main$srcFolderPath(fullPath);
-							if (!_v1.$) {
-								var srcFolder = _v1.a;
-								return _List_fromArray(
-									[
-										$author$project$Interop$NodeJs$mkDir(srcFolder + 'Utils/Json'),
-										A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Json/Encode_.elm', srcFolder + 'Utils/Json/Encode_.elm'),
-										A2($author$project$Interop$NodeJs$copyFile, binPath + '/../src/Utils/Json/Decode_.elm', srcFolder + 'Utils/Json/Decode_.elm')
-									]);
-							} else {
-								return _List_Nil;
-							}
-						}(),
-						_List_fromArray(
-							[
-								$author$project$Interop$NodeJs$mkDir(dirname + ('/' + basename)),
-								A2(
-								$author$project$Interop$NodeJs$writeFile,
-								dirname + ('/' + (basename + '/Encode.elm')),
-								$author$project$Generators$Encode$fromFile(file)),
-								A2(
-								$author$project$Interop$NodeJs$writeFile,
-								dirname + ('/' + (basename + '/Decode.elm')),
-								$author$project$Generators$Decode$fromFile(file))
-							]))));
-		});
 	return A2(
 		$elm$core$Task$andThen,
 		$elm$core$Basics$identity,
@@ -10688,47 +10698,53 @@ var $author$project$Main$processFile = function (path) {
 				function (a, b) {
 					return A2(
 						$elm$core$Task$andThen,
-						$elm$core$Basics$identity,
-						A2(
-							$elm$core$Task$map,
-							function (c) {
-								return A3(generateTask, a, b, c);
-							},
-							$author$project$Main$readAndParseElmFile(b)));
+						function (c) {
+							return A3($author$project$Main$processFile_, a, b, c);
+						},
+						$author$project$Main$readAndParseElmFile(b));
 				}),
 			$author$project$Interop$NodeJs$dirname__,
 			$author$project$Interop$NodeJs$realPath(path)));
 };
-var $author$project$Main$usage = 'Usage: elm-json-interop <File.elm>...';
-var $author$project$Main$run = function () {
+var $author$project$Main$mainTask = function () {
 	var fileCount = function (b) {
 		var len = $elm$core$List$length(b);
+		var suffix = (len === 1) ? ' module' : ' modules';
 		return _Utils_ap(
 			$elm$core$String$fromInt(len),
-			(len === 1) ? ' module' : ' modules');
+			suffix);
 	};
 	return A2(
 		$elm$core$Task$andThen,
 		function (args) {
 			var _v0 = A2($elm$core$List$drop, 2, args);
 			if (!_v0.b) {
-				return $elm$core$Task$fail($author$project$Main$usage);
+				return $elm$core$Task$fail($author$project$Main$BadArguments);
 			} else {
 				var a = _v0;
 				return A2(
-					$elm$core$Task$map,
-					function (v) {
-						return 'JSON encoders/decoders have been generated for ' + (fileCount(v) + '.');
-					},
-					$elm$core$Task$sequence(
-						A2($elm$core$List$map, $author$project$Main$processFile, a)));
+					$elm$core$Task$mapError,
+					$author$project$Main$Exception,
+					A2(
+						$elm$core$Task$map,
+						function (v) {
+							return 'JSON encoders/decoders have been generated for ' + (fileCount(v) + '.');
+						},
+						$elm$core$Task$sequence(
+							A2($elm$core$List$map, $author$project$Main$processFile, a))));
 			}
 		},
-		$author$project$Interop$NodeJs$getArguments);
+		A2($elm$core$Task$mapError, $author$project$Main$Exception, $author$project$Interop$NodeJs$getArguments));
 }();
-var $author$project$Main$init = A2(
+var $author$project$Interop$NodeJs$processExit = function (_v0) {
+	return A2(
+		$author$project$Utils$Task_$andThenDecode,
+		$elm$json$Json$Decode$succeed(0),
+		_Scheduler_binding(function (callback) { try { callback(_Scheduler_succeed(_Json_wrap(process.exit(_v0)))) } catch (e) { callback(_Scheduler_fail($author$project$Interop$JavaScript$Exception(String(e)))) } }));
+};
+var $author$project$Main$mainCmd = A2(
 	$elm$core$Task$attempt,
-	function (_v1) {
+	function (_v2) {
 		return 0;
 	},
 	A2(
@@ -10736,12 +10752,28 @@ var $author$project$Main$init = A2(
 		function (v) {
 			return A2(
 				$elm$core$Task$andThen,
-				function (_v0) {
+				function (_v1) {
 					return $author$project$Interop$NodeJs$processExit(1);
 				},
-				$author$project$Interop$NodeJs$consoleError(v));
+				$author$project$Interop$NodeJs$consoleError(
+					function () {
+						if (!v.$) {
+							return 'Usage: elm-json-interop <File.elm>...';
+						} else {
+							var vv = v.a;
+							return 'elm-json-interop failed: ' + $author$project$Interop$JavaScript$exceptionToString(vv);
+						}
+					}()));
 		},
-		A2($elm$core$Task$andThen, $author$project$Interop$NodeJs$consoleLog, $author$project$Main$run)));
+		A2(
+			$elm$core$Task$andThen,
+			function (v) {
+				return A2(
+					$elm$core$Task$mapError,
+					$author$project$Main$Exception,
+					$author$project$Interop$NodeJs$consoleLog(v));
+			},
+			$author$project$Main$mainTask)));
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -10750,7 +10782,7 @@ var $elm$core$Platform$worker = _Platform_worker;
 var $author$project$Main$main = $elm$core$Platform$worker(
 	{
 		b0: function (_v0) {
-			return _Utils_Tuple2(0, $author$project$Main$init);
+			return _Utils_Tuple2(0, $author$project$Main$mainCmd);
 		},
 		ct: function (_v1) {
 			return $elm$core$Platform$Sub$none;
