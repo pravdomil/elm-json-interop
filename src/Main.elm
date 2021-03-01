@@ -95,8 +95,8 @@ mainTask =
 processFile : String -> Task Exception String
 processFile path =
     let
-        generateTask : String -> String -> RawFile -> Task Exception String
-        generateTask binPath fullPath rawFile =
+        task : String -> String -> RawFile -> Task Exception String
+        task binPath fullPath rawFile =
             let
                 ( dirname, basename ) =
                     fullPath |> split
@@ -126,7 +126,7 @@ processFile path =
         (\a b ->
             Task.map
                 (\c ->
-                    generateTask a b c
+                    task a b c
                 )
                 (readAndParseElmFile b)
                 |> Task.andThen identity
