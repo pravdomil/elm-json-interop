@@ -52,15 +52,17 @@ mainTask =
             let
                 len : Int
                 len =
-                    b |> List.length
-            in
-            String.fromInt len
-                ++ (if len == 1 then
+                    List.length b
+
+                suffix : String
+                suffix =
+                    if len == 1 then
                         " module"
 
                     else
                         " modules"
-                   )
+            in
+            String.fromInt len ++ suffix
     in
     Task.andThen
         (\args ->
