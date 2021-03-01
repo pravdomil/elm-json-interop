@@ -96,12 +96,11 @@ processFile : String -> Task Exception String
 processFile path =
     Task.map2
         (\a b ->
-            Task.map
+            Task.andThen
                 (\c ->
                     processFile_ a b c
                 )
                 (readAndParseElmFile b)
-                |> Task.andThen identity
         )
         NodeJs.dirname__
         (NodeJs.realPath path)
