@@ -135,6 +135,22 @@ processFile_ binPath fullPath rawFile =
         |> Task.map (\_ -> fullPath)
 
 
+readAndParseElmFile : String -> Task Exception RawFile
+readAndParseElmFile a =
+    a
+        |> NodeJs.readFile
+        |> Task.andThen
+            (\v ->
+                v
+                    |> Elm.Parser.parse
+                    |> Result.mapError
+                        (\vv ->
+                            JavaScript.Exception ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
+                        )
+                    |> Task_.fromResult
+            )
+
+
 
 --
 
@@ -150,22 +166,6 @@ srcFolderPath path =
         |> Regex.find regex
         |> List.head
         |> Maybe.map .match
-
-
-readAndParseElmFile : String -> Task Exception RawFile
-readAndParseElmFile a =
-    a
-        |> NodeJs.readFile
-        |> Task.andThen
-            (\v ->
-                v
-                    |> Elm.Parser.parse
-                    |> Result.mapError
-                        (\vv ->
-                            JavaScript.Exception ("I can't parse \"" ++ a ++ "\", because: " ++ deadEndsToString vv ++ ".")
-                        )
-                    |> Task_.fromResult
-            )
 
 
 {-| To get dirname and basename.
