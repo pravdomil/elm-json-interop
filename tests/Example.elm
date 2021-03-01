@@ -3,6 +3,7 @@ module Example exposing (..)
 import Array
 import Dict
 import Expect
+import Id
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Msg exposing (..)
@@ -44,7 +45,7 @@ suite =
 sample : Msg
 sample =
     ReceivedMessages
-        [ message
+        [ ( Id.fromString "1", message )
         ]
 
 
@@ -91,62 +92,68 @@ snapshot =
   "_": 2,
   "a": [
     {
-      "bool": true,
-      "int": 1,
-      "float": 3.141592653589793,
-      "char": "a",
-      "string": "a",
-      "unit": {},
-      "tuple": {
-        "a": {
-          "_": 2
-        },
-        "b": "hello"
-      },
-      "tuple3": {
-        "a": {
-          "_": 2
-        },
-        "b": "hello",
-        "c": "hello"
-      },
-      "list": [
-        {
-          "a": {
-            "_": 2
-          },
-          "b": "hello"
-        }
-      ],
-      "array": [
-        {
-          "a": {
-            "_": 2
-          },
-          "b": "hello"
-        }
-      ],
-      "record": {},
-      "maybe": {
-        "_": 2
-      },
-      "result": {
+      "a": {
         "_": 0,
-        "a": {
-          "_": 2
-        }
+        "a": "1"
       },
-      "set": [
-        1
-      ],
-      "dict": [
-        [
-          1,
+      "b": {
+        "bool": true,
+        "int": 1,
+        "float": 3.141592653589793,
+        "char": "a",
+        "string": "a",
+        "unit": {},
+        "tuple": {
+          "a": {
+            "_": 2
+          },
+          "b": "hello"
+        },
+        "tuple3": {
+          "a": {
+            "_": 2
+          },
+          "b": "hello",
+          "c": "hello"
+        },
+        "list": [
           {
+            "a": {
+              "_": 2
+            },
+            "b": "hello"
+          }
+        ],
+        "array": [
+          {
+            "a": {
+              "_": 2
+            },
+            "b": "hello"
+          }
+        ],
+        "record": {},
+        "maybe": {
+          "_": 2
+        },
+        "result": {
+          "_": 0,
+          "a": {
             "_": 2
           }
+        },
+        "set": [
+          1
+        ],
+        "dict": [
+          [
+            1,
+            {
+              "_": 2
+            }
+          ]
         ]
-      ]
+      }
     }
   ]
 }"""

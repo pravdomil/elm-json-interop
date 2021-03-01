@@ -2,6 +2,7 @@ module Msg exposing (..)
 
 import Array exposing (Array)
 import Dict exposing (Dict)
+import Id exposing (Id)
 import Set exposing (Set)
 import User exposing (User)
 
@@ -11,7 +12,7 @@ import User exposing (User)
 type Msg
     = PressedEnter
     | ChangedDraft String
-    | ReceivedMessages (List (Message User String))
+    | ReceivedMessages (List ( Id, Message User String ))
     | ClickedExit
 
 
