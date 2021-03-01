@@ -82,15 +82,11 @@ mainTask =
         NodeJs.getArguments
 
 
-{-| To get program usage.
--}
 usage : String
 usage =
     "Usage: elm-json-interop <File.elm>..."
 
 
-{-| To process file.
--}
 processFile : String -> Task String String
 processFile path =
     let
