@@ -5,8 +5,8 @@ module Utils.String exposing (..)
 
 {-| To get letter from alphabet by number.
 -}
-letterByInt : Int -> String
-letterByInt a =
+letterFromAlphabet : Int -> String
+letterFromAlphabet a =
     a + 97 |> Char.fromCode |> String.fromChar
 
 
