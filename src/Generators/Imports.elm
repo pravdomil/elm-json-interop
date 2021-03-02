@@ -4,6 +4,7 @@ import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Node as Node exposing (Node(..))
+import Elm.Syntax.Range as Range
 import Utils.String_ as String_
 
 
@@ -21,6 +22,7 @@ changeImport suffix a =
         map b =
             { b
                 | moduleName = b.moduleName |> Node.map (\v -> v ++ [ suffix ])
+                , moduleAlias = b.moduleAlias |> Maybe.withDefault b.moduleName |> Node.value |> String.join "_" |> List.singleton |> n |> Just
                 , exposingList = b.exposingList |> Maybe.map changeExposing
             }
     in
@@ -81,3 +83,12 @@ shouldImport a =
 
         _ ->
             True
+
+
+
+--
+
+
+n : a -> Node a
+n =
+    Node Range.emptyRange
