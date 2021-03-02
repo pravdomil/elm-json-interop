@@ -1,4 +1,4 @@
-module Utils.String exposing (..)
+module Utils.String_ exposing (..)
 
 {-| -}
 
