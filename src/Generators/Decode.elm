@@ -2,7 +2,7 @@ module Generators.Decode exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
-import Elm.Syntax.Expression exposing (Expression(..), FunctionImplementation)
+import Elm.Syntax.Expression exposing (Expression(..), FunctionImplementation, Lambda, RecordSetter)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module(..))
@@ -12,7 +12,7 @@ import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
 import Elm.Syntax.Signature exposing (Signature)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
-import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
+import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
 import Utils.Function as Function
 
@@ -160,8 +160,8 @@ fromTypeAnnotation a =
                     Tupled b ->
                         fromTuple b
 
-                    Record _ ->
-                        UnitExpr
+                    Record b ->
+                        fromRecord b
 
                     GenericRecord _ _ ->
                         -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
@@ -243,6 +243,44 @@ fromTuple a =
                 |> n
     in
     application (fn :: List.map fromTypeAnnotation a)
+
+
+fromRecord : RecordDefinition -> Expression
+fromRecord a =
+    let
+        length : Int
+        length =
+            a |> List.length
+
+        mapFn : Lambda
+        mapFn =
+            { args = List.indexedMap (\i _ -> n (VarPattern ("v" ++ String.fromInt (i + 1)))) a
+            , expression = n (RecordExpr (List.indexedMap toSetter a))
+            }
+
+        toSetter : Int -> Node RecordField -> Node RecordSetter
+        toSetter i b =
+            b |> Node.map (Tuple.mapSecond (Node.map (always (FunctionOrValue [] ("v" ++ String.fromInt (i + 1))))))
+    in
+    if length == 0 then
+        application
+            [ n (FunctionOrValue [ "D" ] "succeed")
+            , n (RecordExpr [])
+            ]
+
+    else if length < 8 then
+        application
+            (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt length))
+                :: n (LambdaExpression mapFn)
+                :: List.map (Node.map fromRecordField) a
+            )
+
+    else
+        application
+            (n (FunctionOrValue [ "D_" ] ("map" ++ String.fromInt length))
+                :: n (LambdaExpression mapFn)
+                :: List.map (Node.map fromRecordField) a
+            )
 
 
 
