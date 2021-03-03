@@ -283,6 +283,36 @@ fromRecord a =
             )
 
 
+fromRecordField : RecordField -> Expression
+fromRecordField ( a, b ) =
+    let
+        fn : Node Expression
+        fn =
+            (case Node.value b of
+                Typed (Node _ ( _, "Maybe" )) _ ->
+                    FunctionOrValue [ "D_" ] "maybeField"
+
+                _ ->
+                    FunctionOrValue [ "D" ] "field"
+            )
+                |> n
+
+        name : Node Expression
+        name =
+            a
+                |> Node.map
+                    (\v ->
+                        if v == "id" then
+                            "_id"
+
+                        else
+                            v
+                    )
+                |> Node.map Literal
+    in
+    application [ fn, name, fromTypeAnnotation b ]
+
+
 
 --
 
