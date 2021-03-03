@@ -5,6 +5,7 @@ import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.Expression exposing (Expression(..), FunctionImplementation, Lambda, RecordSetter)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Import exposing (Import)
+import Elm.Syntax.Infix exposing (InfixDirection(..))
 import Elm.Syntax.Module as Module exposing (Module(..))
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
@@ -248,10 +249,6 @@ fromTuple a =
 fromRecord : RecordDefinition -> Expression
 fromRecord a =
     let
-        length : Int
-        length =
-            a |> List.length
-
         mapFn : Lambda
         mapFn =
             { args = List.indexedMap (\i _ -> n (VarPattern ("v" ++ String.fromInt (i + 1)))) a
@@ -262,25 +259,35 @@ fromRecord a =
         toSetter i b =
             b |> Node.map (Tuple.mapSecond (Node.map (always (FunctionOrValue [] ("v" ++ String.fromInt (i + 1))))))
     in
-    if length == 0 then
+    if a |> List.isEmpty then
         application
             [ n (FunctionOrValue [ "D" ] "succeed")
             , n (RecordExpr [])
             ]
 
-    else if length < 8 then
-        application
-            (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt length))
-                :: n (LambdaExpression mapFn)
-                :: List.map (Node.map fromRecordField) a
-            )
-
     else
         application
-            (n (FunctionOrValue [ "D_" ] ("map" ++ String.fromInt length))
+            (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt (min 8 (List.length a))))
                 :: n (LambdaExpression mapFn)
-                :: List.map (Node.map fromRecordField) a
+                :: (a |> List.take 8 |> List.map (Node.map fromRecordField))
             )
+            |> (\v ->
+                    a
+                        |> List.drop 8
+                        |> List.foldl
+                            (\vv acc ->
+                                pipe
+                                    (n
+                                        (application
+                                            [ n (FunctionOrValue [ "D_" ] "apply")
+                                            , Node.map fromRecordField vv
+                                            ]
+                                        )
+                                    )
+                                    (n acc)
+                            )
+                            v
+               )
 
 
 fromRecordField : RecordField -> Expression
@@ -343,3 +350,8 @@ n =
 application : List (Node Expression) -> Expression
 application a =
     a |> List.map (ParenthesizedExpression >> n) |> Application
+
+
+pipe : Node Expression -> Node Expression -> Expression
+pipe b a =
+    OperatorApplication "|>" Left a b
