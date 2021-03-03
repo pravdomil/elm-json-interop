@@ -69,7 +69,7 @@ additionalImports a =
         importExposingType b c d =
             Import (n b) (Just (n [ c ])) (Just (n (Explicit [ n (TypeOrAliasExpose d) ])))
     in
-    [ import_ a "A"
+    [ Import (n a) Nothing (Just (n (All Range.emptyRange)))
     , importExposingType [ "Json", "Decode" ] "D" "Decoder"
     , import_ [ "Utils", "Json", "Decode_" ] "D_"
     ]
