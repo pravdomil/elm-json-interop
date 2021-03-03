@@ -158,8 +158,8 @@ fromTypeAnnotation a =
                     Unit ->
                         FunctionOrValue [ "D_" ] "unit"
 
-                    Tupled _ ->
-                        UnitExpr
+                    Tupled b ->
+                        fromTuple b
 
                     Record _ ->
                         UnitExpr
@@ -228,6 +228,22 @@ fromTyped b a =
                     FunctionOrValue module_ (Function.nameFromString name)
     in
     Application (Node.map toExpression b :: List.map fromTypeAnnotation a)
+
+
+fromTuple : List (Node TypeAnnotation) -> Expression
+fromTuple a =
+    let
+        fn : Node Expression
+        fn =
+            (if a |> List.length |> (==) 2 then
+                FunctionOrValue [ "D_" ] "tuple"
+
+             else
+                FunctionOrValue [ "D_" ] "tuple3"
+            )
+                |> n
+    in
+    Application (fn :: List.map fromTypeAnnotation a)
 
 
 
