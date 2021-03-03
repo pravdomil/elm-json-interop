@@ -8,6 +8,11 @@ import Json.Decode as D exposing (Decoder)
 import Set exposing (Set)
 
 
+unit : Decoder ()
+unit =
+    D.succeed ()
+
+
 char : Decoder Char
 char =
     D.string
@@ -22,51 +27,13 @@ char =
             )
 
 
-unit : Decoder ()
-unit =
-    D.succeed ()
 
-
-tuple : Decoder a -> Decoder b -> Decoder ( a, b )
-tuple a b =
-    D.map2 Tuple.pair (D.field "a" a) (D.field "b" b)
-
-
-tuple3 : Decoder a -> Decoder b -> Decoder c -> Decoder ( a, b, c )
-tuple3 a b c =
-    D.map3 (\a_ b_ c_ -> ( a_, b_, c_ )) (D.field "a" a) (D.field "b" b) (D.field "c" c)
+--
 
 
 maybe : Decoder a -> Decoder (Maybe a)
 maybe =
     D.nullable
-
-
-set : Decoder comparable -> Decoder (Set comparable)
-set a =
-    D.map Set.fromList (D.list a)
-
-
-dict : Decoder comparable -> Decoder v -> Decoder (Dict comparable v)
-dict k v =
-    D.map Dict.fromList (D.list (D.map2 Tuple.pair (D.index 0 k) (D.index 1 v)))
-
-
-maybeField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
-maybeField name a =
-    D.oneOf
-        [ D.map Just (D.field name D.value)
-        , D.succeed Nothing
-        ]
-        |> D.andThen
-            (\v ->
-                case v of
-                    Just _ ->
-                        D.field name a
-
-                    Nothing ->
-                        D.succeed Nothing
-            )
 
 
 result : Decoder e -> Decoder v -> Decoder (Result e v)
@@ -83,6 +50,51 @@ result e v =
 
                     _ ->
                         D.fail ("I can't decode Result, unknown variant with index " ++ String.fromInt i___ ++ ".")
+            )
+
+
+
+--
+
+
+set : Decoder comparable -> Decoder (Set comparable)
+set a =
+    D.map Set.fromList (D.list a)
+
+
+dict : Decoder comparable -> Decoder v -> Decoder (Dict comparable v)
+dict k v =
+    D.map Dict.fromList (D.list (D.map2 Tuple.pair (D.index 0 k) (D.index 1 v)))
+
+
+
+--
+
+
+tuple : Decoder a -> Decoder b -> Decoder ( a, b )
+tuple a b =
+    D.map2 Tuple.pair (D.field "a" a) (D.field "b" b)
+
+
+tuple3 : Decoder a -> Decoder b -> Decoder c -> Decoder ( a, b, c )
+tuple3 a b c =
+    D.map3 (\a_ b_ c_ -> ( a_, b_, c_ )) (D.field "a" a) (D.field "b" b) (D.field "c" c)
+
+
+maybeField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
+maybeField name a =
+    D.oneOf
+        [ D.map Just (D.field name D.value)
+        , D.succeed Nothing
+        ]
+        |> D.andThen
+            (\v ->
+                case v of
+                    Just _ ->
+                        D.field name a
+
+                    Nothing ->
+                        D.succeed Nothing
             )
 
 
