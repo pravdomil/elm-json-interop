@@ -165,13 +165,13 @@ fromTypeAnnotation a =
 
                     GenericRecord _ _ ->
                         -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
-                        Application
+                        application
                             [ n (FunctionOrValue [ "Debug" ] "todo")
                             , n (Literal "I don't know how to decode extensible record.")
                             ]
 
                     FunctionTypeAnnotation _ _ ->
-                        Application
+                        application
                             [ n (FunctionOrValue [ "Debug" ] "todo")
                             , n (Literal "I don't know how to decode function.")
                             ]
@@ -226,7 +226,7 @@ fromTyped b a =
                 _ ->
                     FunctionOrValue module_ (Function.nameFromString name)
     in
-    Application (Node.map toExpression b :: List.map fromTypeAnnotation a)
+    application (Node.map toExpression b :: List.map fromTypeAnnotation a)
 
 
 fromTuple : List (Node TypeAnnotation) -> Expression
@@ -242,7 +242,7 @@ fromTuple a =
             )
                 |> n
     in
-    Application (fn :: List.map fromTypeAnnotation a)
+    application (fn :: List.map fromTypeAnnotation a)
 
 
 
@@ -270,3 +270,8 @@ toFunctionTypeAnnotation a =
 n : a -> Node a
 n =
     Node Range.emptyRange
+
+
+application : List (Node Expression) -> Expression
+application a =
+    a |> List.map (ParenthesizedExpression >> n) |> Application
