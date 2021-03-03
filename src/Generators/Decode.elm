@@ -143,6 +143,42 @@ fromTypeAlias a =
         |> n
 
 
+fromTypeAnnotation : Node TypeAnnotation -> Node Expression
+fromTypeAnnotation a =
+    a
+        |> Node.map
+            (\v ->
+                case v of
+                    GenericType b ->
+                        FunctionOrValue [] b
+
+                    Typed b c ->
+                        fromTyped b c
+
+                    Unit ->
+                        FunctionOrValue [ "D_" ] "unit"
+
+                    Tupled _ ->
+                        UnitExpr
+
+                    Record _ ->
+                        UnitExpr
+
+                    GenericRecord _ _ ->
+                        -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
+                        Application
+                            [ n (FunctionOrValue [ "Debug" ] "todo")
+                            , n (Literal "I don't know how to decode extensible record.")
+                            ]
+
+                    FunctionTypeAnnotation _ _ ->
+                        Application
+                            [ n (FunctionOrValue [ "Debug" ] "todo")
+                            , n (Literal "I don't know how to decode function.")
+                            ]
+            )
+
+
 
 --
 
