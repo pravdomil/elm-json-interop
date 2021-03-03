@@ -12,6 +12,7 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
 import Elm.Syntax.Signature exposing (Signature)
+import Elm.Syntax.Type exposing (Type)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
@@ -86,8 +87,8 @@ fromDeclaration a =
         AliasDeclaration b ->
             Just (fromTypeAlias b)
 
-        CustomTypeDeclaration _ ->
-            Nothing
+        CustomTypeDeclaration b ->
+            Just (fromCustomType b)
 
         PortDeclaration _ ->
             Nothing
@@ -141,6 +142,36 @@ fromTypeAlias a =
                 |> n
         }
         |> n
+
+
+fromCustomType : Type -> Node Declaration
+fromCustomType a =
+    let
+        oneConstructorAndOneArgument : Maybe (Node TypeAnnotation)
+        oneConstructorAndOneArgument =
+            a.constructors |> listSingleton |> Maybe.andThen (Node.value >> .arguments >> listSingleton)
+    in
+    case oneConstructorAndOneArgument of
+        Just b ->
+            fromTypeAlias
+                { documentation = a.documentation
+                , name = a.name
+                , generics = a.generics
+                , typeAnnotation = b
+                }
+
+        Nothing ->
+            FunctionDeclaration
+                { documentation = Nothing
+                , signature = Nothing
+                , declaration =
+                    { name = a.name |> Node.map Function.nameFromString
+                    , arguments = a.generics |> List.map (Node.map VarPattern)
+                    , expression = n UnitExpr
+                    }
+                        |> n
+                }
+                |> n
 
 
 fromTypeAnnotation : Node TypeAnnotation -> Node Expression
@@ -355,3 +386,13 @@ application a =
 pipe : Node Expression -> Node Expression -> Expression
 pipe b a =
     OperatorApplication "|>" Left a b
+
+
+listSingleton : List a -> Maybe a
+listSingleton a =
+    case a of
+        b :: [] ->
+            Just b
+
+        _ ->
+            Nothing
