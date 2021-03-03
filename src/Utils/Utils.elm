@@ -41,24 +41,3 @@ isIdType a =
 toJsonString : String -> String
 toJsonString a =
     Encode.string a |> Encode.encode 0
-
-
-{-| -}
-toFunctionName : String -> String
-toFunctionName a =
-    a
-        |> firstToLower
-        |> (\v ->
-                if elmKeywords |> List.member v then
-                    firstToLower v ++ "_"
-
-                else
-                    firstToLower v
-           )
-
-
-{-| To define what are reserved Elm keywords.
--}
-elmKeywords : List String
-elmKeywords =
-    [ "module", "where", "import", "as", "exposing", "if", "then", "else", "case", "of", "let", "in", "type", "port", "infix" ]
