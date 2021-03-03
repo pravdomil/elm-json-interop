@@ -23,7 +23,7 @@ char =
                         D.succeed b
 
                     _ ->
-                        D.fail "I was expecting exactly one char."
+                        D.fail "I was expecting exactly one character."
             )
 
 
