@@ -304,6 +304,7 @@ fromRecord a =
                         |> List.foldl
                             (\vv acc ->
                                 pipe
+                                    (n acc)
                                     (n
                                         (application
                                             [ n (FunctionOrValue [ "D_" ] "apply")
@@ -311,7 +312,6 @@ fromRecord a =
                                             ]
                                         )
                                     )
-                                    (n acc)
                             )
                             v
                )
@@ -380,7 +380,7 @@ application a =
 
 
 pipe : Node Expression -> Node Expression -> Expression
-pipe b a =
+pipe a b =
     OperatorApplication "|>" Left a b
 
 
