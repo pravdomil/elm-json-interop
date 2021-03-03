@@ -102,40 +102,11 @@ fromDeclaration a =
 
 fromTypeAlias : TypeAlias -> Node Declaration
 fromTypeAlias a =
-    let
-        fnName : Node String
-        fnName =
-            a.name |> Node.map Function.nameFromString
-
-        signature : Maybe (Node Signature)
-        signature =
-            let
-                arguments : List (Node TypeAnnotation)
-                arguments =
-                    []
-                        ++ (a.generics
-                                |> List.map
-                                    (\v ->
-                                        typed "Decoder" [ Node.map GenericType v ]
-                                    )
-                           )
-                        ++ [ typed
-                                "Decoder"
-                                [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
-                                ]
-                           ]
-            in
-            Just (n (Signature fnName (arguments |> toFunctionTypeAnnotation)))
-
-        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
-        typed b c =
-            n (Typed (n ( [], b )) c)
-    in
     FunctionDeclaration
         { documentation = Nothing
-        , signature = signature
+        , signature = a |> signature |> Just
         , declaration =
-            { name = fnName
+            { name = a.name |> Node.map Function.nameFromString
             , arguments = a.generics |> List.map (Node.map VarPattern)
             , expression = a.typeAnnotation |> fromTypeAnnotation
             }
@@ -163,7 +134,7 @@ fromCustomType a =
         Nothing ->
             FunctionDeclaration
                 { documentation = Nothing
-                , signature = Nothing
+                , signature = a |> signature |> Just
                 , declaration =
                     { name = a.name |> Node.map Function.nameFromString
                     , arguments = a.generics |> List.map (Node.map VarPattern)
@@ -172,6 +143,31 @@ fromCustomType a =
                         |> n
                 }
                 |> n
+
+
+signature : { a | generics : List (Node String), name : Node String } -> Node Signature
+signature a =
+    let
+        arguments : List (Node TypeAnnotation)
+        arguments =
+            []
+                ++ (a.generics
+                        |> List.map
+                            (\v ->
+                                typed "Decoder" [ Node.map GenericType v ]
+                            )
+                   )
+                ++ [ typed
+                        "Decoder"
+                        [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
+                        ]
+                   ]
+
+        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
+        typed b c =
+            n (Typed (n ( [], b )) c)
+    in
+    n (Signature (Node.map Function.nameFromString a.name) (toFunctionTypeAnnotation arguments))
 
 
 fromTypeAnnotation : Node TypeAnnotation -> Node Expression
