@@ -2,14 +2,20 @@ module Generators.Decode exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
+import Elm.Syntax.Expression exposing (Expression(..), FunctionImplementation)
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module(..))
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
+import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
+import Elm.Syntax.Signature exposing (Signature)
+import Elm.Syntax.TypeAlias exposing (TypeAlias)
+import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Elm.Writer as Writer
 import Generators.Imports as Imports
+import Utils.Function as Function
 
 
 fromFile : File -> String
@@ -37,7 +43,7 @@ fromFile a =
 
         declarations : List (Node Declaration)
         declarations =
-            []
+            a.declarations |> List.filterMap fromDeclaration
     in
     { a
         | moduleDefinition = module_
@@ -71,8 +77,100 @@ additionalImports a =
         |> List.map n
 
 
+fromDeclaration : Node Declaration -> Maybe (Node Declaration)
+fromDeclaration a =
+    case a |> Node.value of
+        FunctionDeclaration _ ->
+            Nothing
+
+        AliasDeclaration b ->
+            Just (fromTypeAlias b)
+
+        CustomTypeDeclaration _ ->
+            Nothing
+
+        PortDeclaration _ ->
+            Nothing
+
+        InfixDeclaration _ ->
+            Nothing
+
+        Destructuring _ _ ->
+            Nothing
+
+
+fromTypeAlias : TypeAlias -> Node Declaration
+fromTypeAlias a =
+    let
+        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
+        typed b c =
+            n (Typed (n ( [], b )) c)
+
+        fnName : Node String
+        fnName =
+            a.name |> Node.map Function.nameFromString
+
+        signature : Maybe (Node Signature)
+        signature =
+            let
+                arguments_ : List (Node TypeAnnotation)
+                arguments_ =
+                    []
+                        ++ (a.generics
+                                |> List.map
+                                    (\v ->
+                                        typed "Decoder" [ Node.map GenericType v ]
+                                    )
+                           )
+                        ++ [ typed
+                                "Decoder"
+                                [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
+                                ]
+                           ]
+            in
+            Just (n (Signature fnName (arguments_ |> toFunctionTypeAnnotation)))
+
+        arguments : List (Node Pattern)
+        arguments =
+            a.generics |> List.map (Node.map VarPattern)
+
+        expression : Node Expression
+        expression =
+            n UnitExpr
+    in
+    FunctionDeclaration
+        { documentation = Nothing
+        , signature = signature
+        , declaration =
+            { name = fnName
+            , arguments = arguments
+            , expression = expression
+            }
+                |> n
+        }
+        |> n
+
+
 
 --
+
+
+toFunctionTypeAnnotation : List (Node TypeAnnotation) -> Node TypeAnnotation
+toFunctionTypeAnnotation a =
+    let
+        helper : List (Node TypeAnnotation) -> Node TypeAnnotation -> Node TypeAnnotation
+        helper b c =
+            b |> List.foldl (\v acc -> FunctionTypeAnnotation v acc |> n) c
+    in
+    case a |> List.reverse of
+        [] ->
+            n Unit
+
+        b :: [] ->
+            b
+
+        b :: c :: rest ->
+            FunctionTypeAnnotation c b |> n |> helper rest
 
 
 n : a -> Node a
