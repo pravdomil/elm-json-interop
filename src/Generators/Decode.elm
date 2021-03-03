@@ -194,11 +194,11 @@ fromTyped b a =
                 ( [], "Float" ) ->
                     FunctionOrValue [ "D" ] "float"
 
+                ( [], "Char" ) ->
+                    FunctionOrValue [ "D_" ] "char"
+
                 ( [], "String" ) ->
                     FunctionOrValue [ "D" ] "string"
-
-                ( [], "Maybe" ) ->
-                    FunctionOrValue [ "D_" ] "maybe"
 
                 ( [], "List" ) ->
                     FunctionOrValue [ "D" ] "list"
@@ -206,8 +206,8 @@ fromTyped b a =
                 ( [], "Array" ) ->
                     FunctionOrValue [ "D" ] "array"
 
-                ( [], "Char" ) ->
-                    FunctionOrValue [ "D_" ] "char"
+                ( [], "Maybe" ) ->
+                    FunctionOrValue [ "D_" ] "maybe"
 
                 ( [], "Result" ) ->
                     FunctionOrValue [ "D_" ] "result"
