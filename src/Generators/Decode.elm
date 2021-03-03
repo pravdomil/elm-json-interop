@@ -113,8 +113,8 @@ fromTypeAlias a =
         signature : Maybe (Node Signature)
         signature =
             let
-                arguments_ : List (Node TypeAnnotation)
-                arguments_ =
+                arguments : List (Node TypeAnnotation)
+                arguments =
                     []
                         ++ (a.generics
                                 |> List.map
@@ -128,23 +128,15 @@ fromTypeAlias a =
                                 ]
                            ]
             in
-            Just (n (Signature fnName (arguments_ |> toFunctionTypeAnnotation)))
-
-        arguments : List (Node Pattern)
-        arguments =
-            a.generics |> List.map (Node.map VarPattern)
-
-        expression : Node Expression
-        expression =
-            n UnitExpr
+            Just (n (Signature fnName (arguments |> toFunctionTypeAnnotation)))
     in
     FunctionDeclaration
         { documentation = Nothing
         , signature = signature
         , declaration =
             { name = fnName
-            , arguments = arguments
-            , expression = expression
+            , arguments = a.generics |> List.map (Node.map VarPattern)
+            , expression = a.typeAnnotation |> fromTypeAnnotation
             }
                 |> n
         }
