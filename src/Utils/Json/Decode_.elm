@@ -8,8 +8,6 @@ import Json.Decode as D exposing (Decoder)
 import Set exposing (Set)
 
 
-{-| To decode char.
--}
 char : Decoder Char
 char =
     D.string
@@ -24,46 +22,36 @@ char =
             )
 
 
-{-| -}
 unit : Decoder ()
 unit =
     D.succeed ()
 
 
-{-| -}
 tuple : Decoder a -> Decoder b -> Decoder ( a, b )
 tuple a b =
     D.map2 Tuple.pair (D.field "a" a) (D.field "b" b)
 
 
-{-| -}
 tuple3 : Decoder a -> Decoder b -> Decoder c -> Decoder ( a, b, c )
 tuple3 a b c =
     D.map3 (\a_ b_ c_ -> ( a_, b_, c_ )) (D.field "a" a) (D.field "b" b) (D.field "c" c)
 
 
-{-| -}
 maybe : Decoder a -> Decoder (Maybe a)
 maybe =
     D.nullable
 
 
-{-| To decode set.
--}
 set : Decoder comparable -> Decoder (Set comparable)
 set a =
     D.map Set.fromList (D.list a)
 
 
-{-| To decode dictionary.
--}
 dict : Decoder comparable -> Decoder v -> Decoder (Dict comparable v)
 dict k v =
     D.map Dict.fromList (D.list (D.map2 Tuple.pair (D.index 0 k) (D.index 1 v)))
 
 
-{-| To maybe decode field.
--}
 maybeField : String -> Decoder (Maybe a) -> Decoder (Maybe a)
 maybeField name a =
     D.oneOf
@@ -81,8 +69,6 @@ maybeField name a =
             )
 
 
-{-| To decode result.
--}
 result : Decoder e -> Decoder v -> Decoder (Result e v)
 result e v =
     D.field "_" D.int
@@ -104,7 +90,6 @@ result e v =
 --
 
 
-{-| -}
 apply : Decoder a -> Decoder (a -> b) -> Decoder b
 apply decoder a =
     D.map2 (\fn v -> fn v) a decoder
