@@ -14,7 +14,6 @@ import Elm.Syntax.Signature exposing (Signature)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Elm.Writer as Writer
-import Generators.Imports as Imports
 import Utils.Function as Function
 
 
@@ -39,7 +38,7 @@ fromFile a =
 
         imports : List (Node Import)
         imports =
-            a |> Imports.fromFile suffix |> (++) (additionalImports name)
+            additionalImports name
 
         declarations : List (Node Declaration)
         declarations =
