@@ -102,10 +102,6 @@ fromDeclaration a =
 fromTypeAlias : TypeAlias -> Node Declaration
 fromTypeAlias a =
     let
-        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
-        typed b c =
-            n (Typed (n ( [], b )) c)
-
         fnName : Node String
         fnName =
             a.name |> Node.map Function.nameFromString
@@ -129,6 +125,10 @@ fromTypeAlias a =
                            ]
             in
             Just (n (Signature fnName (arguments |> toFunctionTypeAnnotation)))
+
+        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
+        typed b c =
+            n (Typed (n ( [], b )) c)
     in
     FunctionDeclaration
         { documentation = Nothing
