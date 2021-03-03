@@ -179,6 +179,57 @@ fromTypeAnnotation a =
             )
 
 
+fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> Expression
+fromTyped b a =
+    let
+        toExpression : ( ModuleName, String ) -> Expression
+        toExpression ( module_, name ) =
+            case ( module_, name ) of
+                ( [], "Bool" ) ->
+                    FunctionOrValue [ "D" ] "bool"
+
+                ( [], "Int" ) ->
+                    FunctionOrValue [ "D" ] "int"
+
+                ( [], "Float" ) ->
+                    FunctionOrValue [ "D" ] "float"
+
+                ( [], "String" ) ->
+                    FunctionOrValue [ "D" ] "string"
+
+                ( [], "Maybe" ) ->
+                    FunctionOrValue [ "D_" ] "maybe"
+
+                ( [], "List" ) ->
+                    FunctionOrValue [ "D" ] "list"
+
+                ( [], "Array" ) ->
+                    FunctionOrValue [ "D" ] "array"
+
+                ( [], "Char" ) ->
+                    FunctionOrValue [ "D_" ] "char"
+
+                ( [], "Result" ) ->
+                    FunctionOrValue [ "D_" ] "result"
+
+                ( [], "Set" ) ->
+                    FunctionOrValue [ "D_" ] "set"
+
+                ( [], "Dict" ) ->
+                    FunctionOrValue [ "D_" ] "dict"
+
+                ( [ "Encode" ], "Value" ) ->
+                    FunctionOrValue [ "D" ] "value"
+
+                ( [ "Decode" ], "Value" ) ->
+                    FunctionOrValue [ "D" ] "value"
+
+                _ ->
+                    FunctionOrValue module_ (Function.nameFromString name)
+    in
+    Application (Node.map toExpression b :: List.map fromTypeAnnotation a)
+
+
 
 --
 
