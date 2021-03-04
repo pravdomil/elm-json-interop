@@ -276,11 +276,16 @@ fromTuple a =
 fromRecord : RecordDefinition -> Expression
 fromRecord a =
     let
-        mapFn : Lambda
-        mapFn =
-            { args = List.indexedMap (\i _ -> n (VarPattern ("v" ++ String.fromInt (i + 1)))) a
-            , expression = n (RecordExpr (List.indexedMap toSetter a))
-            }
+        fn : Expression
+        fn =
+            if a |> List.isEmpty then
+                RecordExpr []
+
+            else
+                LambdaExpression
+                    { args = List.indexedMap (\i _ -> n (VarPattern ("v" ++ String.fromInt (i + 1)))) a
+                    , expression = n (RecordExpr (List.indexedMap toSetter a))
+                    }
 
         toSetter : Int -> Node RecordField -> Node RecordSetter
         toSetter i b =
@@ -288,7 +293,7 @@ fromRecord a =
     in
     mapApplication
         (List.map (Node.map fromRecordField) a)
-        (LambdaExpression mapFn)
+        fn
 
 
 fromRecordField : RecordField -> Expression
