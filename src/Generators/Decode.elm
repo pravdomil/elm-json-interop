@@ -12,11 +12,12 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
 import Elm.Syntax.Signature exposing (Signature)
-import Elm.Syntax.Type exposing (Type)
+import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
 import Utils.Function as Function
+import Utils.String_ as String_
 
 
 fromFile : File -> String
@@ -132,17 +133,76 @@ fromCustomType a =
                 }
 
         Nothing ->
+            let
+                expression : Node Expression
+                expression =
+                    pipe
+                        (n
+                            (application
+                                [ n (FunctionOrValue [ "D" ] "field")
+                                , n (Literal "_")
+                                , n (FunctionOrValue [ "D" ] "int")
+                                ]
+                            )
+                        )
+                        (n decoderFn)
+                        |> n
+
+                decoderFn : Expression
+                decoderFn =
+                    application
+                        [ n (FunctionOrValue [ "D" ] "andThen")
+                        , n
+                            (LambdaExpression
+                                { args = [ n (VarPattern "i___") ]
+                                , expression =
+                                    CaseExpression
+                                        { expression = n (FunctionOrValue [] "i___")
+                                        , cases = a.constructors |> List.indexedMap fromCustomTypeConstructor
+                                        }
+                                        |> n
+                                }
+                            )
+                        ]
+            in
             FunctionDeclaration
                 { documentation = Nothing
                 , signature = a |> signature |> Just
                 , declaration =
                     { name = a.name |> Node.map Function.nameFromString
                     , arguments = a.generics |> List.map (Node.map VarPattern)
-                    , expression = n UnitExpr
+                    , expression = expression
                     }
                         |> n
                 }
                 |> n
+
+
+fromCustomTypeConstructor : Int -> Node ValueConstructor -> ( Node Pattern, Node Expression )
+fromCustomTypeConstructor i (Node _ a) =
+    let
+        decoder : Expression
+        decoder =
+            mapApplication
+                (FunctionOrValue [] (Node.value a.name))
+                arguments
+
+        arguments : List (Node Expression)
+        arguments =
+            a.arguments
+                |> List.indexedMap
+                    (\i_ v ->
+                        n
+                            (fromRecordField
+                                ( n (String_.letterFromAlphabet i_)
+                                , v
+                                )
+                            )
+                    )
+    in
+    ( n (IntPattern i)
+    , n decoder
+    )
 
 
 signature : { a | generics : List (Node String), name : Node String } -> Node Signature
