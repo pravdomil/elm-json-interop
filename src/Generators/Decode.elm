@@ -351,6 +351,11 @@ fromRecordField ( a, b ) =
 --
 
 
+n : a -> Node a
+n =
+    Node Range.emptyRange
+
+
 toFunctionTypeAnnotation : List (Node TypeAnnotation) -> Node TypeAnnotation
 toFunctionTypeAnnotation a =
     let
@@ -367,11 +372,6 @@ toFunctionTypeAnnotation a =
 
         b :: c :: rest ->
             FunctionTypeAnnotation c b |> n |> helper rest
-
-
-n : a -> Node a
-n =
-    Node Range.emptyRange
 
 
 application : List (Node Expression) -> Expression
