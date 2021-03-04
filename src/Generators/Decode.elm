@@ -122,86 +122,75 @@ fromCustomType a =
         oneConstructorAndOneArgument : Maybe (Node TypeAnnotation)
         oneConstructorAndOneArgument =
             a.constructors |> listSingleton |> Maybe.andThen (Node.value >> .arguments >> listSingleton)
-    in
-    case oneConstructorAndOneArgument of
-        Just b ->
-            fromTypeAlias
-                { documentation = a.documentation
-                , name = a.name
-                , generics = a.generics
-                , typeAnnotation = b
-                }
 
-        Nothing ->
-            let
-                expression : Node Expression
-                expression =
-                    pipe
-                        (n
-                            (application
-                                [ n (FunctionOrValue [ "D" ] "field")
-                                , n (Literal "_")
-                                , n (FunctionOrValue [ "D" ] "int")
-                                ]
-                            )
-                        )
-                        (n decoderFn)
-                        |> n
-
-                decoderFn : Expression
-                decoderFn =
-                    application
-                        [ n (FunctionOrValue [ "D" ] "andThen")
-                        , n
-                            (LambdaExpression
-                                { args = [ n (VarPattern "i___") ]
-                                , expression =
-                                    CaseExpression
-                                        { expression = n (FunctionOrValue [] "i___")
-                                        , cases = List.indexedMap fromCustomTypeConstructor a.constructors ++ [ fail ]
-                                        }
-                                        |> n
-                                }
-                            )
+        expression : Node Expression
+        expression =
+            pipe
+                (n
+                    (application
+                        [ n (FunctionOrValue [ "D" ] "field")
+                        , n (Literal "_")
+                        , n (FunctionOrValue [ "D" ] "int")
                         ]
+                    )
+                )
+                (n decoderFn)
+                |> n
 
-                fail : ( Node Pattern, Node Expression )
-                fail =
-                    ( n AllPattern
+        decoderFn : Expression
+        decoderFn =
+            application
+                [ n (FunctionOrValue [ "D" ] "andThen")
+                , n
+                    (LambdaExpression
+                        { args = [ n (VarPattern "i___") ]
+                        , expression =
+                            CaseExpression
+                                { expression = n (FunctionOrValue [] "i___")
+                                , cases = List.indexedMap fromCustomTypeConstructor a.constructors ++ [ fail ]
+                                }
+                                |> n
+                        }
+                    )
+                ]
+
+        fail : ( Node Pattern, Node Expression )
+        fail =
+            ( n AllPattern
+            , n
+                (application
+                    [ n (FunctionOrValue [ "D" ] "fail")
                     , n
-                        (application
-                            [ n (FunctionOrValue [ "D" ] "fail")
-                            , n
+                        (append
+                            (n (Literal ("I can't decode \\\"" ++ Node.value a.name ++ "\\\", unknown variant with index ")))
+                            (n
                                 (append
-                                    (n (Literal ("I can't decode \\\"" ++ Node.value a.name ++ "\\\", unknown variant with index ")))
                                     (n
-                                        (append
-                                            (n
-                                                (application
-                                                    [ n (FunctionOrValue [ "String" ] "fromInt")
-                                                    , n (FunctionOrValue [] "i___")
-                                                    ]
-                                                )
-                                            )
-                                            (n (Literal "."))
+                                        (application
+                                            [ n (FunctionOrValue [ "String" ] "fromInt")
+                                            , n (FunctionOrValue [] "i___")
+                                            ]
                                         )
                                     )
+                                    (n (Literal "."))
                                 )
-                            ]
+                            )
                         )
-                    )
-            in
-            FunctionDeclaration
-                { documentation = Nothing
-                , signature = a |> signature |> Just
-                , declaration =
-                    { name = a.name |> Node.map Function.nameFromString
-                    , arguments = a.generics |> List.map (Node.map VarPattern)
-                    , expression = expression
-                    }
-                        |> n
-                }
+                    ]
+                )
+            )
+    in
+    FunctionDeclaration
+        { documentation = Nothing
+        , signature = a |> signature |> Just
+        , declaration =
+            { name = a.name |> Node.map Function.nameFromString
+            , arguments = a.generics |> List.map (Node.map VarPattern)
+            , expression = expression
+            }
                 |> n
+        }
+        |> n
 
 
 fromCustomTypeConstructor : Int -> Node ValueConstructor -> ( Node Pattern, Node Expression )
