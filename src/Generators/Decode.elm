@@ -119,23 +119,36 @@ fromTypeAlias a =
 fromCustomType : Type -> Node Declaration
 fromCustomType a =
     let
-        oneConstructorAndOneArgument : Maybe (Node TypeAnnotation)
+        oneConstructorAndOneArgument : Maybe ( Node String, Node TypeAnnotation )
         oneConstructorAndOneArgument =
-            a.constructors |> listSingleton |> Maybe.andThen (Node.value >> .arguments >> listSingleton)
+            a.constructors
+                |> listSingleton
+                |> Maybe.andThen
+                    (\(Node _ v) ->
+                        v.arguments |> listSingleton |> Maybe.map (Tuple.pair v.name)
+                    )
 
         expression : Node Expression
         expression =
-            pipe
-                (n
-                    (application
-                        [ n (FunctionOrValue [ "D" ] "field")
-                        , n (Literal "_")
-                        , n (FunctionOrValue [ "D" ] "int")
-                        ]
-                    )
-                )
-                (n decoderFn)
-                |> n
+            case oneConstructorAndOneArgument of
+                Just ( b, c ) ->
+                    mapApplication
+                        (Node.map (FunctionOrValue []) b)
+                        [ fromTypeAnnotation c ]
+                        |> n
+
+                Nothing ->
+                    pipe
+                        (n
+                            (application
+                                [ n (FunctionOrValue [ "D" ] "field")
+                                , n (Literal "_")
+                                , n (FunctionOrValue [ "D" ] "int")
+                                ]
+                            )
+                        )
+                        (n decoderFn)
+                        |> n
 
         decoderFn : Expression
         decoderFn =
