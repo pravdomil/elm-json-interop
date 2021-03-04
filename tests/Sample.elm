@@ -31,27 +31,27 @@ type alias Record0 =
 
 
 type alias Record1 =
-    { a1 : String
+    { a : String
     }
 
 
 type alias Record2 =
-    { a1 : String
-    , a2 : String
+    { a : String
+    , b : String
     }
 
 
 type alias Record10 =
-    { a1 : String
-    , a2 : String
-    , a3 : String
-    , a4 : String
-    , a5 : String
-    , a6 : String
-    , a7 : String
-    , a8 : String
-    , a9 : String
-    , a10 : String
+    { a : String
+    , b : String
+    , c : String
+    , d : String
+    , e : String
+    , f : String
+    , g : String
+    , h : String
+    , i : String
+    , j : String
     }
 
 
