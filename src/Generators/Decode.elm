@@ -210,7 +210,7 @@ fromCustomTypeConstructor i (Node _ a) =
         decoder : Expression
         decoder =
             mapApplication
-                (FunctionOrValue [] (Node.value a.name))
+                (n (FunctionOrValue [] (Node.value a.name)))
                 arguments
 
         arguments : List (Node Expression)
@@ -378,7 +378,7 @@ fromRecord a =
             b |> Node.map (Tuple.mapSecond (Node.map (always (FunctionOrValue [] ("v" ++ String.fromInt (i + 1))))))
     in
     mapApplication
-        fn
+        (n fn)
         (List.map (Node.map fromRecordField) a)
 
 
@@ -444,26 +444,26 @@ application a =
     a |> List.map (ParenthesizedExpression >> n) |> Application
 
 
-mapApplication : Expression -> List (Node Expression) -> Expression
+mapApplication : Node Expression -> List (Node Expression) -> Expression
 mapApplication b a =
     case a of
         [] ->
             application
                 [ n (FunctionOrValue [ "D" ] "succeed")
-                , n b
+                , b
                 ]
 
         c :: [] ->
             application
                 [ n (FunctionOrValue [ "D" ] "map")
-                , n b
+                , b
                 , c
                 ]
 
         _ ->
             application
                 (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt (min 8 (List.length a))))
-                    :: n b
+                    :: b
                     :: (a |> List.take 8)
                 )
                 |> (\v ->
