@@ -16,6 +16,6 @@ mv bin/elm-json-interop.js bin/elm-json-interop
 chmod +x bin/elm-json-interop
 
 # To run tests.
-bin/elm-json-interop tests/Id.elm tests/Msg.elm tests/User.elm
-elm-format --yes tests/Id/*.elm tests/Msg/*.elm tests/User/*.elm
+bin/elm-json-interop tests/Sample.elm tests/Sample2.elm
+elm-format --yes tests/Sample/*.elm tests/Sample2/*.elm
 elm-test
