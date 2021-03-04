@@ -286,35 +286,9 @@ fromRecord a =
         toSetter i b =
             b |> Node.map (Tuple.mapSecond (Node.map (always (FunctionOrValue [] ("v" ++ String.fromInt (i + 1))))))
     in
-    if a |> List.isEmpty then
-        application
-            [ n (FunctionOrValue [ "D" ] "succeed")
-            , n (RecordExpr [])
-            ]
-
-    else
-        application
-            (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt (min 8 (List.length a))))
-                :: n (LambdaExpression mapFn)
-                :: (a |> List.take 8 |> List.map (Node.map fromRecordField))
-            )
-            |> (\v ->
-                    a
-                        |> List.drop 8
-                        |> List.foldl
-                            (\vv acc ->
-                                pipe
-                                    (n acc)
-                                    (n
-                                        (application
-                                            [ n (FunctionOrValue [ "D_" ] "apply")
-                                            , Node.map fromRecordField vv
-                                            ]
-                                        )
-                                    )
-                            )
-                            v
-               )
+    mapApplication
+        (List.map (Node.map fromRecordField) a)
+        (LambdaExpression mapFn)
 
 
 fromRecordField : RecordField -> Expression
@@ -377,6 +351,47 @@ toFunctionTypeAnnotation a =
 application : List (Node Expression) -> Expression
 application a =
     a |> List.map (ParenthesizedExpression >> n) |> Application
+
+
+mapApplication : List (Node Expression) -> Expression -> Expression
+mapApplication a b =
+    case a of
+        [] ->
+            application
+                [ n (FunctionOrValue [ "D" ] "succeed")
+                , n b
+                ]
+
+        c :: [] ->
+            application
+                [ n (FunctionOrValue [ "D" ] "map")
+                , n b
+                , c
+                ]
+
+        _ ->
+            application
+                (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt (min 8 (List.length a))))
+                    :: n b
+                    :: (a |> List.take 8)
+                )
+                |> (\v ->
+                        a
+                            |> List.drop 8
+                            |> List.foldl
+                                (\vv acc ->
+                                    pipe
+                                        (n acc)
+                                        (n
+                                            (application
+                                                [ n (FunctionOrValue [ "D_" ] "apply")
+                                                , vv
+                                                ]
+                                            )
+                                        )
+                                )
+                                v
+                   )
 
 
 pipe : Node Expression -> Node Expression -> Expression
