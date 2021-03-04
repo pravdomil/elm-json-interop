@@ -1,5 +1,9 @@
 module Sample exposing (..)
 
+import Array exposing (Array)
+import Dict exposing (Dict)
+import Set exposing (Set)
+
 
 type Type0
     = Type0
@@ -47,4 +51,36 @@ type alias Record10 =
     , a8 : String
     , a9 : String
     , a10 : String
+    }
+
+
+
+--
+
+
+type alias Sample a b c =
+    { -- Sum Types
+      unit : ()
+    , bool : Bool
+    , int : Int
+    , float : Float
+    , char : Char
+    , string : String
+
+    --
+    , list : List a
+    , array : Array a
+
+    --
+    , maybe : Maybe a
+    , result : Result a b
+
+    --
+    , set : Set a
+    , dict : Dict a b
+
+    -- Product Types
+    , tuple : ( a, b )
+    , tuple3 : ( a, b, c )
+    , record : {}
     }
