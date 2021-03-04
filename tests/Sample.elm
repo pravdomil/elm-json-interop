@@ -2,6 +2,7 @@ module Sample exposing (..)
 
 import Array exposing (Array)
 import Dict exposing (Dict)
+import Sample2 exposing (SampleType)
 import Set exposing (Set)
 
 
@@ -52,6 +53,18 @@ type alias Record10 =
     , a9 : String
     , a10 : String
     }
+
+
+
+--
+
+
+type alias TypeUnqualified =
+    SampleType
+
+
+type alias TypeQualified =
+    Sample2.SampleType
 
 
 
