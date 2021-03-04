@@ -57,14 +57,14 @@ record10 a =
     E.object [ ( "a1", E.string a.a1 ), ( "a2", E.string a.a2 ), ( "a3", E.string a.a3 ), ( "a4", E.string a.a4 ), ( "a5", E.string a.a5 ), ( "a6", E.string a.a6 ), ( "a7", E.string a.a7 ), ( "a8", E.string a.a8 ), ( "a9", E.string a.a9 ), ( "a10", E.string a.a10 ) ]
 
 
-typeUnqualified : A.TypeUnqualified -> E.Value
-typeUnqualified a =
-    sampleType a
-
-
 typeQualified : A.TypeQualified -> E.Value
 typeQualified a =
     Sample2.sampleType a
+
+
+typeUnqualified : A.TypeUnqualified -> E.Value
+typeUnqualified a =
+    sampleType a
 
 
 sample encodeA encodeB encodeC a =

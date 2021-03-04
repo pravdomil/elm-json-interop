@@ -59,12 +59,12 @@ type alias Record10 =
 --
 
 
-type alias TypeUnqualified =
-    SampleType
-
-
 type alias TypeQualified =
     Sample2.SampleType
+
+
+type alias TypeUnqualified =
+    SampleType
 
 
 

@@ -85,14 +85,14 @@ record10 =
     D_.map10 (\a b c d e f g h i j -> { a1 = a, a2 = b, a3 = c, a4 = d, a5 = e, a6 = f, a7 = g, a8 = h, a9 = i, a10 = j }) (D.field "a1" D.string) (D.field "a2" D.string) (D.field "a3" D.string) (D.field "a4" D.string) (D.field "a5" D.string) (D.field "a6" D.string) (D.field "a7" D.string) (D.field "a8" D.string) (D.field "a9" D.string) (D.field "a10" D.string)
 
 
-typeUnqualified : Decoder A.TypeUnqualified
-typeUnqualified =
-    sampleType
-
-
 typeQualified : Decoder A.TypeQualified
 typeQualified =
     Sample2.sampleType
+
+
+typeUnqualified : Decoder A.TypeUnqualified
+typeUnqualified =
+    sampleType
 
 
 sample aDecoder bDecoder cDecoder =
