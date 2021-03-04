@@ -3,15 +3,12 @@ module Example exposing (..)
 import Array
 import Dict
 import Expect
-import Id
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Msg exposing (..)
-import Msg.Decode
-import Msg.Encode
+import Sample exposing (..)
+import Sample2 exposing (..)
 import Set
 import Test exposing (..)
-import User exposing (..)
 
 
 suite : Test
@@ -42,19 +39,58 @@ suite =
         ]
 
 
-sample : Msg
+type0 : Type0
+type0 =
+    Type0
+
+
+type1 : Type1
+type1 =
+    Type1 "a1"
+
+
+type2 : Type2
+type2 =
+    Type2 "a1" "a2"
+
+
+type10 : Type10
+type10 =
+    Type10 "a1" "a2" "a3" "a4" "a5" "a6" "a7" "a8" "a9" "a10"
+
+
+record0 : Record0
+record0 =
+    Record0
+
+
+record1 : Record1
+record1 =
+    Record1 "a1"
+
+
+record2 : Record2
+record2 =
+    Record2 "a1" "a2"
+
+
+record10 : Record10
+record10 =
+    Record10 "a1" "a2" "a3" "a4" "a5" "a6" "a7" "a8" "a9" "a10"
+
+
+typeUnqualified : TypeUnqualified
+typeUnqualified =
+    SampleType
+
+
+typeQualified : TypeQualified
+typeQualified =
+    SampleType
+
+
+sample : Sample String String String
 sample =
-    ReceivedMessages
-        [ ( Id.fromString "1", message )
-        ]
-
-
-message : Message User String
-message =
-    let
-        ( a, b ) =
-            ( Anonymous, "hello" )
-    in
     { -- Sum Types
       unit = ()
     , bool = True
@@ -64,20 +100,20 @@ message =
     , string = "a"
 
     --
-    , list = [ { a = a, b = b } ]
-    , array = Array.fromList [ { a = a, b = b } ]
+    , list = [ "a" ]
+    , array = Array.fromList [ "a" ]
 
     --
-    , maybe = Just a
-    , result = Ok a
+    , maybe = Just "a"
+    , result = Ok "a"
 
     --
-    , set = Set.fromList [ 1 ]
-    , dict = Dict.fromList [ ( 1, a ) ]
+    , set = Set.fromList [ "a" ]
+    , dict = Dict.fromList [ ( "a", "b" ) ]
 
     -- Product Types
-    , tuple = ( a, b )
-    , tuple3 = ( a, b, b )
+    , tuple = ( "a", "b" )
+    , tuple3 = ( "a", "b", "c" )
     , record = {}
     }
 
