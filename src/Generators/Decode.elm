@@ -158,12 +158,38 @@ fromCustomType a =
                                 , expression =
                                     CaseExpression
                                         { expression = n (FunctionOrValue [] "i___")
-                                        , cases = a.constructors |> List.indexedMap fromCustomTypeConstructor
+                                        , cases = List.indexedMap fromCustomTypeConstructor a.constructors ++ [ fail ]
                                         }
                                         |> n
                                 }
                             )
                         ]
+
+                fail : ( Node Pattern, Node Expression )
+                fail =
+                    ( n AllPattern
+                    , n
+                        (application
+                            [ n (FunctionOrValue [ "D" ] "fail")
+                            , n
+                                (append
+                                    (n (Literal ("I can't decode \\\"" ++ Node.value a.name ++ "\\\", unknown variant with index ")))
+                                    (n
+                                        (append
+                                            (n
+                                                (application
+                                                    [ n (FunctionOrValue [ "String" ] "fromInt")
+                                                    , n (FunctionOrValue [] "i___")
+                                                    ]
+                                                )
+                                            )
+                                            (n (Literal "."))
+                                        )
+                                    )
+                                )
+                            ]
+                        )
+                    )
             in
             FunctionDeclaration
                 { documentation = Nothing
@@ -462,6 +488,11 @@ mapApplication b a =
 pipe : Node Expression -> Node Expression -> Expression
 pipe a b =
     OperatorApplication "|>" Left a b
+
+
+append : Node Expression -> Node Expression -> Expression
+append a b =
+    OperatorApplication "++" Right a b
 
 
 listSingleton : List a -> Maybe a
