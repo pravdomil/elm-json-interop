@@ -260,38 +260,38 @@ signature a =
 
 fromTypeAnnotation : Node TypeAnnotation -> Node Expression
 fromTypeAnnotation a =
-    a
-        |> Node.map
-            (\v ->
-                case v of
-                    GenericType b ->
-                        FunctionOrValue [] b
+    Node.map
+        (\v ->
+            case v of
+                GenericType b ->
+                    FunctionOrValue [] b
 
-                    Typed b c ->
-                        fromTyped b c
+                Typed b c ->
+                    fromTyped b c
 
-                    Unit ->
-                        FunctionOrValue [ "D_" ] "unit"
+                Unit ->
+                    FunctionOrValue [ "D_" ] "unit"
 
-                    Tupled b ->
-                        fromTuple b
+                Tupled b ->
+                    fromTuple b
 
-                    Record b ->
-                        fromRecord b
+                Record b ->
+                    fromRecord b
 
-                    GenericRecord _ _ ->
-                        -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
-                        application
-                            [ n (FunctionOrValue [ "Debug" ] "todo")
-                            , n (Literal "I don't know how to decode extensible record.")
-                            ]
+                GenericRecord _ _ ->
+                    -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
+                    application
+                        [ n (FunctionOrValue [ "Debug" ] "todo")
+                        , n (Literal "I don't know how to decode extensible record.")
+                        ]
 
-                    FunctionTypeAnnotation _ _ ->
-                        application
-                            [ n (FunctionOrValue [ "Debug" ] "todo")
-                            , n (Literal "I don't know how to decode function.")
-                            ]
-            )
+                FunctionTypeAnnotation _ _ ->
+                    application
+                        [ n (FunctionOrValue [ "Debug" ] "todo")
+                        , n (Literal "I don't know how to decode function.")
+                        ]
+        )
+        a
 
 
 fromTyped : Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> Expression
