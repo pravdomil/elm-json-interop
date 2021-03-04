@@ -292,8 +292,8 @@ fromRecord a =
             b |> Node.map (Tuple.mapSecond (Node.map (always (FunctionOrValue [] ("v" ++ String.fromInt (i + 1))))))
     in
     mapApplication
-        (List.map (Node.map fromRecordField) a)
         fn
+        (List.map (Node.map fromRecordField) a)
 
 
 fromRecordField : RecordField -> Expression
@@ -358,8 +358,8 @@ application a =
     a |> List.map (ParenthesizedExpression >> n) |> Application
 
 
-mapApplication : List (Node Expression) -> Expression -> Expression
-mapApplication a b =
+mapApplication : Expression -> List (Node Expression) -> Expression
+mapApplication b a =
     case a of
         [] ->
             application
