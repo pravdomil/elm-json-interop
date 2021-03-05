@@ -59,23 +59,6 @@ qualifyDeclaration file a =
 
 qualifyTypeAnnotation : File -> Node TypeAnnotation -> Node TypeAnnotation
 qualifyTypeAnnotation file a =
-    let
-        qualify_ : ( ModuleName, String ) -> ( ModuleName, String )
-        qualify_ b =
-            case b of
-                ( [], name ) ->
-                    ( name |> qualifyName file |> Maybe.withDefault []
-                    , name
-                    )
-
-                ( [ module_ ], name ) ->
-                    ( module_ |> expandAlias file |> Maybe.withDefault [ module_ ]
-                    , name
-                    )
-
-                _ ->
-                    b
-    in
     Node.map
         (\v ->
             case v of
@@ -84,7 +67,7 @@ qualifyTypeAnnotation file a =
 
                 Typed b c ->
                     Typed
-                        (b |> Node.map qualify_)
+                        (b |> Node.map (qualify file))
                         (c |> List.map (qualifyTypeAnnotation file))
 
                 Unit ->
@@ -103,6 +86,23 @@ qualifyTypeAnnotation file a =
                     v
         )
         a
+
+
+qualify : File -> ( ModuleName, String ) -> ( ModuleName, String )
+qualify file b =
+    case b of
+        ( [], name ) ->
+            ( name |> qualifyName file |> Maybe.withDefault []
+            , name
+            )
+
+        ( [ module_ ], name ) ->
+            ( module_ |> expandAlias file |> Maybe.withDefault [ module_ ]
+            , name
+            )
+
+        _ ->
+            b
 
 
 qualifyName : File -> String -> Maybe ModuleName
