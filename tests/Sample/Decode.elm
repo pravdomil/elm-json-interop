@@ -121,8 +121,8 @@ typeUnqualified =
     D.value
 
 
-sample : Decoder a -> (Decoder b -> (Decoder c -> Decoder (Sample a b c)))
-sample a b c =
+sample : Decoder comparable -> (Decoder b -> (Decoder c -> Decoder (Sample comparable b c)))
+sample comparable b c =
     D.map8
         (\v1 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 v12 v13 v14 v15 ->
             { unit = v1
@@ -148,12 +148,12 @@ sample a b c =
         (D.field "float" D.float)
         (D.field "char" D_.char)
         (D.field "string" D.string)
-        (D.field "list" (D.list a))
-        (D.field "array" (D.array a))
-        |> D_.apply (D_.maybeField "maybe" (D_.maybe a))
-        |> D_.apply (D.field "result" (D_.result a b))
-        |> D_.apply (D.field "set" (D_.set a))
-        |> D_.apply (D.field "dict" (D_.dict a b))
-        |> D_.apply (D.field "tuple" (D_.tuple a b))
-        |> D_.apply (D.field "tuple3" (D_.tuple3 a b c))
+        (D.field "list" (D.list comparable))
+        (D.field "array" (D.array comparable))
+        |> D_.apply (D_.maybeField "maybe" (D_.maybe comparable))
+        |> D_.apply (D.field "result" (D_.result comparable b))
+        |> D_.apply (D.field "set" (D_.set comparable))
+        |> D_.apply (D.field "dict" (D_.dict comparable b))
+        |> D_.apply (D.field "tuple" (D_.tuple comparable b))
+        |> D_.apply (D.field "tuple3" (D_.tuple3 comparable b c))
         |> D_.apply (D.field "record" (D.succeed {}))

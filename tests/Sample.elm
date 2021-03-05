@@ -76,7 +76,7 @@ type alias TypeUnqualified =
 --
 
 
-type alias Sample a b c =
+type alias Sample comparable b c =
     { -- Sum Types
       unit : ()
     , bool : Bool
@@ -86,19 +86,19 @@ type alias Sample a b c =
     , string : String
 
     --
-    , list : List a
-    , array : Array a
+    , list : List comparable
+    , array : Array comparable
 
     --
-    , maybe : Maybe a
-    , result : Result a b
+    , maybe : Maybe comparable
+    , result : Result comparable b
 
     --
-    , set : Set a
-    , dict : Dict a b
+    , set : Set comparable
+    , dict : Dict comparable b
 
     -- Product Types
-    , tuple : ( a, b )
-    , tuple3 : ( a, b, c )
+    , tuple : ( comparable, b )
+    , tuple3 : ( comparable, b, c )
     , record : {}
     }
