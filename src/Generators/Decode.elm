@@ -321,7 +321,7 @@ fromTyped b a =
                 ( [], "List" ) ->
                     FunctionOrValue [ "D" ] "list"
 
-                ( [], "Array" ) ->
+                ( [ "Array" ], "Array" ) ->
                     FunctionOrValue [ "D" ] "array"
 
                 ( [], "Maybe" ) ->
@@ -330,16 +330,16 @@ fromTyped b a =
                 ( [], "Result" ) ->
                     FunctionOrValue [ "D_" ] "result"
 
-                ( [], "Set" ) ->
+                ( [ "Set" ], "Set" ) ->
                     FunctionOrValue [ "D_" ] "set"
 
-                ( [], "Dict" ) ->
+                ( [ "Dict" ], "Dict" ) ->
                     FunctionOrValue [ "D_" ] "dict"
 
-                ( [ "Encode" ], "Value" ) ->
+                ( [ "Json", "Encode" ], "Value" ) ->
                     FunctionOrValue [ "D" ] "value"
 
-                ( [ "Decode" ], "Value" ) ->
+                ( [ "Json", "Decode" ], "Value" ) ->
                     FunctionOrValue [ "D" ] "value"
 
                 _ ->
