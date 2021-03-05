@@ -24,9 +24,6 @@ import Utils.String_ as String_
 fromFile : File -> String
 fromFile a =
     let
-        suffix : String
-        suffix =
-            "Decode"
 
         name : ModuleName
         name =
@@ -35,7 +32,7 @@ fromFile a =
         module_ : Node Module
         module_ =
             NormalModule
-                { moduleName = n (name ++ [ suffix ])
+                { moduleName = n (name ++ [ "Decode" ])
                 , exposingList = n (All Range.emptyRange)
                 }
                 |> n
