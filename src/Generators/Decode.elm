@@ -16,6 +16,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
+import Generators.Argument as Argument exposing (Argument(..))
 import Generators.Dependencies as Dependencies
 import Utils.ElmSyntax as ElmSyntax
 import Utils.Function as Function
@@ -345,13 +346,13 @@ fromRecord a =
 
             else
                 LambdaExpression
-                    { args = List.indexedMap (\i _ -> n (VarPattern ("v" ++ String.fromInt (i + 1)))) a
+                    { args = List.indexedMap (\i _ -> Argument i |> Argument.toPattern |> n) a
                     , expression = n (RecordExpr (List.indexedMap toSetter a))
                     }
 
         toSetter : Int -> Node RecordField -> Node RecordSetter
         toSetter i b =
-            b |> Node.map (Tuple.mapSecond (Node.map (always (FunctionOrValue [] ("v" ++ String.fromInt (i + 1))))))
+            b |> Node.map (Tuple.mapSecond (Node.map (always (Argument i |> Argument.toExpression))))
     in
     mapApplication
         (n fn)
