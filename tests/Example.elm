@@ -26,7 +26,7 @@ suite =
             "Type1"
             Sample.Encode.type1
             Sample.Decode.type1
-            """{"_":0,"a":"1"}"""
+            """"1\""""
             (Type1 "1")
         , test_
             "Type2"
