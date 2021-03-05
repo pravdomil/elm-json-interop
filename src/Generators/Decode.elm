@@ -43,7 +43,7 @@ fromFile a =
                 |> List.concatMap Dependencies.fromDeclaration
                 |> List.filterMap
                     (\( v, _ ) ->
-                        if v == [] || v == [ "D" ] || v == [ "D_" ] then
+                        if v == [] || v == [ "D" ] || v == [ "D_" ] || v == [ "String" ] then
                             Nothing
 
                         else
