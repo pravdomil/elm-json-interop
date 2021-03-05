@@ -17,6 +17,7 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
 import Generators.Dependencies as Dependencies
+import Utils.ElmSyntax as ElmSyntax
 import Utils.Function as Function
 import Utils.String_ as String_
 
@@ -413,30 +414,12 @@ signature a =
         typed b c =
             n (Typed (n ( [], b )) c)
     in
-    n (Signature (Node.map Function.nameFromString a.name) (toFunctionTypeAnnotation arguments))
+    n (Signature (Node.map Function.nameFromString a.name) (ElmSyntax.function arguments))
 
 
 n : a -> Node a
 n =
     Node Range.emptyRange
-
-
-toFunctionTypeAnnotation : List (Node TypeAnnotation) -> Node TypeAnnotation
-toFunctionTypeAnnotation a =
-    let
-        helper : List (Node TypeAnnotation) -> Node TypeAnnotation -> Node TypeAnnotation
-        helper b c =
-            b |> List.foldl (\v acc -> FunctionTypeAnnotation v acc |> n) c
-    in
-    case a |> List.reverse of
-        [] ->
-            n Unit
-
-        b :: [] ->
-            b
-
-        b :: c :: rest ->
-            FunctionTypeAnnotation c b |> n |> helper rest
 
 
 application : List (Node Expression) -> Expression
