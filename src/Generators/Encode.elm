@@ -189,7 +189,47 @@ fromCustomTypeConstructor arg i (Node _ a) =
             in
             a.arguments
                 |> List.foldl fold ( [], Argument.next arg )
-                |> Tuple.mapBoth List.reverse Argument.next
+                |> Tuple.mapFirst List.reverse
+
+        expressions : List (Node Expression)
+        expressions =
+            let
+                fold : Node TypeAnnotation -> ( Int, Argument, List (Node Expression) ) -> ( Int, Argument, List (Node Expression) )
+                fold b ( i_, arg_, acc ) =
+                    let
+                        expression : Node Expression
+                        expression =
+                            TupledExpression
+                                [ n (Literal (String_.letterFromAlphabet i_))
+                                , ElmSyntax.application
+                                    [ fromTypeAnnotation nextArg b
+                                    , n (Argument.toExpression arg_)
+                                    ]
+                                    |> n
+                                ]
+                                |> n
+                    in
+                    ( i_ + 1
+                    , Argument.next arg_
+                    , expression :: acc
+                    )
+            in
+            a.arguments
+                |> List.foldl fold ( 0, Argument.next arg, [] )
+                |> (\( _, _, v ) -> v)
+                |> List.reverse
+                |> (::)
+                    (TupledExpression
+                        [ n (Literal "_")
+                        , n
+                            (ElmSyntax.application
+                                [ n (FunctionOrValue [ "E" ] "int")
+                                , n (Integer i)
+                                ]
+                            )
+                        ]
+                        |> n
+                    )
     in
     ( NamedPattern
         (QualifiedNameRef [] (Node.value a.name))
