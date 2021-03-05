@@ -231,31 +231,6 @@ fromCustomTypeConstructor i (Node _ a) =
     )
 
 
-signature : { a | generics : List (Node String), name : Node String } -> Node Signature
-signature a =
-    let
-        arguments : List (Node TypeAnnotation)
-        arguments =
-            []
-                ++ (a.generics
-                        |> List.map
-                            (\v ->
-                                typed "Decoder" [ Node.map GenericType v ]
-                            )
-                   )
-                ++ [ typed
-                        "Decoder"
-                        [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
-                        ]
-                   ]
-
-        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
-        typed b c =
-            n (Typed (n ( [], b )) c)
-    in
-    n (Signature (Node.map Function.nameFromString a.name) (toFunctionTypeAnnotation arguments))
-
-
 fromTypeAnnotation : Node TypeAnnotation -> Node Expression
 fromTypeAnnotation a =
     Node.map
@@ -414,6 +389,31 @@ fromRecordField ( a, b ) =
 
 
 --
+
+
+signature : { a | generics : List (Node String), name : Node String } -> Node Signature
+signature a =
+    let
+        arguments : List (Node TypeAnnotation)
+        arguments =
+            []
+                ++ (a.generics
+                        |> List.map
+                            (\v ->
+                                typed "Decoder" [ Node.map GenericType v ]
+                            )
+                   )
+                ++ [ typed
+                        "Decoder"
+                        [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
+                        ]
+                   ]
+
+        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
+        typed b c =
+            n (Typed (n ( [], b )) c)
+    in
+    n (Signature (Node.map Function.nameFromString a.name) (toFunctionTypeAnnotation arguments))
 
 
 n : a -> Node a
