@@ -4,101 +4,156 @@ module Sample.Decode exposing (..)
 -}
 
 import Json.Decode as D exposing (Decoder)
-import Sample as A
-import Sample2.Decode as Sample2
+import Sample exposing (..)
+import Sample2.Decode
 import Utils.Json.Decode_ as D_
 
 
-type0 : Decoder A.Type0
+type0 : Decoder Type0
 type0 =
     D.field "_" D.int
         |> D.andThen
             (\i___ ->
                 case i___ of
                     0 ->
-                        D.succeed A.Type0
+                        D.succeed Type0
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Type0" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                        D.fail ("I can't decode \"Type0\", unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
 
 
-type1 : Decoder A.Type1
+type1 : Decoder Type1
 type1 =
-    D.field "_" D.int
-        |> D.andThen
-            (\i___ ->
-                case i___ of
-                    0 ->
-                        D.map A.Type1 (D.field "a" D.string)
-
-                    _ ->
-                        D.fail ("I can't decode " ++ "Type1" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
-            )
+    D.map Type1 D.string
 
 
-type2 : Decoder A.Type2
+type2 : Decoder Type2
 type2 =
     D.field "_" D.int
         |> D.andThen
             (\i___ ->
                 case i___ of
                     0 ->
-                        D.map2 A.Type2 (D.field "a" D.string) (D.field "b" D.string)
+                        D.map2 Type2 (D.field "a" D.string) (D.field "b" D.string)
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Type2" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                        D.fail ("I can't decode \"Type2\", unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
 
 
-type10 : Decoder A.Type10
+type10 : Decoder Type10
 type10 =
     D.field "_" D.int
         |> D.andThen
             (\i___ ->
                 case i___ of
                     0 ->
-                        D_.map10 A.Type10 (D.field "a" D.string) (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) (D.field "i" D.string) (D.field "j" D.string)
+                        D.map8 Type10 (D.field "a" D.string) (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) |> D_.apply (D.field "i" D.string) |> D_.apply (D.field "j" D.string)
 
                     _ ->
-                        D.fail ("I can't decode " ++ "Type10" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                        D.fail ("I can't decode \"Type10\", unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
 
 
-record0 : Decoder A.Record0
+record0 : Decoder Record0
 record0 =
     D.succeed {}
 
 
-record1 : Decoder A.Record1
+record1 : Decoder Record1
 record1 =
-    D.map (\a -> { a = a }) (D.field "a" D.string)
+    D.map (\v1 -> { a = v1 }) (D.field "a" D.string)
 
 
-record2 : Decoder A.Record2
+record2 : Decoder Record2
 record2 =
-    D.map2 (\a b -> { a = a, b = b }) (D.field "a" D.string) (D.field "b" D.string)
+    D.map2
+        (\v1 v2 ->
+            { a = v1
+            , b = v2
+            }
+        )
+        (D.field "a" D.string)
+        (D.field "b" D.string)
 
 
-record10 : Decoder A.Record10
+record10 : Decoder Record10
 record10 =
-    D_.map10 (\a b c d e f g h i j -> { a = a, b = b, c = c, d = d, e = e, f = f, g = g, h = h, i = i, j = j }) (D.field "a" D.string) (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) (D.field "i" D.string) (D.field "j" D.string)
+    D.map8
+        (\v1 v2 v3 v4 v5 v6 v7 v8 v9 v10 ->
+            { a = v1
+            , b = v2
+            , c = v3
+            , d = v4
+            , e = v5
+            , f = v6
+            , g = v7
+            , h = v8
+            , i = v9
+            , j = v10
+            }
+        )
+        (D.field "a" D.string)
+        (D.field "b" D.string)
+        (D.field "c" D.string)
+        (D.field "d" D.string)
+        (D.field "e" D.string)
+        (D.field "f" D.string)
+        (D.field "g" D.string)
+        (D.field "h" D.string)
+        |> D_.apply (D.field "i" D.string)
+        |> D_.apply (D.field "j" D.string)
 
 
-typeQualified : Decoder A.TypeQualified
+typeQualified : Decoder TypeQualified
 typeQualified =
-    Sample2.sampleType
+    Sample2.Decode.sampleType
 
 
-typeQualifiedViaAlias : Decoder A.TypeQualifiedViaAlias
+typeQualifiedViaAlias : Decoder TypeQualifiedViaAlias
 typeQualifiedViaAlias =
     D.value
 
 
-typeUnqualified : Decoder A.TypeUnqualified
+typeUnqualified : Decoder TypeUnqualified
 typeUnqualified =
     D.value
 
 
-sample aDecoder bDecoder cDecoder =
-    D_.map15 (\a b c d e f g h i j k l m n o -> { unit = a, bool = b, int = c, float = d, char = e, string = f, list = g, array = h, maybe = i, result = j, set = k, dict = l, tuple = m, tuple3 = n, record = o }) (D.field "unit" D_.unit) (D.field "bool" D.bool) (D.field "int" D.int) (D.field "float" D.float) (D.field "char" D_.char) (D.field "string" D.string) (D.field "list" (D.list aDecoder)) (D.field "array" (D.array aDecoder)) (D_.maybeField "maybe" (D_.maybe aDecoder)) (D.field "result" (D_.result aDecoder bDecoder)) (D.field "set" (D_.set aDecoder)) (D.field "dict" (D_.dict aDecoder bDecoder)) (D.field "tuple" (D_.tuple aDecoder bDecoder)) (D.field "tuple3" (D_.tuple3 aDecoder bDecoder cDecoder)) (D.field "record" (D.succeed {}))
+sample : Decoder a -> (Decoder b -> (Decoder c -> Decoder (Sample a b c)))
+sample a b c =
+    D.map8
+        (\v1 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 v12 v13 v14 v15 ->
+            { unit = v1
+            , bool = v2
+            , int = v3
+            , float = v4
+            , char = v5
+            , string = v6
+            , list = v7
+            , array = v8
+            , maybe = v9
+            , result = v10
+            , set = v11
+            , dict = v12
+            , tuple = v13
+            , tuple3 = v14
+            , record = v15
+            }
+        )
+        (D.field "unit" D_.unit)
+        (D.field "bool" D.bool)
+        (D.field "int" D.int)
+        (D.field "float" D.float)
+        (D.field "char" D_.char)
+        (D.field "string" D.string)
+        (D.field "list" (D.list a))
+        (D.field "array" (D.array a))
+        |> D_.apply (D_.maybeField "maybe" (D_.maybe a))
+        |> D_.apply (D.field "result" (D_.result a b))
+        |> D_.apply (D.field "set" (D_.set a))
+        |> D_.apply (D.field "dict" (D_.dict a b))
+        |> D_.apply (D.field "tuple" (D_.tuple a b))
+        |> D_.apply (D.field "tuple3" (D_.tuple3 a b c))
+        |> D_.apply (D.field "record" (D.succeed {}))

@@ -4,19 +4,19 @@ module Sample2.Decode exposing (..)
 -}
 
 import Json.Decode as D exposing (Decoder)
-import Sample2 as A
+import Sample2 exposing (..)
 import Utils.Json.Decode_ as D_
 
 
-sampleType : Decoder A.SampleType
+sampleType : Decoder SampleType
 sampleType =
     D.field "_" D.int
         |> D.andThen
             (\i___ ->
                 case i___ of
                     0 ->
-                        D.succeed A.SampleType
+                        D.succeed SampleType
 
                     _ ->
-                        D.fail ("I can't decode " ++ "SampleType" ++ ", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                        D.fail ("I can't decode \"SampleType\", unknown variant with index " ++ String.fromInt i___ ++ ".")
             )
