@@ -68,6 +68,11 @@ qualifyTypeAnnotation file a =
                     , name
                     )
 
+                ( [ module_ ], name ) ->
+                    ( module_ |> expandAlias file |> Maybe.withDefault [ module_ ]
+                    , name
+                    )
+
                 _ ->
                     b
     in
@@ -134,5 +139,20 @@ qualifyName file a =
     in
     file.imports
         |> List.filter isImportExposing
+        |> List.head
+        |> Maybe.map (Node.value >> .moduleName >> Node.value)
+
+
+expandAlias : File -> String -> Maybe ModuleName
+expandAlias file a =
+    let
+        isAlias : Node Import -> Bool
+        isAlias (Node _ b) =
+            b.moduleAlias
+                |> Maybe.map (\v -> Node.value v == [ a ])
+                |> Maybe.withDefault False
+    in
+    file.imports
+        |> List.filter isAlias
         |> List.head
         |> Maybe.map (Node.value >> .moduleName >> Node.value)
