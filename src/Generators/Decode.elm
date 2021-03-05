@@ -306,7 +306,14 @@ fromTyped b a =
                     FunctionOrValue [ "D" ] "value"
 
                 _ ->
-                    FunctionOrValue (module_ ++ [ "Decode" ]) (Function.nameFromString name)
+                    FunctionOrValue
+                        (if module_ == [] then
+                            []
+
+                         else
+                            module_ ++ [ "Decode" ]
+                        )
+                        (Function.nameFromString name)
     in
     ElmSyntax.application (Node.map toExpression b :: List.map fromTypeAnnotation a)
 
