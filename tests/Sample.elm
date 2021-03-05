@@ -76,7 +76,7 @@ type alias TypeUnqualified =
 --
 
 
-type alias Sample comparable b c =
+type alias SampleRecord comparable b c =
     { -- Sum Types
       unit : ()
     , bool : Bool
