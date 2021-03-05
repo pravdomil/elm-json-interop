@@ -14,6 +14,7 @@ import Elm.Syntax.Signature exposing (Signature)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Elm.Writer as Writer
+import Generators.Argument as Argument exposing (Argument(..))
 import Generators.Dependencies as Dependencies
 import Utils.ElmSyntax as ElmSyntax
 import Utils.Function as Function
@@ -99,17 +100,71 @@ fromDeclaration a =
 
 fromTypeAlias : TypeAlias -> Node Declaration
 fromTypeAlias a =
+    let
+        arg : Argument
+        arg =
+            Argument 0
+    in
     FunctionDeclaration
         { documentation = Nothing
         , signature = a |> signature |> Just
         , declaration =
             { name = a.name |> Node.map Function.nameFromString
-            , arguments = a.generics |> List.map (Node.map VarPattern)
-            , expression = n UnitExpr
+            , arguments = (a.generics |> List.map (Node.map VarPattern)) ++ [ n (Argument.toPattern arg) ]
+            , expression = a.typeAnnotation |> fromTypeAnnotation arg
             }
                 |> n
         }
         |> n
+
+
+fromTypeAnnotation : Argument -> Node TypeAnnotation -> Node Expression
+fromTypeAnnotation arg a =
+    Node.map
+        (\v ->
+            (case v of
+                GenericType b ->
+                    FunctionOrValue [] b
+
+                Typed _ _ ->
+                    UnitExpr
+
+                Unit ->
+                    FunctionOrValue [ "E_" ] "unit"
+
+                Tupled b ->
+                    FunctionOrValue [ "E_" ]
+                        (if List.length b == 2 then
+                            "tuple"
+
+                         else
+                            "tuple3"
+                        )
+
+                Record _ ->
+                    UnitExpr
+
+                GenericRecord _ _ ->
+                    -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
+                    ElmSyntax.application
+                        [ n (FunctionOrValue [ "Debug" ] "todo")
+                        , n (Literal "I don't know how to encode extensible record.")
+                        ]
+
+                FunctionTypeAnnotation _ _ ->
+                    ElmSyntax.application
+                        [ n (FunctionOrValue [ "Debug" ] "todo")
+                        , n (Literal "I don't know how to encode function.")
+                        ]
+            )
+                |> (\vv ->
+                        ElmSyntax.application
+                            [ n vv
+                            , n (Argument.toExpression arg)
+                            ]
+                   )
+        )
+        a
 
 
 
