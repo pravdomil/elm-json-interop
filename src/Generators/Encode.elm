@@ -2,6 +2,7 @@ module Generators.Encode exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
+import Elm.Syntax.Expression exposing (Expression(..))
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module(..))
@@ -9,9 +10,12 @@ import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
+import Elm.Syntax.Signature exposing (Signature)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
+import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 import Elm.Writer as Writer
 import Generators.Dependencies as Dependencies
+import Utils.ElmSyntax as ElmSyntax
 import Utils.Function as Function
 
 
@@ -69,3 +73,77 @@ additionalImports a =
     , Import (n [ "Utils", "Json", "Encode_" ]) (Just (n [ "E_" ])) (Just (n (Explicit [ n (TypeOrAliasExpose "Encoder") ])))
     ]
         |> List.map n
+
+
+fromDeclaration : Node Declaration -> Maybe (Node Declaration)
+fromDeclaration a =
+    case a |> Node.value of
+        FunctionDeclaration _ ->
+            Nothing
+
+        AliasDeclaration b ->
+            Just (fromTypeAlias b)
+
+        CustomTypeDeclaration _ ->
+            Nothing
+
+        PortDeclaration _ ->
+            Nothing
+
+        InfixDeclaration _ ->
+            Nothing
+
+        Destructuring _ _ ->
+            Nothing
+
+
+fromTypeAlias : TypeAlias -> Node Declaration
+fromTypeAlias a =
+    FunctionDeclaration
+        { documentation = Nothing
+        , signature = a |> signature |> Just
+        , declaration =
+            { name = a.name |> Node.map Function.nameFromString
+            , arguments = a.generics |> List.map (Node.map VarPattern)
+            , expression = n UnitExpr
+            }
+                |> n
+        }
+        |> n
+
+
+
+--
+
+
+signature : { a | generics : List (Node String), name : Node String } -> Node Signature
+signature a =
+    let
+        arguments : List (Node TypeAnnotation)
+        arguments =
+            []
+                ++ (a.generics
+                        |> List.map
+                            (\v ->
+                                typed "Encoder" [ Node.map GenericType v ]
+                            )
+                   )
+                ++ [ typed
+                        "Encoder"
+                        [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
+                        ]
+                   ]
+
+        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
+        typed b c =
+            n (Typed (n ( [], b )) c)
+    in
+    { name = Node.map Function.nameFromString a.name
+    , typeAnnotation = ElmSyntax.function arguments
+    }
+        |> n
+
+
+n : a -> Node a
+n =
+    Node Range.emptyRange
