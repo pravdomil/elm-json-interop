@@ -15,8 +15,8 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
-import Generators.Argument as Argument exposing (Argument(..))
-import Generators.Dependencies as Dependencies
+import Utils.Argument as Argument exposing (Argument(..))
+import Utils.Dependencies as Dependencies
 import Utils.ElmSyntax as ElmSyntax
 import Utils.Function as Function
 import Utils.String_ as String_

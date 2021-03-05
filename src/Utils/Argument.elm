@@ -1,4 +1,4 @@
-module Generators.Argument exposing (..)
+module Utils.Argument exposing (..)
 
 import Elm.Syntax.Expression exposing (Expression(..))
 import Elm.Syntax.Pattern exposing (Pattern(..))

@@ -6,12 +6,12 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.Decode as Decode
 import Generators.Encode as Encode
-import Generators.Imports as Imports
 import Interop.JavaScript as JavaScript exposing (Exception)
 import Interop.NodeJs as NodeJs
 import Parser
 import Regex
 import Task exposing (Task)
+import Utils.Imports as Imports
 import Utils.Task_ as Task_
 
 

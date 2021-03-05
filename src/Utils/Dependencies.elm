@@ -1,4 +1,4 @@
-module Generators.Dependencies exposing (..)
+module Utils.Dependencies exposing (..)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Expression exposing (Expression(..), Function, LetDeclaration(..))

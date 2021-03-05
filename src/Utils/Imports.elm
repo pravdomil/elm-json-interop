@@ -1,4 +1,4 @@
-module Generators.Imports exposing (..)
+module Utils.Imports exposing (..)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
 import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
