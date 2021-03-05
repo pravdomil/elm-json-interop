@@ -2,7 +2,8 @@ module Sample exposing (..)
 
 import Array exposing (Array)
 import Dict exposing (Dict)
-import Sample2 exposing (SampleType)
+import Json.Decode as Decode exposing (Value)
+import Sample2
 import Set exposing (Set)
 
 
@@ -63,8 +64,12 @@ type alias TypeQualified =
     Sample2.SampleType
 
 
+type alias TypeQualifiedViaAlias =
+    Decode.Value
+
+
 type alias TypeUnqualified =
-    SampleType
+    Value
 
 
 

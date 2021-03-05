@@ -75,11 +75,17 @@ suite =
             """{"_":0}"""
             SampleType
         , test_
+            "TypeQualifiedViaAlias"
+            Sample.Encode.typeQualifiedViaAlias
+            Sample.Decode.typeQualifiedViaAlias
+            """"1\""""
+            (Encode.string "1")
+        , test_
             "TypeUnqualified"
             Sample.Encode.typeUnqualified
             Sample.Decode.typeUnqualified
-            """{"_":0}"""
-            SampleType
+            """"1\""""
+            (Encode.string "1")
 
         --
         , test_
