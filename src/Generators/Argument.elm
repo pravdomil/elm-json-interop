@@ -8,6 +8,11 @@ type Argument
     = Argument Int
 
 
+next : Argument -> Argument
+next (Argument a) =
+    Argument (a + 1)
+
+
 toString : Argument -> String
 toString (Argument a) =
     "v" ++ String.fromInt (a + 1)
