@@ -15,12 +15,12 @@ type alias Encoder a =
 --
 
 
-unit : () -> E.Value
+unit : Encoder ()
 unit _ =
     E.object []
 
 
-char : Char -> E.Value
+char : Encoder Char
 char a =
     String.fromChar a |> E.string
 
@@ -29,7 +29,7 @@ char a =
 --
 
 
-maybe : (a -> E.Value) -> Maybe a -> E.Value
+maybe : Encoder a -> Encoder (Maybe a)
 maybe encode a =
     case a of
         Just b ->
@@ -39,7 +39,7 @@ maybe encode a =
             E.null
 
 
-result : (e -> E.Value) -> (v -> E.Value) -> Result e v -> E.Value
+result : Encoder e -> Encoder v -> Encoder (Result e v)
 result encodeError encodeValue a =
     case a of
         Ok b ->
@@ -53,7 +53,7 @@ result encodeError encodeValue a =
 --
 
 
-dict : (comparable -> E.Value) -> (v -> E.Value) -> Dict comparable v -> E.Value
+dict : Encoder comparable -> Encoder v -> Encoder (Dict comparable v)
 dict encodeKey encodeValue a =
     a
         |> Dict.toList
@@ -64,11 +64,11 @@ dict encodeKey encodeValue a =
 --
 
 
-tuple : (a -> E.Value) -> (b -> E.Value) -> ( a, b ) -> E.Value
+tuple : Encoder a -> Encoder b -> Encoder ( a, b )
 tuple encodeA encodeB ( a, b ) =
     E.object [ ( "a", encodeA a ), ( "b", encodeB b ) ]
 
 
-tuple3 : (a -> E.Value) -> (b -> E.Value) -> (c -> E.Value) -> ( a, b, c ) -> E.Value
+tuple3 : Encoder a -> Encoder b -> Encoder c -> Encoder ( a, b, c )
 tuple3 encodeA encodeB encodeC ( a, b, c ) =
     E.object [ ( "a", encodeA a ), ( "b", encodeB b ), ( "c", encodeC c ) ]
