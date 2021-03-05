@@ -1,7 +1,7 @@
 module Generators.Encode exposing (fromFile)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
-import Elm.Syntax.Exposing exposing (Exposing(..))
+import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.File exposing (File)
 import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module(..))
@@ -66,6 +66,6 @@ additionalImports : ModuleName -> List (Node Import)
 additionalImports a =
     [ Import (n a) Nothing (Just (n (All Range.emptyRange)))
     , Import (n [ "Json", "Encode" ]) (Just (n [ "E" ])) Nothing
-    , Import (n [ "Utils", "Json", "Encode_" ]) (Just (n [ "E_" ])) Nothing
+    , Import (n [ "Utils", "Json", "Encode_" ]) (Just (n [ "E_" ])) (Just (n (Explicit [ n (TypeOrAliasExpose "Encoder") ])))
     ]
         |> List.map n
