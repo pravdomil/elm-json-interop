@@ -154,13 +154,7 @@ fromTypeAnnotation arg a =
                     FunctionOrValue [ "E_" ] "unit"
 
                 Tupled b ->
-                    FunctionOrValue [ "E_" ]
-                        (if List.length b == 2 then
-                            "tuple"
-
-                         else
-                            "tuple3"
-                        )
+                    fromTuple arg b
 
                 Record b ->
                     fromRecord arg b
@@ -179,6 +173,23 @@ fromTypeAnnotation arg a =
                         ]
         )
         a
+
+
+fromTuple : Argument -> List (Node TypeAnnotation) -> Expression
+fromTuple arg a =
+    let
+        expression : Node Expression
+        expression =
+            FunctionOrValue [ "E_" ]
+                (if List.length a == 2 then
+                    "tuple"
+
+                 else
+                    "tuple3"
+                )
+                |> n
+    in
+    ElmSyntax.application (expression :: List.map (fromTypeAnnotation arg) a)
 
 
 fromTyped : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> Expression
