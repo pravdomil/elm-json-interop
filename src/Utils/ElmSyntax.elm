@@ -1,5 +1,6 @@
 module Utils.ElmSyntax exposing (..)
 
+import Elm.Syntax.Expression exposing (Expression(..))
 import Elm.Syntax.Node exposing (Node(..))
 import Elm.Syntax.Range as Range
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
@@ -21,6 +22,11 @@ function a =
 
         b :: c :: rest ->
             FunctionTypeAnnotation c b |> n |> helper rest
+
+
+application : List (Node Expression) -> Expression
+application a =
+    a |> List.map (ParenthesizedExpression >> n) |> Application
 
 
 n : a -> Node a

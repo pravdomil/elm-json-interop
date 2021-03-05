@@ -139,7 +139,7 @@ fromCustomType a =
                 Nothing ->
                     pipe
                         (n
-                            (application
+                            (ElmSyntax.application
                                 [ n (FunctionOrValue [ "D" ] "field")
                                 , n (Literal "_")
                                 , n (FunctionOrValue [ "D" ] "int")
@@ -151,7 +151,7 @@ fromCustomType a =
 
         decoderFn : Expression
         decoderFn =
-            application
+            ElmSyntax.application
                 [ n (FunctionOrValue [ "D" ] "andThen")
                 , n
                     (LambdaExpression
@@ -170,7 +170,7 @@ fromCustomType a =
         fail =
             ( n AllPattern
             , n
-                (application
+                (ElmSyntax.application
                     [ n (FunctionOrValue [ "D" ] "fail")
                     , n
                         (append
@@ -178,7 +178,7 @@ fromCustomType a =
                             (n
                                 (append
                                     (n
-                                        (application
+                                        (ElmSyntax.application
                                             [ n (FunctionOrValue [ "String" ] "fromInt")
                                             , n (FunctionOrValue [] "i___")
                                             ]
@@ -254,13 +254,13 @@ fromTypeAnnotation a =
 
                 GenericRecord _ _ ->
                     -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
-                    application
+                    ElmSyntax.application
                         [ n (FunctionOrValue [ "Debug" ] "todo")
                         , n (Literal "I don't know how to decode extensible record.")
                         ]
 
                 FunctionTypeAnnotation _ _ ->
-                    application
+                    ElmSyntax.application
                         [ n (FunctionOrValue [ "Debug" ] "todo")
                         , n (Literal "I don't know how to decode function.")
                         ]
@@ -316,7 +316,7 @@ fromTyped b a =
                 _ ->
                     FunctionOrValue (module_ ++ [ "Decode" ]) (Function.nameFromString name)
     in
-    application (Node.map toExpression b :: List.map fromTypeAnnotation a)
+    ElmSyntax.application (Node.map toExpression b :: List.map fromTypeAnnotation a)
 
 
 fromTuple : List (Node TypeAnnotation) -> Expression
@@ -332,7 +332,7 @@ fromTuple a =
             )
                 |> n
     in
-    application (fn :: List.map fromTypeAnnotation a)
+    ElmSyntax.application (fn :: List.map fromTypeAnnotation a)
 
 
 fromRecord : RecordDefinition -> Expression
@@ -385,7 +385,7 @@ fromRecordField ( a, b ) =
                     )
                 |> Node.map Literal
     in
-    application [ fn, name, fromTypeAnnotation b ]
+    ElmSyntax.application [ fn, name, fromTypeAnnotation b ]
 
 
 
@@ -422,29 +422,24 @@ n =
     Node Range.emptyRange
 
 
-application : List (Node Expression) -> Expression
-application a =
-    a |> List.map (ParenthesizedExpression >> n) |> Application
-
-
 mapApplication : Node Expression -> List (Node Expression) -> Expression
 mapApplication b a =
     case a of
         [] ->
-            application
+            ElmSyntax.application
                 [ n (FunctionOrValue [ "D" ] "succeed")
                 , b
                 ]
 
         c :: [] ->
-            application
+            ElmSyntax.application
                 [ n (FunctionOrValue [ "D" ] "map")
                 , b
                 , c
                 ]
 
         _ ->
-            application
+            ElmSyntax.application
                 (n (FunctionOrValue [ "D" ] ("map" ++ String.fromInt (min 8 (List.length a))))
                     :: b
                     :: (a |> List.take 8)
@@ -457,7 +452,7 @@ mapApplication b a =
                                     pipe
                                         (n acc)
                                         (n
-                                            (application
+                                            (ElmSyntax.application
                                                 [ n (FunctionOrValue [ "D_" ] "apply")
                                                 , vv
                                                 ]
