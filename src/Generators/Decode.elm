@@ -17,7 +17,6 @@ import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
 import Generators.Dependencies as Dependencies
-import Generators.Imports as Imports
 import Utils.Function as Function
 import Utils.String_ as String_
 
@@ -25,13 +24,9 @@ import Utils.String_ as String_
 fromFile : File -> String
 fromFile a =
     let
-        b : File
-        b =
-            a |> Imports.qualifyFile
-
         name : ModuleName
         name =
-            b.moduleDefinition |> Node.value |> Module.moduleName
+            a.moduleDefinition |> Node.value |> Module.moduleName
 
         module_ : Node Module
         module_ =
@@ -57,9 +52,9 @@ fromFile a =
 
         declarations : List (Node Declaration)
         declarations =
-            b.declarations |> List.filterMap fromDeclaration
+            a.declarations |> List.filterMap fromDeclaration
     in
-    { b
+    { a
         | moduleDefinition = module_
         , imports = imports
         , declarations = declarations

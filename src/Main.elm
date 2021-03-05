@@ -6,6 +6,7 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.Decode as Decode
 import Generators.Encode as Encode
+import Generators.Imports as Imports
 import Interop.JavaScript as JavaScript exposing (Exception)
 import Interop.NodeJs as NodeJs
 import Parser
@@ -115,7 +116,7 @@ processFile_ binPath fullPath rawFile =
 
         file : File
         file =
-            rawFile |> Processing.process Processing.init
+            rawFile |> Processing.process Processing.init |> Imports.qualifyFile
     in
     (case fullPath |> srcFolderPath of
         Just srcFolder ->
