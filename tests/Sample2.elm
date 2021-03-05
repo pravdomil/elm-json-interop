@@ -1,5 +1,5 @@
 module Sample2 exposing (..)
 
 
-type SampleType
-    = SampleType
+type SampleType2
+    = SampleType2

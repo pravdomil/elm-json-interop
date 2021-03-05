@@ -61,7 +61,7 @@ type alias Record10 =
 
 
 type alias TypeQualified =
-    Sample2.SampleType
+    Sample2.SampleType2
 
 
 type alias TypeQualifiedViaAlias =

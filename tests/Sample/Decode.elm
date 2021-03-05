@@ -108,7 +108,7 @@ record10 =
 
 typeQualified : Decoder TypeQualified
 typeQualified =
-    Sample2.Decode.sampleType
+    Sample2.Decode.sampleType2
 
 
 typeQualifiedViaAlias : Decoder TypeQualifiedViaAlias

@@ -73,7 +73,7 @@ suite =
             Sample.Encode.typeQualified
             Sample.Decode.typeQualified
             """{"_":0}"""
-            SampleType
+            SampleType2
         , test_
             "TypeQualifiedViaAlias"
             Sample.Encode.typeQualifiedViaAlias
