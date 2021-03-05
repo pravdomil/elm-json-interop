@@ -126,8 +126,8 @@ fromTypeAnnotation arg a =
                 GenericType b ->
                     FunctionOrValue [] b
 
-                Typed _ _ ->
-                    UnitExpr
+                Typed b c ->
+                    fromTyped arg b c
 
                 Unit ->
                     FunctionOrValue [ "E_" ] "unit"
@@ -165,6 +165,57 @@ fromTypeAnnotation arg a =
                    )
         )
         a
+
+
+fromTyped : Argument -> Node ( ModuleName, String ) -> List (Node TypeAnnotation) -> Expression
+fromTyped arg b a =
+    let
+        toExpression : ( ModuleName, String ) -> Expression
+        toExpression ( module_, name ) =
+            case ( module_, name ) of
+                ( [], "Bool" ) ->
+                    FunctionOrValue [ "E" ] "bool"
+
+                ( [], "Int" ) ->
+                    FunctionOrValue [ "E" ] "int"
+
+                ( [], "Float" ) ->
+                    FunctionOrValue [ "E" ] "float"
+
+                ( [], "Char" ) ->
+                    FunctionOrValue [ "E_" ] "char"
+
+                ( [], "String" ) ->
+                    FunctionOrValue [ "E" ] "string"
+
+                ( [], "List" ) ->
+                    FunctionOrValue [ "E" ] "list"
+
+                ( [ "Array" ], "Array" ) ->
+                    FunctionOrValue [ "E" ] "array"
+
+                ( [], "Maybe" ) ->
+                    FunctionOrValue [ "E_" ] "maybe"
+
+                ( [], "Result" ) ->
+                    FunctionOrValue [ "E_" ] "result"
+
+                ( [ "Set" ], "Set" ) ->
+                    FunctionOrValue [ "E" ] "set"
+
+                ( [ "Dict" ], "Dict" ) ->
+                    FunctionOrValue [ "E_" ] "dict"
+
+                ( [ "Json", "Encode" ], "Value" ) ->
+                    FunctionOrValue [] "identity"
+
+                ( [ "Json", "Decode" ], "Value" ) ->
+                    FunctionOrValue [] "identity"
+
+                _ ->
+                    FunctionOrValue (module_ ++ [ "Encode" ]) (Function.nameFromString name)
+    in
+    ElmSyntax.application (Node.map toExpression b :: List.map (fromTypeAnnotation arg) a)
 
 
 
