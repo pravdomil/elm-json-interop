@@ -11,6 +11,7 @@ import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
 import Elm.Syntax.Signature exposing (Signature)
+import Elm.Syntax.Type exposing (Type)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
@@ -85,8 +86,8 @@ fromDeclaration a =
         AliasDeclaration b ->
             Just (fromTypeAlias b)
 
-        CustomTypeDeclaration _ ->
-            Nothing
+        CustomTypeDeclaration b ->
+            Just (fromCustomType b)
 
         PortDeclaration _ ->
             Nothing
@@ -112,6 +113,26 @@ fromTypeAlias a =
             { name = a.name |> Node.map Function.nameFromString
             , arguments = a.generics |> List.map (Node.map VarPattern)
             , expression = a.typeAnnotation |> fromTypeAnnotation arg
+            }
+                |> n
+        }
+        |> n
+
+
+fromCustomType : Type -> Node Declaration
+fromCustomType a =
+    let
+        expression : Node Expression
+        expression =
+            n UnitExpr
+    in
+    FunctionDeclaration
+        { documentation = Nothing
+        , signature = a |> signature |> Just
+        , declaration =
+            { name = a.name |> Node.map Function.nameFromString
+            , arguments = a.generics |> List.map (Node.map VarPattern)
+            , expression = expression
             }
                 |> n
         }
