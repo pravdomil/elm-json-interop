@@ -100,5 +100,5 @@ type alias Sample comparable b c =
     -- Product Types
     , tuple : ( comparable, b )
     , tuple3 : ( comparable, b, c )
-    , record : {}
+    , record : { a : comparable, b : b, c : c }
     }

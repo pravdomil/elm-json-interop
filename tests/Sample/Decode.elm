@@ -156,4 +156,4 @@ sample comparable b c =
         |> D_.apply (D.field "dict" (D_.dict comparable b))
         |> D_.apply (D.field "tuple" (D_.tuple comparable b))
         |> D_.apply (D.field "tuple3" (D_.tuple3 comparable b c))
-        |> D_.apply (D.field "record" (D.succeed {}))
+        |> D_.apply (D.field "record" (D.map3 (\v1 v2 v3 -> { a = v1, b = v2, c = v3 }) (D.field "a" comparable) (D.field "b" b) (D.field "c" c)))

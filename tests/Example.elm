@@ -92,7 +92,7 @@ suite =
             "Sample"
             (Sample.Encode.sample Encode.string Encode.string Encode.string)
             (Sample.Decode.sample Decode.string Decode.string Decode.string)
-            """{"unit":{},"bool":true,"int":1,"float":3.141592653589793,"char":"a","string":"a","list":["a"],"array":["a"],"maybe":null,"result":{"_":1,"a":"a"},"set":["a"],"dict":[["a","b"]],"tuple":{"a":"a","b":"b"},"tuple3":{"a":"a","b":"b","c":"c"},"record":{}}"""
+            """{"unit":{},"bool":true,"int":1,"float":3.141592653589793,"char":"a","string":"a","list":["a"],"array":["a"],"maybe":null,"result":{"_":1,"a":"a"},"set":["a"],"dict":[["a","b"]],"tuple":{"a":"a","b":"b"},"tuple3":{"a":"a","b":"b","c":"c"},"record":{"a":"a","b":"b","c":"c"}}"""
             (Sample
                 ()
                 True
@@ -108,7 +108,7 @@ suite =
                 (Dict.fromList [ ( "a", "b" ) ])
                 ( "a", "b" )
                 ( "a", "b", "c" )
-                {}
+                { a = "a", b = "b", c = "c" }
             )
         ]
 
