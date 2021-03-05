@@ -8,10 +8,10 @@ import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.Module as Module exposing (Module(..))
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
-import Elm.Syntax.Pattern exposing (Pattern(..))
+import Elm.Syntax.Pattern exposing (Pattern(..), QualifiedNameRef)
 import Elm.Syntax.Range as Range
 import Elm.Syntax.Signature exposing (Signature)
-import Elm.Syntax.Type exposing (Type)
+import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
@@ -19,6 +19,7 @@ import Generators.Argument as Argument exposing (Argument(..))
 import Generators.Dependencies as Dependencies
 import Utils.ElmSyntax as ElmSyntax
 import Utils.Function as Function
+import Utils.String_ as String_
 
 
 fromFile : File -> String
@@ -122,9 +123,45 @@ fromTypeAlias a =
 fromCustomType : Type -> Node Declaration
 fromCustomType a =
     let
+        arg : Argument
+        arg =
+            Argument 0
+
         expression : Node Expression
         expression =
-            n UnitExpr
+            case ElmSyntax.oneConstructorAndOneArgument a of
+                Just ( b, c ) ->
+                    LambdaExpression
+                        { args =
+                            [ ParenthesizedPattern
+                                (n
+                                    (NamedPattern (QualifiedNameRef [] (Node.value b))
+                                        [ n (Argument.toPattern arg)
+                                        ]
+                                    )
+                                )
+                                |> n
+                            ]
+                        , expression =
+                            ElmSyntax.application
+                                [ fromTypeAnnotation (Argument.next arg) c
+                                , n (Argument.toExpression arg)
+                                ]
+                                |> n
+                        }
+                        |> n
+
+                Nothing ->
+                    LambdaExpression
+                        { args = [ n (Argument.toPattern arg) ]
+                        , expression =
+                            CaseExpression
+                                { expression = n (Argument.toExpression arg)
+                                , cases = a.constructors |> List.indexedMap (fromCustomTypeConstructor arg)
+                                }
+                                |> n
+                        }
+                        |> n
     in
     FunctionDeclaration
         { documentation = Nothing
