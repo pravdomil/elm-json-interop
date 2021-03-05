@@ -121,6 +121,26 @@ typeUnqualified =
     D.value
 
 
+sampleType : Decoder comparable -> (Decoder b -> (Decoder c -> Decoder (SampleType comparable b c)))
+sampleType comparable b c =
+    D.field "_" D.int
+        |> D.andThen
+            (\i___ ->
+                case i___ of
+                    0 ->
+                        D.succeed Foo
+
+                    1 ->
+                        D.map Bar (D.field "a" (D_.tuple3 comparable b c))
+
+                    2 ->
+                        D.map3 Bas (D.field "a" (D.map (\v1 -> { a = v1 }) (D.field "a" comparable))) (D.field "b" (D.map (\v1 -> { b = v1 }) (D.field "b" b))) (D.field "c" (D.map (\v1 -> { c = v1 }) (D.field "c" c)))
+
+                    _ ->
+                        D.fail ("I can't decode \"SampleType\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+            )
+
+
 sampleRecord : Decoder comparable -> (Decoder b -> (Decoder c -> Decoder (SampleRecord comparable b c)))
 sampleRecord comparable b c =
     D.map8

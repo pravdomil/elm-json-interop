@@ -76,6 +76,12 @@ type alias TypeUnqualified =
 --
 
 
+type SampleType comparable b c
+    = Foo
+    | Bar ( comparable, b, c )
+    | Bas { a : comparable } { b : b } { c : c }
+
+
 type alias SampleRecord comparable b c =
     { -- Sum Types
       unit : ()

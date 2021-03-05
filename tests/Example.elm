@@ -89,6 +89,14 @@ suite =
 
         --
         , test_
+            "SampleType"
+            (Sample.Encode.sampleType Encode.string Encode.string Encode.string)
+            (Sample.Decode.sampleType Decode.string Decode.string Decode.string)
+            """{"_":2,"a":{"a":"a"},"b":{"b":"b"},"c":{"c":"c"}}"""
+            (Bas { a = "a" } { b = "b" } { c = "c" })
+
+        --
+        , test_
             "SampleRecord"
             (Sample.Encode.sampleRecord Encode.string Encode.string Encode.string)
             (Sample.Decode.sampleRecord Decode.string Decode.string Decode.string)
