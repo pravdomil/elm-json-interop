@@ -7,6 +7,14 @@ import Dict exposing (Dict)
 import Json.Encode as E
 
 
+type alias Encoder a =
+    a -> E.Value
+
+
+
+--
+
+
 unit : () -> E.Value
 unit _ =
     E.object []
