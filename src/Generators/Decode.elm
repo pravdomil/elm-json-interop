@@ -119,18 +119,9 @@ fromTypeAlias a =
 fromCustomType : Type -> Node Declaration
 fromCustomType a =
     let
-        oneConstructorAndOneArgument : Maybe ( Node String, Node TypeAnnotation )
-        oneConstructorAndOneArgument =
-            a.constructors
-                |> listSingleton
-                |> Maybe.andThen
-                    (\(Node _ v) ->
-                        v.arguments |> listSingleton |> Maybe.map (Tuple.pair v.name)
-                    )
-
         expression : Node Expression
         expression =
-            case oneConstructorAndOneArgument of
+            case ElmSyntax.oneConstructorAndOneArgument a of
                 Just ( b, c ) ->
                     mapApplication
                         (Node.map (FunctionOrValue []) b)
@@ -475,13 +466,3 @@ pipe a b =
 append : Node Expression -> Node Expression -> Expression
 append a b =
     OperatorApplication "++" Right a b
-
-
-listSingleton : List a -> Maybe a
-listSingleton a =
-    case a of
-        b :: [] ->
-            Just b
-
-        _ ->
-            Nothing

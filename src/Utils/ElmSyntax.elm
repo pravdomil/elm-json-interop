@@ -3,6 +3,7 @@ module Utils.ElmSyntax exposing (..)
 import Elm.Syntax.Expression exposing (Expression(..))
 import Elm.Syntax.Node exposing (Node(..))
 import Elm.Syntax.Range as Range
+import Elm.Syntax.Type exposing (Type)
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
 
 
@@ -27,6 +28,26 @@ function a =
 application : List (Node Expression) -> Expression
 application a =
     a |> List.map (ParenthesizedExpression >> n) |> Application
+
+
+oneConstructorAndOneArgument : Type -> Maybe ( Node String, Node TypeAnnotation )
+oneConstructorAndOneArgument a =
+    a.constructors
+        |> listSingleton
+        |> Maybe.andThen
+            (\(Node _ v) ->
+                v.arguments |> listSingleton |> Maybe.map (Tuple.pair v.name)
+            )
+
+
+listSingleton : List a -> Maybe a
+listSingleton a =
+    case a of
+        b :: [] ->
+            Just b
+
+        _ ->
+            Nothing
 
 
 n : a -> Node a
