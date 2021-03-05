@@ -1,7 +1,9 @@
 module Generators.Imports exposing (..)
 
 import Elm.Syntax.Declaration exposing (Declaration(..))
+import Elm.Syntax.Exposing exposing (Exposing(..), TopLevelExpose(..))
 import Elm.Syntax.File exposing (File)
+import Elm.Syntax.Import exposing (Import)
 import Elm.Syntax.ModuleName exposing (ModuleName)
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
@@ -60,7 +62,14 @@ qualifyTypeAnnotation file a =
     let
         qualify_ : ( ModuleName, String ) -> ( ModuleName, String )
         qualify_ b =
-            b
+            case b of
+                ( [], name ) ->
+                    ( name |> qualifyName file |> Maybe.withDefault []
+                    , name
+                    )
+
+                _ ->
+                    b
     in
     Node.map
         (\v ->
@@ -89,3 +98,41 @@ qualifyTypeAnnotation file a =
                     v
         )
         a
+
+
+qualifyName : File -> String -> Maybe ModuleName
+qualifyName file a =
+    let
+        isImportExposing : Node Import -> Bool
+        isImportExposing (Node _ b) =
+            case b.exposingList of
+                Just (Node _ c) ->
+                    case c of
+                        All _ ->
+                            False
+
+                        Explicit d ->
+                            d |> List.any isExposeExposing
+
+                Nothing ->
+                    False
+
+        isExposeExposing : Node TopLevelExpose -> Bool
+        isExposeExposing (Node _ b) =
+            case b of
+                InfixExpose _ ->
+                    False
+
+                FunctionExpose _ ->
+                    False
+
+                TypeOrAliasExpose c ->
+                    c == a
+
+                TypeExpose c ->
+                    c.name == a
+    in
+    file.imports
+        |> List.filter isImportExposing
+        |> List.head
+        |> Maybe.map (Node.value >> .moduleName >> Node.value)
