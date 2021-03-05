@@ -176,6 +176,33 @@ fromCustomType a =
         |> n
 
 
+fromCustomTypeConstructor : Argument -> Int -> Node ValueConstructor -> ( Node Pattern, Node Expression )
+fromCustomTypeConstructor arg i (Node _ a) =
+    let
+        ( args, nextArg ) =
+            let
+                fold : a -> ( List Argument, Argument ) -> ( List Argument, Argument )
+                fold _ ( acc, arg_ ) =
+                    ( arg_ :: acc
+                    , Argument.next arg_
+                    )
+            in
+            a.arguments
+                |> List.foldl fold ( [], Argument.next arg )
+                |> Tuple.mapBoth List.reverse Argument.next
+    in
+    ( NamedPattern
+        (QualifiedNameRef [] (Node.value a.name))
+        (args |> List.map (Argument.toPattern >> n))
+        |> n
+    , ElmSyntax.application
+        [ n (FunctionOrValue [ "E" ] "object")
+        , n (ListExpr expressions)
+        ]
+        |> n
+    )
+
+
 fromTypeAnnotation : Argument -> Node TypeAnnotation -> Node Expression
 fromTypeAnnotation arg a =
     Node.map
