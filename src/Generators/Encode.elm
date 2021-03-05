@@ -110,7 +110,7 @@ fromTypeAlias a =
         , signature = a |> signature |> Just
         , declaration =
             { name = a.name |> Node.map Function.nameFromString
-            , arguments = (a.generics |> List.map (Node.map VarPattern)) ++ [ n (Argument.toPattern arg) ]
+            , arguments = a.generics |> List.map (Node.map VarPattern)
             , expression = a.typeAnnotation |> fromTypeAnnotation arg
             }
                 |> n
@@ -122,7 +122,7 @@ fromTypeAnnotation : Argument -> Node TypeAnnotation -> Node Expression
 fromTypeAnnotation arg a =
     Node.map
         (\v ->
-            (case v of
+            case v of
                 GenericType b ->
                     FunctionOrValue [] b
 
@@ -156,13 +156,6 @@ fromTypeAnnotation arg a =
                         [ n (FunctionOrValue [ "Debug" ] "todo")
                         , n (Literal "I don't know how to encode function.")
                         ]
-            )
-                |> (\vv ->
-                        ElmSyntax.application
-                            [ n vv
-                            , n (Argument.toExpression arg)
-                            ]
-                   )
         )
         a
 
