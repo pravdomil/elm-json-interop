@@ -16,6 +16,7 @@ import Elm.Syntax.Type exposing (Type, ValueConstructor)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
 import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
+import Generators.Dependencies as Dependencies
 import Utils.Function as Function
 import Utils.String_ as String_
 
@@ -41,7 +42,17 @@ fromFile a =
 
         imports : List (Node Import)
         imports =
-            additionalImports name
+            declarations
+                |> List.concatMap Dependencies.fromDeclaration
+                |> List.filterMap
+                    (\( v, _ ) ->
+                        if v == [] || v == [ "D" ] || v == [ "D_" ] then
+                            Nothing
+
+                        else
+                            Just (n (Import (n v) Nothing Nothing))
+                    )
+                |> (++) (additionalImports name)
 
         declarations : List (Node Declaration)
         declarations =
