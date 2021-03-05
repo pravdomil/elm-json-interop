@@ -12,7 +12,7 @@ import Elm.Syntax.Pattern exposing (Pattern(..))
 import Elm.Syntax.Range as Range
 import Elm.Syntax.Signature exposing (Signature)
 import Elm.Syntax.TypeAlias exposing (TypeAlias)
-import Elm.Syntax.TypeAnnotation exposing (TypeAnnotation(..))
+import Elm.Syntax.TypeAnnotation exposing (RecordDefinition, RecordField, TypeAnnotation(..))
 import Elm.Writer as Writer
 import Generators.Argument as Argument exposing (Argument(..))
 import Generators.Dependencies as Dependencies
@@ -141,8 +141,8 @@ fromTypeAnnotation arg a =
                             "tuple3"
                         )
 
-                Record _ ->
-                    UnitExpr
+                Record b ->
+                    fromRecord arg b
 
                 GenericRecord _ _ ->
                     -- https://www.reddit.com/r/elm/comments/atitkl/using_extensible_record_with_json_decoder/
@@ -209,6 +209,48 @@ fromTyped arg b a =
                     FunctionOrValue (module_ ++ [ "Encode" ]) (Function.nameFromString name)
     in
     ElmSyntax.application (Node.map toExpression b :: List.map (fromTypeAnnotation arg) a)
+
+
+fromRecord : Argument -> RecordDefinition -> Expression
+fromRecord arg a =
+    LambdaExpression
+        { args = [ n (Argument.toPattern arg) ]
+        , expression =
+            ElmSyntax.application
+                [ n (FunctionOrValue [ "E" ] "object")
+                , n (ListExpr (a |> List.map (fromRecordField arg)))
+                ]
+                |> n
+        }
+
+
+fromRecordField : Argument -> Node RecordField -> Node Expression
+fromRecordField arg a =
+    Node.map
+        (\( name, b ) ->
+            let
+                name_ : Node String
+                name_ =
+                    Node.map
+                        (\v ->
+                            if v == "id" then
+                                "_id"
+
+                            else
+                                v
+                        )
+                        name
+            in
+            TupledExpression
+                [ Node.map Literal name_
+                , ElmSyntax.application
+                    [ fromTypeAnnotation (Argument.next arg) b
+                    , n (RecordAccess (n (Argument.toExpression arg)) name_)
+                    ]
+                    |> n
+                ]
+        )
+        a
 
 
 
