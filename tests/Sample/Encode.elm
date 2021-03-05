@@ -4,73 +4,226 @@ module Sample.Encode exposing (..)
 -}
 
 import Json.Encode as E
-import Sample as A
-import Sample2.Encode as Sample2
-import Utils.Json.Encode_ as E_
+import Sample exposing (..)
+import Sample2.Encode
+import Utils.Json.Encode_ as E_ exposing (Encoder)
 
 
-type0 : A.Type0 -> E.Value
-type0 a =
-    case a of
-        A.Type0 ->
-            E.object [ ( "_", E.int 0 ) ]
+type0 : Encoder Type0
+type0 =
+    \v1 ->
+        case v1 of
+            Type0 ->
+                E.object [ ( "_", E.int 0 ) ]
 
 
-type1 : A.Type1 -> E.Value
-type1 a =
-    case a of
-        A.Type1 b ->
-            E.object [ ( "_", E.int 0 ), ( "a", E.string b ) ]
+type1 : Encoder Type1
+type1 =
+    \(Type1 v1) -> E.string v1
 
 
-type2 : A.Type2 -> E.Value
-type2 a =
-    case a of
-        A.Type2 b c ->
-            E.object [ ( "_", E.int 0 ), ( "a", E.string b ), ( "b", E.string c ) ]
+type2 : Encoder Type2
+type2 =
+    \v1 ->
+        case v1 of
+            Type2 v2 v3 ->
+                E.object [ ( "_", E.int 0 ), ( "a", E.string v2 ), ( "b", E.string v3 ) ]
 
 
-type10 : A.Type10 -> E.Value
-type10 a =
-    case a of
-        A.Type10 b c d e f g h i j k ->
-            E.object [ ( "_", E.int 0 ), ( "a", E.string b ), ( "b", E.string c ), ( "c", E.string d ), ( "d", E.string e ), ( "e", E.string f ), ( "f", E.string g ), ( "g", E.string h ), ( "h", E.string i ), ( "i", E.string j ), ( "j", E.string k ) ]
+type10 : Encoder Type10
+type10 =
+    \v1 ->
+        case v1 of
+            Type10 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 ->
+                E.object [ ( "_", E.int 0 ), ( "a", E.string v2 ), ( "b", E.string v3 ), ( "c", E.string v4 ), ( "d", E.string v5 ), ( "e", E.string v6 ), ( "f", E.string v7 ), ( "g", E.string v8 ), ( "h", E.string v9 ), ( "i", E.string v10 ), ( "j", E.string v11 ) ]
 
 
-record0 : A.Record0 -> E.Value
-record0 a =
-    E.object []
+record0 : Encoder Record0
+record0 =
+    \v1 -> E.object []
 
 
-record1 : A.Record1 -> E.Value
-record1 a =
-    E.object [ ( "a", E.string a.a ) ]
+record1 : Encoder Record1
+record1 =
+    \v1 ->
+        E.object
+            [ ( "a"
+              , E.string v1.a
+              )
+            ]
 
 
-record2 : A.Record2 -> E.Value
-record2 a =
-    E.object [ ( "a", E.string a.a ), ( "b", E.string a.b ) ]
+record2 : Encoder Record2
+record2 =
+    \v1 ->
+        E.object
+            [ ( "a"
+              , E.string v1.a
+              )
+            , ( "b"
+              , E.string v1.b
+              )
+            ]
 
 
-record10 : A.Record10 -> E.Value
-record10 a =
-    E.object [ ( "a", E.string a.a ), ( "b", E.string a.b ), ( "c", E.string a.c ), ( "d", E.string a.d ), ( "e", E.string a.e ), ( "f", E.string a.f ), ( "g", E.string a.g ), ( "h", E.string a.h ), ( "i", E.string a.i ), ( "j", E.string a.j ) ]
+record10 : Encoder Record10
+record10 =
+    \v1 ->
+        E.object
+            [ ( "a"
+              , E.string v1.a
+              )
+            , ( "b"
+              , E.string v1.b
+              )
+            , ( "c"
+              , E.string v1.c
+              )
+            , ( "d"
+              , E.string v1.d
+              )
+            , ( "e"
+              , E.string v1.e
+              )
+            , ( "f"
+              , E.string v1.f
+              )
+            , ( "g"
+              , E.string v1.g
+              )
+            , ( "h"
+              , E.string v1.h
+              )
+            , ( "i"
+              , E.string v1.i
+              )
+            , ( "j"
+              , E.string v1.j
+              )
+            ]
 
 
-typeQualified : A.TypeQualified -> E.Value
-typeQualified a =
-    Sample2.sampleType a
+typeQualified : Encoder TypeQualified
+typeQualified =
+    Sample2.Encode.sampleType2
 
 
-typeQualifiedViaAlias : A.TypeQualifiedViaAlias -> E.Value
-typeQualifiedViaAlias a =
-    identity a
+typeQualifiedViaAlias : Encoder TypeQualifiedViaAlias
+typeQualifiedViaAlias =
+    identity
 
 
-typeUnqualified : A.TypeUnqualified -> E.Value
-typeUnqualified a =
-    identity a
+typeUnqualified : Encoder TypeUnqualified
+typeUnqualified =
+    identity
 
 
-sample encodeA encodeB encodeC a =
-    E.object [ ( "unit", E_.unit a.unit ), ( "bool", E.bool a.bool ), ( "int", E.int a.int ), ( "float", E.float a.float ), ( "char", E_.char a.char ), ( "string", E.string a.string ), ( "list", E.list (\a_list_ -> encodeA a_list_) a.list ), ( "array", E.array (\a_array_ -> encodeA a_array_) a.array ), ( "maybe", E_.maybe (\a_maybe_ -> encodeA a_maybe_) a.maybe ), ( "result", E_.result (\a_result_ -> encodeA a_result_) (\a_result_ -> encodeB a_result_) a.result ), ( "set", E.set (\a_set_ -> encodeA a_set_) a.set ), ( "dict", E_.dict (\a_dict_ -> encodeA a_dict_) (\a_dict_ -> encodeB a_dict_) a.dict ), ( "tuple", E_.tuple (\a_tuple_ -> encodeA a_tuple_) (\a_tuple_ -> encodeB a_tuple_) a.tuple ), ( "tuple3", E_.tuple3 (\a_tuple3_ -> encodeA a_tuple3_) (\a_tuple3_ -> encodeB a_tuple3_) (\a_tuple3_ -> encodeC a_tuple3_) a.tuple3 ), ( "record", E.object [] ) ]
+sampleType : Encoder comparable -> (Encoder b -> (Encoder c -> Encoder (SampleType comparable b c)))
+sampleType comparable b c =
+    \v1 ->
+        case v1 of
+            Foo ->
+                E.object [ ( "_", E.int 0 ) ]
+
+            Bar v2 ->
+                E.object [ ( "_", E.int 1 ), ( "a", E_.tuple3 comparable b c v2 ) ]
+
+            Bas v2 v3 v4 ->
+                E.object
+                    [ ( "_", E.int 2 )
+                    , ( "a"
+                      , (\v5 ->
+                            E.object
+                                [ ( "a"
+                                  , comparable v5.a
+                                  )
+                                ]
+                        )
+                            v2
+                      )
+                    , ( "b"
+                      , (\v5 ->
+                            E.object
+                                [ ( "b"
+                                  , b v5.b
+                                  )
+                                ]
+                        )
+                            v3
+                      )
+                    , ( "c"
+                      , (\v5 ->
+                            E.object
+                                [ ( "c"
+                                  , c v5.c
+                                  )
+                                ]
+                        )
+                            v4
+                      )
+                    ]
+
+
+sampleRecord : Encoder comparable -> (Encoder b -> (Encoder c -> Encoder (SampleRecord comparable b c)))
+sampleRecord comparable b c =
+    \v1 ->
+        E.object
+            [ ( "unit"
+              , E_.unit v1.unit
+              )
+            , ( "bool"
+              , E.bool v1.bool
+              )
+            , ( "int"
+              , E.int v1.int
+              )
+            , ( "float"
+              , E.float v1.float
+              )
+            , ( "char"
+              , E_.char v1.char
+              )
+            , ( "string"
+              , E.string v1.string
+              )
+            , ( "list"
+              , E.list comparable v1.list
+              )
+            , ( "array"
+              , E.array comparable v1.array
+              )
+            , ( "maybe"
+              , E_.maybe comparable v1.maybe
+              )
+            , ( "result"
+              , E_.result comparable b v1.result
+              )
+            , ( "set"
+              , E.set comparable v1.set
+              )
+            , ( "dict"
+              , E_.dict comparable b v1.dict
+              )
+            , ( "tuple"
+              , E_.tuple comparable b v1.tuple
+              )
+            , ( "tuple3"
+              , E_.tuple3 comparable b c v1.tuple3
+              )
+            , ( "record"
+              , (\v2 ->
+                    E.object
+                        [ ( "a"
+                          , comparable v2.a
+                          )
+                        , ( "b"
+                          , b v2.b
+                          )
+                        , ( "c"
+                          , c v2.c
+                          )
+                        ]
+                )
+                    v1.record
+              )
+            ]
