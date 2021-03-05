@@ -343,7 +343,7 @@ fromTyped b a =
                     FunctionOrValue [ "D" ] "value"
 
                 _ ->
-                    FunctionOrValue module_ (Function.nameFromString name)
+                    FunctionOrValue (module_ ++ [ "Decode" ]) (Function.nameFromString name)
     in
     application (Node.map toExpression b :: List.map fromTypeAnnotation a)
 
