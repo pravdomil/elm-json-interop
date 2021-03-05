@@ -5,7 +5,7 @@ module Sample.Decode exposing (..)
 
 import Json.Decode as D exposing (Decoder)
 import Sample as A
-import Sample2.Decode as Sample2 exposing (sampleType)
+import Sample2.Decode as Sample2
 import Utils.Json.Decode_ as D_
 
 
@@ -90,9 +90,14 @@ typeQualified =
     Sample2.sampleType
 
 
+typeQualifiedViaAlias : Decoder A.TypeQualifiedViaAlias
+typeQualifiedViaAlias =
+    D.value
+
+
 typeUnqualified : Decoder A.TypeUnqualified
 typeUnqualified =
-    sampleType
+    D.value
 
 
 sample aDecoder bDecoder cDecoder =

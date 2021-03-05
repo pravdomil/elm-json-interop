@@ -5,7 +5,7 @@ module Sample.Encode exposing (..)
 
 import Json.Encode as E
 import Sample as A
-import Sample2.Encode as Sample2 exposing (sampleType)
+import Sample2.Encode as Sample2
 import Utils.Json.Encode_ as E_
 
 
@@ -62,9 +62,14 @@ typeQualified a =
     Sample2.sampleType a
 
 
+typeQualifiedViaAlias : A.TypeQualifiedViaAlias -> E.Value
+typeQualifiedViaAlias a =
+    identity a
+
+
 typeUnqualified : A.TypeUnqualified -> E.Value
 typeUnqualified a =
-    sampleType a
+    identity a
 
 
 sample encodeA encodeB encodeC a =
