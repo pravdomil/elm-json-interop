@@ -414,7 +414,10 @@ signature a =
         typed b c =
             n (Typed (n ( [], b )) c)
     in
-    n (Signature (Node.map Function.nameFromString a.name) (ElmSyntax.function arguments))
+    { name = Node.map Function.nameFromString a.name
+    , typeAnnotation = ElmSyntax.function arguments
+    }
+        |> n
 
 
 n : a -> Node a
