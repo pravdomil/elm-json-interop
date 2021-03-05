@@ -71,18 +71,9 @@ fromFile a =
 
 additionalImports : ModuleName -> List (Node Import)
 additionalImports a =
-    let
-        import_ : ModuleName -> String -> Import
-        import_ b c =
-            Import (n b) (Just (n [ c ])) Nothing
-
-        importExposingType : ModuleName -> String -> String -> Import
-        importExposingType b c d =
-            Import (n b) (Just (n [ c ])) (Just (n (Explicit [ n (TypeOrAliasExpose d) ])))
-    in
     [ Import (n a) Nothing (Just (n (All Range.emptyRange)))
-    , importExposingType [ "Json", "Decode" ] "D" "Decoder"
-    , import_ [ "Utils", "Json", "Decode_" ] "D_"
+    , Import (n [ "Json", "Decode" ]) (Just (n [ "D" ])) (Just (n (Explicit [ n (TypeOrAliasExpose "Decoder") ])))
+    , Import (n [ "Utils", "Json", "Decode_" ]) (Just (n [ "D_" ])) Nothing
     ]
         |> List.map n
 
