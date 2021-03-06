@@ -8,7 +8,7 @@ import Generators.Decode as Decode
 import Generators.Encode as Encode
 import Interop.JavaScript as JavaScript exposing (Exception)
 import Interop.NodeJs as NodeJs
-import Parser
+import Parser exposing (DeadEnd)
 import Regex
 import Task exposing (Task)
 import Utils.Imports as Imports
@@ -26,6 +26,7 @@ main =
 
 type Error
     = BadArguments
+    | CannotParse String (List DeadEnd)
     | Exception JavaScript.Exception
 
 
@@ -42,6 +43,9 @@ mainCmd =
                 (case v of
                     BadArguments ->
                         "Usage: elm-json-interop <File.elm>..."
+
+                    CannotParse b c ->
+                        "I can't parse \"" ++ b ++ "\", because: " ++ Parser.deadEndsToString c ++ "."
 
                     Exception b ->
                         "elm-json-interop failed: " ++ JavaScript.exceptionToString b
@@ -86,25 +90,25 @@ mainTask =
                             (\v ->
                                 "JSON encoders/decoders have been generated for " ++ fileCount v ++ "."
                             )
-                        |> Task.mapError Exception
         )
         (NodeJs.getArguments
             |> Task.mapError Exception
         )
 
 
-processFile : String -> Task Exception String
+processFile : String -> Task Error String
 processFile path =
     Task.map2
         (\a b ->
             Task.andThen
                 (\c ->
                     processFile_ a b c
+                        |> Task.mapError Exception
                 )
                 (readAndParseElmFile b)
         )
-        NodeJs.dirname__
-        (NodeJs.realPath path)
+        (NodeJs.dirname__ |> Task.mapError Exception)
+        (NodeJs.realPath path |> Task.mapError Exception)
         |> Task.andThen identity
 
 
@@ -136,18 +140,16 @@ processFile_ binPath fullPath rawFile =
         |> Task.map (\_ -> fullPath)
 
 
-readAndParseElmFile : String -> Task Exception RawFile
+readAndParseElmFile : String -> Task Error RawFile
 readAndParseElmFile a =
     a
         |> NodeJs.readFile
+        |> Task.mapError Exception
         |> Task.andThen
             (\v ->
                 v
                     |> Elm.Parser.parse
-                    |> Result.mapError
-                        (\vv ->
-                            JavaScript.Exception ("I can't parse \"" ++ a ++ "\", because: " ++ Parser.deadEndsToString vv ++ ".")
-                        )
+                    |> Result.mapError (CannotParse a)
                     |> Task_.fromResult
             )
 
