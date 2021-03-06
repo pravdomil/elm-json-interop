@@ -43,8 +43,8 @@ mainCmd =
                     BadArguments ->
                         "Usage: elm-json-interop <File.elm>..."
 
-                    Exception vv ->
-                        "elm-json-interop failed: " ++ JavaScript.exceptionToString vv
+                    Exception b ->
+                        "elm-json-interop failed: " ++ JavaScript.exceptionToString b
                 )
                     |> NodeJs.consoleError
                     |> Task.andThen (\_ -> NodeJs.processExit 1)
