@@ -29,14 +29,14 @@ fromResult a =
 --
 
 
-andThenDecode : Decoder a -> Task Exception Decode.Value -> Task Exception a
+andThenDecode : Decoder a -> Task String Decode.Value -> Task String a
 andThenDecode decoder a =
     a
         |> Task.andThen
             (\v ->
                 v
                     |> Decode.decodeValue decoder
-                    |> Result.mapError (Decode.errorToString >> Exception)
+                    |> Result.mapError Decode.errorToString
                     |> fromResult
             )
 

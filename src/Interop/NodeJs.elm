@@ -3,7 +3,6 @@ module Interop.NodeJs exposing (..)
 import Interop.JavaScript as JavaScript exposing (Exception)
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
-import Utils.Task_ as Task_
 
 
 {-| To get program arguments.
@@ -12,7 +11,7 @@ import Utils.Task_ as Task_
 getArguments : Task Exception (List String)
 getArguments =
     JavaScript.run "process.argv"
-        |> Task_.andThenDecode (Decode.list Decode.string)
+        |> JavaScript.decode (Decode.list Decode.string)
 
 
 {-| To get stdin.
@@ -20,7 +19,7 @@ getArguments =
 getStdin : Task Exception (Maybe String)
 getStdin =
     JavaScript.run "await (process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8'))"
-        |> Task_.andThenDecode (Decode.nullable Decode.string)
+        |> JavaScript.decode (Decode.nullable Decode.string)
 
 
 
@@ -32,7 +31,7 @@ getStdin =
 consoleLog : String -> Task Exception ()
 consoleLog _ =
     JavaScript.run "console.log(_v0)"
-        |> Task_.andThenDecode (Decode.succeed ())
+        |> JavaScript.decode (Decode.succeed ())
 
 
 {-| To call console.error function.
@@ -40,7 +39,7 @@ consoleLog _ =
 consoleError : String -> Task Exception ()
 consoleError _ =
     JavaScript.run "console.error(_v0)"
-        |> Task_.andThenDecode (Decode.succeed ())
+        |> JavaScript.decode (Decode.succeed ())
 
 
 {-| To kill process with exit code.
@@ -48,7 +47,7 @@ consoleError _ =
 processExit : Int -> Task Exception ()
 processExit _ =
     JavaScript.run "process.exit(_v0)"
-        |> Task_.andThenDecode (Decode.succeed ())
+        |> JavaScript.decode (Decode.succeed ())
 
 
 
@@ -60,7 +59,7 @@ processExit _ =
 filename__ : Task Exception String
 filename__ =
     JavaScript.run "__filename"
-        |> Task_.andThenDecode Decode.string
+        |> JavaScript.decode Decode.string
 
 
 {-| To get \_\_dirname.
@@ -68,7 +67,7 @@ filename__ =
 dirname__ : Task Exception String
 dirname__ =
     JavaScript.run "__dirname"
-        |> Task_.andThenDecode Decode.string
+        |> JavaScript.decode Decode.string
 
 
 {-| To get real path.
@@ -76,7 +75,7 @@ dirname__ =
 realPath : String -> Task Exception String
 realPath _ =
     JavaScript.run "await require('fs/promises').realpath(_v0, 'utf8')"
-        |> Task_.andThenDecode Decode.string
+        |> JavaScript.decode Decode.string
 
 
 
@@ -88,7 +87,7 @@ realPath _ =
 mkDir : String -> Task Exception ()
 mkDir _ =
     JavaScript.run "await require('fs/promises').mkdir(_v0, { recursive: true })"
-        |> Task_.andThenDecode (Decode.succeed ())
+        |> JavaScript.decode (Decode.succeed ())
 
 
 {-| To read file.
@@ -96,7 +95,7 @@ mkDir _ =
 readFile : String -> Task Exception String
 readFile _ =
     JavaScript.run "await require('fs/promises').readFile(_v0, 'utf8')"
-        |> Task_.andThenDecode Decode.string
+        |> JavaScript.decode Decode.string
 
 
 {-| To write file.
@@ -104,7 +103,7 @@ readFile _ =
 writeFile : String -> String -> Task Exception ()
 writeFile _ _ =
     JavaScript.run "await require('fs/promises').writeFile(_v0, _v1)"
-        |> Task_.andThenDecode (Decode.succeed ())
+        |> JavaScript.decode (Decode.succeed ())
 
 
 {-| To copy file.
@@ -112,4 +111,4 @@ writeFile _ _ =
 copyFile : String -> String -> Task Exception ()
 copyFile _ _ =
     JavaScript.run "await require('fs/promises').copyFile(_v0, _v1)"
-        |> Task_.andThenDecode (Decode.succeed ())
+        |> JavaScript.decode (Decode.succeed ())
