@@ -4,13 +4,13 @@ module Sample2.Encode exposing (..)
 -}
 
 import Json.Encode as E
-import Sample2 exposing (..)
+import Sample2 as A
 import Utils.Json.Encode_ as E_ exposing (Encoder)
 
 
-sampleType2 : Encoder SampleType2
+sampleType2 : Encoder A.SampleType2
 sampleType2 =
     \v1 ->
         case v1 of
-            SampleType2 ->
+            A.SampleType2 ->
                 E.object [ ( "_", E.int 0 ) ]

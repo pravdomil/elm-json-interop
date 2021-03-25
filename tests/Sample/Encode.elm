@@ -4,46 +4,46 @@ module Sample.Encode exposing (..)
 -}
 
 import Json.Encode as E
-import Sample exposing (..)
+import Sample as A
 import Sample2.Encode
 import Utils.Json.Encode_ as E_ exposing (Encoder)
 
 
-type0 : Encoder Type0
+type0 : Encoder A.Type0
 type0 =
     \v1 ->
         case v1 of
-            Type0 ->
+            A.Type0 ->
                 E.object [ ( "_", E.int 0 ) ]
 
 
-type1 : Encoder Type1
+type1 : Encoder A.Type1
 type1 =
-    \(Type1 v1) -> E.string v1
+    \(A.Type1 v1) -> E.string v1
 
 
-type2 : Encoder Type2
+type2 : Encoder A.Type2
 type2 =
     \v1 ->
         case v1 of
-            Type2 v2 v3 ->
+            A.Type2 v2 v3 ->
                 E.object [ ( "_", E.int 0 ), ( "a", E.string v2 ), ( "b", E.string v3 ) ]
 
 
-type10 : Encoder Type10
+type10 : Encoder A.Type10
 type10 =
     \v1 ->
         case v1 of
-            Type10 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 ->
+            A.Type10 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 ->
                 E.object [ ( "_", E.int 0 ), ( "a", E.string v2 ), ( "b", E.string v3 ), ( "c", E.string v4 ), ( "d", E.string v5 ), ( "e", E.string v6 ), ( "f", E.string v7 ), ( "g", E.string v8 ), ( "h", E.string v9 ), ( "i", E.string v10 ), ( "j", E.string v11 ) ]
 
 
-record0 : Encoder Record0
+record0 : Encoder A.Record0
 record0 =
     \v1 -> E.object []
 
 
-record1 : Encoder Record1
+record1 : Encoder A.Record1
 record1 =
     \v1 ->
         E.object
@@ -53,7 +53,7 @@ record1 =
             ]
 
 
-record2 : Encoder Record2
+record2 : Encoder A.Record2
 record2 =
     \v1 ->
         E.object
@@ -66,7 +66,7 @@ record2 =
             ]
 
 
-record10 : Encoder Record10
+record10 : Encoder A.Record10
 record10 =
     \v1 ->
         E.object
@@ -103,32 +103,32 @@ record10 =
             ]
 
 
-typeQualified : Encoder TypeQualified
+typeQualified : Encoder A.TypeQualified
 typeQualified =
     Sample2.Encode.sampleType2
 
 
-typeQualifiedViaAlias : Encoder TypeQualifiedViaAlias
+typeQualifiedViaAlias : Encoder A.TypeQualifiedViaAlias
 typeQualifiedViaAlias =
     identity
 
 
-typeUnqualified : Encoder TypeUnqualified
+typeUnqualified : Encoder A.TypeUnqualified
 typeUnqualified =
     identity
 
 
-sampleType : Encoder comparable -> (Encoder b -> (Encoder c -> Encoder (SampleType comparable b c)))
+sampleType : Encoder comparable -> (Encoder b -> (Encoder c -> Encoder (A.SampleType comparable b c)))
 sampleType comparable b c =
     \v1 ->
         case v1 of
-            Foo ->
+            A.Foo ->
                 E.object [ ( "_", E.int 0 ) ]
 
-            Bar v2 ->
+            A.Bar v2 ->
                 E.object [ ( "_", E.int 1 ), ( "a", E_.tuple3 comparable b c v2 ) ]
 
-            Bas v2 v3 v4 ->
+            A.Bas v2 v3 v4 ->
                 E.object
                     [ ( "_", E.int 2 )
                     , ( "a"
@@ -164,7 +164,7 @@ sampleType comparable b c =
                     ]
 
 
-sampleRecord : Encoder comparable -> (Encoder b -> (Encoder c -> Encoder (SampleRecord comparable b c)))
+sampleRecord : Encoder comparable -> (Encoder b -> (Encoder c -> Encoder (A.SampleRecord comparable b c)))
 sampleRecord comparable b c =
     \v1 ->
         E.object

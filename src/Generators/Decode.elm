@@ -43,7 +43,7 @@ fromFile a =
                 |> List.concatMap Dependencies.fromDeclaration
                 |> List.filterMap
                     (\( v, _ ) ->
-                        if v == [] || v == [ "D" ] || v == [ "D_" ] || v == [ "String" ] then
+                        if v == [] || v == [ "A" ] || v == [ "D" ] || v == [ "D_" ] || v == [ "String" ] then
                             Nothing
 
                         else
@@ -65,7 +65,7 @@ fromFile a =
 
 additionalImports : ModuleName -> List (Node Import)
 additionalImports a =
-    [ Import (n a) Nothing (Just (n (All Range.emptyRange)))
+    [ Import (n a) (Just (n [ "A" ])) Nothing
     , Import (n [ "Json", "Decode" ]) (Just (n [ "D" ])) (Just (n (Explicit [ n (TypeOrAliasExpose "Decoder") ])))
     , Import (n [ "Utils", "Json", "Decode_" ]) (Just (n [ "D_" ])) Nothing
     ]
@@ -117,7 +117,7 @@ fromCustomType a =
             case ElmSyntax.oneConstructorAndOneArgument a of
                 Just ( b, c ) ->
                     mapApplication
-                        (Node.map (FunctionOrValue []) b)
+                        (Node.map (FunctionOrValue [ "A" ]) b)
                         [ fromTypeAnnotation c ]
                         |> n
 
@@ -196,7 +196,7 @@ fromCustomTypeConstructor i (Node _ a) =
         decoder : Expression
         decoder =
             mapApplication
-                (n (FunctionOrValue [] (Node.value a.name)))
+                (n (FunctionOrValue [ "A" ] (Node.value a.name)))
                 arguments
 
         arguments : List (Node Expression)
@@ -393,18 +393,18 @@ signature a =
                 ++ (a.generics
                         |> List.map
                             (\v ->
-                                typed "Decoder" [ Node.map GenericType v ]
+                                typed ( [], "Decoder" ) [ Node.map GenericType v ]
                             )
                    )
                 ++ [ typed
-                        "Decoder"
-                        [ typed (Node.value a.name) (a.generics |> List.map (Node.map GenericType))
+                        ( [], "Decoder" )
+                        [ typed ( [ "A" ], Node.value a.name ) (a.generics |> List.map (Node.map GenericType))
                         ]
                    ]
 
-        typed : String -> List (Node TypeAnnotation) -> Node TypeAnnotation
+        typed : ( List String, String ) -> List (Node TypeAnnotation) -> Node TypeAnnotation
         typed b c =
-            n (Typed (n ( [], b )) c)
+            n (Typed (n b) c)
     in
     { name = Node.map Function.nameFromString a.name
     , typeAnnotation = ElmSyntax.function arguments
