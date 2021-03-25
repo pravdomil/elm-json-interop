@@ -1,6 +1,5 @@
 module Utils.Task_ exposing (..)
 
-import Interop.JavaScript exposing (Exception(..))
 import Json.Decode as Decode exposing (Decoder)
 import Task exposing (..)
 
