@@ -3373,14 +3373,14 @@ var $stil4m$elm_syntax$Elm$Syntax$Exposing$Explicit = function (a) {
 var $stil4m$elm_syntax$Elm$Syntax$Exposing$TypeOrAliasExpose = function (a) {
 	return {$: 2, a: a};
 };
-var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
-	aS: {aM: 0, bl: 0},
-	aA: {aM: 0, bl: 0}
-};
 var $stil4m$elm_syntax$Elm$Syntax$Node$Node = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
 	});
+var $stil4m$elm_syntax$Elm$Syntax$Range$emptyRange = {
+	aS: {aM: 0, bl: 0},
+	aA: {aM: 0, bl: 0}
+};
 var $author$project$Generators$Decode$n = $stil4m$elm_syntax$Elm$Syntax$Node$Node($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange);
 var $author$project$Generators$Decode$additionalImports = function (a) {
 	return A2(
@@ -3391,10 +3391,11 @@ var $author$project$Generators$Decode$additionalImports = function (a) {
 				A3(
 				$stil4m$elm_syntax$Elm$Syntax$Import$Import,
 				$author$project$Generators$Decode$n(a),
-				$elm$core$Maybe$Nothing,
 				$elm$core$Maybe$Just(
 					$author$project$Generators$Decode$n(
-						$stil4m$elm_syntax$Elm$Syntax$Exposing$All($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange)))),
+						_List_fromArray(
+							['A']))),
+				$elm$core$Maybe$Nothing),
 				A3(
 				$stil4m$elm_syntax$Elm$Syntax$Import$Import,
 				$author$project$Generators$Decode$n(
@@ -4148,7 +4149,8 @@ var $author$project$Generators$Decode$fromCustomTypeConstructor = F2(
 			$author$project$Generators$Decode$n(
 				A2(
 					$stil4m$elm_syntax$Elm$Syntax$Expression$FunctionOrValue,
-					_List_Nil,
+					_List_fromArray(
+						['A']),
 					$stil4m$elm_syntax$Elm$Syntax$Node$value(a.z))),
 			_arguments);
 		return _Utils_Tuple2(
@@ -4250,8 +4252,7 @@ var $author$project$Generators$Decode$signature = function (a) {
 			return $author$project$Generators$Decode$n(
 				A2(
 					$stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed,
-					$author$project$Generators$Decode$n(
-						_Utils_Tuple2(_List_Nil, b)),
+					$author$project$Generators$Decode$n(b),
 					c));
 		});
 	var _arguments = _Utils_ap(
@@ -4262,7 +4263,7 @@ var $author$project$Generators$Decode$signature = function (a) {
 				function (v) {
 					return A2(
 						typed,
-						'Decoder',
+						_Utils_Tuple2(_List_Nil, 'Decoder'),
 						_List_fromArray(
 							[
 								A2($stil4m$elm_syntax$Elm$Syntax$Node$map, $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$GenericType, v)
@@ -4273,12 +4274,15 @@ var $author$project$Generators$Decode$signature = function (a) {
 				[
 					A2(
 					typed,
-					'Decoder',
+					_Utils_Tuple2(_List_Nil, 'Decoder'),
 					_List_fromArray(
 						[
 							A2(
 							typed,
-							$stil4m$elm_syntax$Elm$Syntax$Node$value(a.z),
+							_Utils_Tuple2(
+								_List_fromArray(
+									['A']),
+								$stil4m$elm_syntax$Elm$Syntax$Node$value(a.z)),
 							A2(
 								$elm$core$List$map,
 								$stil4m$elm_syntax$Elm$Syntax$Node$map($stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$GenericType),
@@ -4369,7 +4373,9 @@ var $author$project$Generators$Decode$fromCustomType = function (a) {
 					$author$project$Generators$Decode$mapApplication,
 					A2(
 						$stil4m$elm_syntax$Elm$Syntax$Node$map,
-						$stil4m$elm_syntax$Elm$Syntax$Expression$FunctionOrValue(_List_Nil),
+						$stil4m$elm_syntax$Elm$Syntax$Expression$FunctionOrValue(
+							_List_fromArray(
+								['A'])),
 						b),
 					_List_fromArray(
 						[
@@ -6066,13 +6072,16 @@ var $author$project$Generators$Decode$fromFile = function (a) {
 				return (_Utils_eq(v, _List_Nil) || (_Utils_eq(
 					v,
 					_List_fromArray(
+						['A'])) || (_Utils_eq(
+					v,
+					_List_fromArray(
 						['D'])) || (_Utils_eq(
 					v,
 					_List_fromArray(
 						['D_'])) || _Utils_eq(
 					v,
 					_List_fromArray(
-						['String']))))) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+						['String'])))))) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 					$author$project$Generators$Decode$n(
 						A3(
 							$stil4m$elm_syntax$Elm$Syntax$Import$Import,
@@ -6096,10 +6105,11 @@ var $author$project$Generators$Encode$additionalImports = function (a) {
 				A3(
 				$stil4m$elm_syntax$Elm$Syntax$Import$Import,
 				$author$project$Generators$Encode$n(a),
-				$elm$core$Maybe$Nothing,
 				$elm$core$Maybe$Just(
 					$author$project$Generators$Encode$n(
-						$stil4m$elm_syntax$Elm$Syntax$Exposing$All($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange)))),
+						_List_fromArray(
+							['A']))),
+				$elm$core$Maybe$Nothing),
 				A3(
 				$stil4m$elm_syntax$Elm$Syntax$Import$Import,
 				$author$project$Generators$Encode$n(
@@ -6532,7 +6542,8 @@ var $author$project$Generators$Encode$fromCustomTypeConstructor = F3(
 					$stil4m$elm_syntax$Elm$Syntax$Pattern$NamedPattern,
 					A2(
 						$stil4m$elm_syntax$Elm$Syntax$Pattern$QualifiedNameRef,
-						_List_Nil,
+						_List_fromArray(
+							['A']),
 						$stil4m$elm_syntax$Elm$Syntax$Node$value(a.z)),
 					A2(
 						$elm$core$List$map,
@@ -6558,8 +6569,7 @@ var $author$project$Generators$Encode$signature = function (a) {
 			return $author$project$Generators$Encode$n(
 				A2(
 					$stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$Typed,
-					$author$project$Generators$Encode$n(
-						_Utils_Tuple2(_List_Nil, b)),
+					$author$project$Generators$Encode$n(b),
 					c));
 		});
 	var _arguments = _Utils_ap(
@@ -6570,7 +6580,7 @@ var $author$project$Generators$Encode$signature = function (a) {
 				function (v) {
 					return A2(
 						typed,
-						'Encoder',
+						_Utils_Tuple2(_List_Nil, 'Encoder'),
 						_List_fromArray(
 							[
 								A2($stil4m$elm_syntax$Elm$Syntax$Node$map, $stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$GenericType, v)
@@ -6581,12 +6591,15 @@ var $author$project$Generators$Encode$signature = function (a) {
 				[
 					A2(
 					typed,
-					'Encoder',
+					_Utils_Tuple2(_List_Nil, 'Encoder'),
 					_List_fromArray(
 						[
 							A2(
 							typed,
-							$stil4m$elm_syntax$Elm$Syntax$Node$value(a.z),
+							_Utils_Tuple2(
+								_List_fromArray(
+									['A']),
+								$stil4m$elm_syntax$Elm$Syntax$Node$value(a.z)),
 							A2(
 								$elm$core$List$map,
 								$stil4m$elm_syntax$Elm$Syntax$Node$map($stil4m$elm_syntax$Elm$Syntax$TypeAnnotation$GenericType),
@@ -6619,7 +6632,8 @@ var $author$project$Generators$Encode$fromCustomType = function (a) {
 											$stil4m$elm_syntax$Elm$Syntax$Pattern$NamedPattern,
 											A2(
 												$stil4m$elm_syntax$Elm$Syntax$Pattern$QualifiedNameRef,
-												_List_Nil,
+												_List_fromArray(
+													['A']),
 												$stil4m$elm_syntax$Elm$Syntax$Node$value(b)),
 											_List_fromArray(
 												[
@@ -6742,10 +6756,13 @@ var $author$project$Generators$Encode$fromFile = function (a) {
 				return (_Utils_eq(v, _List_Nil) || (_Utils_eq(
 					v,
 					_List_fromArray(
+						['A'])) || (_Utils_eq(
+					v,
+					_List_fromArray(
 						['E'])) || _Utils_eq(
 					v,
 					_List_fromArray(
-						['E_'])))) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+						['E_']))))) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 					$author$project$Generators$Encode$n(
 						A3(
 							$stil4m$elm_syntax$Elm$Syntax$Import$Import,
