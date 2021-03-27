@@ -381,7 +381,7 @@ fromRecordField arg a =
                 [ Node.map Literal name_
                 , ElmSyntax.application
                     [ fromTypeAnnotation (Argument.next arg) b
-                    , n (RecordAccess (n (Argument.toExpression arg)) name_)
+                    , n (RecordAccess (n (Argument.toExpression arg)) name)
                     ]
                     |> n
                 ]
