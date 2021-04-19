@@ -68,7 +68,16 @@ dict k v =
 
 unit : Decoder ()
 unit =
-    D.succeed ()
+    D.keyValuePairs D.value
+        |> D.andThen
+            (\v ->
+                case v of
+                    [] ->
+                        D.succeed ()
+
+                    _ ->
+                        D.fail "I can't decode unit type."
+            )
 
 
 tuple : Decoder a -> Decoder b -> Decoder ( a, b )
