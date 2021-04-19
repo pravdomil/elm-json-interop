@@ -15,11 +15,6 @@ type alias Encoder a =
 --
 
 
-unit : Encoder ()
-unit _ =
-    E.object []
-
-
 char : Encoder Char
 char a =
     String.fromChar a |> E.string
@@ -62,6 +57,11 @@ dict encodeKey encodeValue a =
 
 
 --
+
+
+unit : Encoder ()
+unit _ =
+    E.object []
 
 
 tuple : Encoder a -> Encoder b -> Encoder ( a, b )

@@ -8,11 +8,6 @@ import Json.Decode as D exposing (Decoder)
 import Set exposing (Set)
 
 
-unit : Decoder ()
-unit =
-    D.succeed ()
-
-
 char : Decoder Char
 char =
     D.string
@@ -69,6 +64,11 @@ dict k v =
 
 
 --
+
+
+unit : Decoder ()
+unit =
+    D.succeed ()
 
 
 tuple : Decoder a -> Decoder b -> Decoder ( a, b )
