@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# To stop if any command fails.
+# Stop if any command fails.
 set -e
 
-# To stop on unset variables.
+# Stop on unset variables.
 set -u
 
-# To be in project root.
+# Be in project root.
 cd "${0%/*}/.."
 
-# To compile our app.
+# Compile our app.
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 elm-ffi --shebang --run bin/elm-json-interop.js
 mv bin/elm-json-interop.js bin/elm-json-interop
 chmod +x bin/elm-json-interop
 
-# To run tests.
+# Run tests.
 bin/elm-json-interop tests/Sample.elm tests/Sample2.elm
 elm-format --yes tests/Sample/*.elm tests/Sample2/*.elm
 elm-test
