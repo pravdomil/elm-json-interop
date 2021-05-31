@@ -2705,7 +2705,7 @@ var $elm$core$Set$toList = function (_v0) {
 	return $elm$core$Dict$keys(dict);
 };
 var $elm$core$Basics$GT = 2;
-var $author$project$Main$Exception = function (a) {
+var $author$project$Main$JavaScriptError = function (a) {
 	return {$: 2, a: a};
 };
 var $elm$core$Task$andThen = _Scheduler_andThen;
@@ -3268,7 +3268,9 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
-var $author$project$Interop$JavaScript$Exception = $elm$core$Basics$identity;
+var $author$project$Interop$JavaScript$DecodeError = function (a) {
+	return {$: 2, a: a};
+};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$core$Task$fail = _Scheduler_fail;
 var $author$project$Interop$JavaScript$decode = F2(
@@ -3283,13 +3285,21 @@ var $author$project$Interop$JavaScript$decode = F2(
 				} else {
 					var b = _v0.a;
 					return $elm$core$Task$fail(
-						'TypeError: ' + $elm$json$Json$Decode$errorToString(b));
+						$author$project$Interop$JavaScript$DecodeError(b));
 				}
 			},
 			a);
 	});
+var $author$project$Interop$JavaScript$Exception = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Interop$JavaScript$anyDecoder = _Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });
 var $author$project$Interop$JavaScript$run = function (_v0) {
-	return $elm$core$Task$fail('Compiled file needs to be processed via elm-ffi command.');
+	var _v1 = $author$project$Interop$JavaScript$anyDecoder;
+	var _v2 = $author$project$Interop$JavaScript$Exception;
+	return $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);
 };
 var $elm$json$Json$Decode$succeed = _Json_succeed;
 var $author$project$Interop$NodeJs$consoleError = function (_v0) {
@@ -3307,9 +3317,34 @@ var $author$project$Interop$NodeJs$consoleLog = function (_v0) {
 var $elm$parser$Parser$deadEndsToString = function (deadEnds) {
 	return 'TODO deadEndsToString';
 };
-var $author$project$Interop$JavaScript$exceptionToString = function (_v0) {
-	var a = _v0;
-	return a;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (!result.$) {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
+var $author$project$Interop$JavaScript$errorToString = function (a) {
+	switch (a.$) {
+		case 0:
+			return 'Compiled file needs to be processed via elm-ffi command.';
+		case 1:
+			var b = a.a;
+			return 'Got JavaScript exception:\n' + A2(
+				$elm$core$Result$withDefault,
+				'No message provided.',
+				A2(
+					$elm$json$Json$Decode$decodeValue,
+					A2($elm$json$Json$Decode$field, 'message', $elm$json$Json$Decode$string),
+					b));
+		default:
+			var b = a.a;
+			return 'Cannot decode JavaScript value because:\n' + $elm$json$Json$Decode$errorToString(b);
+	}
 };
 var $author$project$Main$BadArguments = {$: 0};
 var $elm$core$List$drop = F2(
@@ -3334,7 +3369,6 @@ var $elm$core$List$drop = F2(
 		}
 	});
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Interop$NodeJs$getArguments = A2(
 	$author$project$Interop$JavaScript$decode,
 	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
@@ -9396,15 +9430,6 @@ var $elm$parser$Parser$symbol = function (str) {
 			str,
 			$elm$parser$Parser$ExpectingSymbol(str)));
 };
-var $elm$core$Result$withDefault = F2(
-	function (def, result) {
-		if (!result.$) {
-			var a = result.a;
-			return a;
-		} else {
-			return def;
-		}
-	});
 var $stil4m$elm_syntax$Elm$Parser$Tokens$escapedCharValue = $elm$parser$Parser$oneOf(
 	_List_fromArray(
 		[
@@ -13211,7 +13236,7 @@ var $author$project$Main$readAndParseElmFile = function (a) {
 		},
 		A2(
 			$elm$core$Task$mapError,
-			$author$project$Main$Exception,
+			$author$project$Main$JavaScriptError,
 			$author$project$Interop$NodeJs$readFile(a)));
 };
 var $author$project$Interop$NodeJs$realPath = function (_v0) {
@@ -13233,15 +13258,15 @@ var $author$project$Main$processFile = function (path) {
 						function (c) {
 							return A2(
 								$elm$core$Task$mapError,
-								$author$project$Main$Exception,
+								$author$project$Main$JavaScriptError,
 								A3($author$project$Main$processFile_, a, b, c));
 						},
 						$author$project$Main$readAndParseElmFile(b));
 				}),
-			A2($elm$core$Task$mapError, $author$project$Main$Exception, $author$project$Interop$NodeJs$dirname__),
+			A2($elm$core$Task$mapError, $author$project$Main$JavaScriptError, $author$project$Interop$NodeJs$dirname__),
 			A2(
 				$elm$core$Task$mapError,
-				$author$project$Main$Exception,
+				$author$project$Main$JavaScriptError,
 				$author$project$Interop$NodeJs$realPath(path))));
 };
 var $author$project$Main$mainTask = function () {
@@ -13269,7 +13294,7 @@ var $author$project$Main$mainTask = function () {
 						A2($elm$core$List$map, $author$project$Main$processFile, a)));
 			}
 		},
-		A2($elm$core$Task$mapError, $author$project$Main$Exception, $author$project$Interop$NodeJs$getArguments));
+		A2($elm$core$Task$mapError, $author$project$Main$JavaScriptError, $author$project$Interop$NodeJs$getArguments));
 }();
 var $author$project$Interop$NodeJs$processExit = function (_v0) {
 	return A2(
@@ -13301,7 +13326,7 @@ var $author$project$Main$mainCmd = A2(
 								return 'I can\'t parse \"' + (b + ('\", because: ' + ($elm$parser$Parser$deadEndsToString(c) + '.')));
 							default:
 								var b = v.a;
-								return 'elm-json-interop failed: ' + $author$project$Interop$JavaScript$exceptionToString(b);
+								return 'elm-json-interop failed: ' + $author$project$Interop$JavaScript$errorToString(b);
 						}
 					}()));
 		},
@@ -13310,7 +13335,7 @@ var $author$project$Main$mainCmd = A2(
 			function (v) {
 				return A2(
 					$elm$core$Task$mapError,
-					$author$project$Main$Exception,
+					$author$project$Main$JavaScriptError,
 					$author$project$Interop$NodeJs$consoleLog(v));
 			},
 			$author$project$Main$mainTask)));
