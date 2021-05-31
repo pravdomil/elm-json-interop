@@ -193,7 +193,7 @@ fromCustomTypeConstructor arg i (Node _ a) =
                         expression : Node Expression
                         expression =
                             TupledExpression
-                                [ n (Literal (String_.letterFromAlphabet i_))
+                                [ n (Literal (String_.letterFromAlphabet (i_ + 1)))
                                 , ElmSyntax.application
                                     [ fromTypeAnnotation nextArg b
                                     , n (Argument.toExpression arg_)
@@ -213,7 +213,7 @@ fromCustomTypeConstructor arg i (Node _ a) =
                 |> List.reverse
                 |> (::)
                     (TupledExpression
-                        [ n (Literal "_")
+                        [ n (Literal "a")
                         , n
                             (ElmSyntax.application
                                 [ n (FunctionOrValue [ "E" ] "int")

@@ -33,18 +33,18 @@ maybe =
 
 result : Decoder e -> Decoder v -> Decoder (Result e v)
 result e v =
-    D.field "_" D.int
+    D.field "a" D.int
         |> D.andThen
-            (\i___ ->
-                case i___ of
+            (\a___ ->
+                case a___ of
                     0 ->
-                        D.map Ok (D.field "a" v)
+                        D.map Ok (D.field "b" v)
 
                     1 ->
-                        D.map Err (D.field "a" e)
+                        D.map Err (D.field "b" e)
 
                     _ ->
-                        D.fail ("I can't decode Result, unknown variant with index " ++ String.fromInt i___ ++ ".")
+                        D.fail ("I can't decode Result, unknown variant with index " ++ String.fromInt a___ ++ ".")
             )
 
 

@@ -126,7 +126,7 @@ fromCustomType a =
                         (n
                             (ElmSyntax.application
                                 [ n (FunctionOrValue [ "D" ] "field")
-                                , n (Literal "_")
+                                , n (Literal "a")
                                 , n (FunctionOrValue [ "D" ] "int")
                                 ]
                             )
@@ -140,10 +140,10 @@ fromCustomType a =
                 [ n (FunctionOrValue [ "D" ] "andThen")
                 , n
                     (LambdaExpression
-                        { args = [ n (VarPattern "i___") ]
+                        { args = [ n (VarPattern "a___") ]
                         , expression =
                             CaseExpression
-                                { expression = n (FunctionOrValue [] "i___")
+                                { expression = n (FunctionOrValue [] "a___")
                                 , cases = List.indexedMap fromCustomTypeConstructor a.constructors ++ [ fail ]
                                 }
                                 |> n
@@ -165,7 +165,7 @@ fromCustomType a =
                                     (n
                                         (ElmSyntax.application
                                             [ n (FunctionOrValue [ "String" ] "fromInt")
-                                            , n (FunctionOrValue [] "i___")
+                                            , n (FunctionOrValue [] "a___")
                                             ]
                                         )
                                     )
@@ -220,7 +220,7 @@ fromCustomTypeConstructor i (Node _ a) =
                     (\i_ v ->
                         n
                             (fromRecordField
-                                ( n (String_.letterFromAlphabet i_)
+                                ( n (String_.letterFromAlphabet (i_ + 1))
                                 , v
                                 )
                             )

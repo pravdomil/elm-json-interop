@@ -38,10 +38,10 @@ result : Encoder e -> Encoder v -> Encoder (Result e v)
 result encodeError encodeValue a =
     case a of
         Ok b ->
-            E.object [ ( "_", E.int 0 ), ( "a", encodeValue b ) ]
+            E.object [ ( "a", E.int 0 ), ( "b", encodeValue b ) ]
 
         Err b ->
-            E.object [ ( "_", E.int 1 ), ( "a", encodeError b ) ]
+            E.object [ ( "a", E.int 1 ), ( "b", encodeError b ) ]
 
 
 
