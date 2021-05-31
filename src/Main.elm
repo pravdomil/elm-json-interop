@@ -4,8 +4,8 @@ import Elm.Parser
 import Elm.Processing as Processing
 import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
-import Generators.Decode as Decode
-import Generators.Encode as Encode
+import Generators.Decoder as Decoder
+import Generators.Encoder as Encoder
 import Interop.JavaScript as JavaScript
 import Interop.NodeJs as NodeJs
 import Parser
@@ -141,8 +141,8 @@ processFileHelper binPath fullPath rawFile =
             []
     )
         ++ [ NodeJs.createDirectory (dirname ++ "/" ++ basename)
-           , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
-           , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
+           , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encoder.fromFile file)
+           , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decoder.fromFile file)
            ]
         |> Task.sequence
         |> Task.map (\_ -> fullPath)
