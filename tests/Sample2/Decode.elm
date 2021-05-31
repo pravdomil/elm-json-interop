@@ -10,13 +10,16 @@ import Utils.Json.Decode_ as D_
 
 sampleType2 : Decoder A.SampleType2
 sampleType2 =
-    D.field "_" D.int
-        |> D.andThen
-            (\i___ ->
-                case i___ of
-                    0 ->
-                        D.succeed A.SampleType2
+    D.lazy
+        (\_ ->
+            D.field "_" D.int
+                |> D.andThen
+                    (\i___ ->
+                        case i___ of
+                            0 ->
+                                D.succeed A.SampleType2
 
-                    _ ->
-                        D.fail ("I can't decode \"SampleType2\", unknown variant with index " ++ String.fromInt i___ ++ ".")
-            )
+                            _ ->
+                                D.fail ("I can't decode \"SampleType2\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                    )
+        )

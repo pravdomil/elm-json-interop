@@ -176,6 +176,20 @@ fromCustomType a =
                     ]
                 )
             )
+
+        lazyDecode : Node Expression -> Node Expression
+        lazyDecode b =
+            n
+                (ElmSyntax.application
+                    [ n (FunctionOrValue [ "D" ] "lazy")
+                    , n
+                        (LambdaExpression
+                            { args = [ n AllPattern ]
+                            , expression = b
+                            }
+                        )
+                    ]
+                )
     in
     FunctionDeclaration
         { documentation = Nothing
@@ -183,7 +197,7 @@ fromCustomType a =
         , declaration =
             { name = a.name |> Node.map Function.nameFromString
             , arguments = a.generics |> List.map (Node.map VarPattern)
-            , expression = expression
+            , expression = lazyDecode expression
             }
                 |> n
         }

@@ -11,49 +11,58 @@ import Utils.Json.Decode_ as D_
 
 type0 : Decoder A.Type0
 type0 =
-    D.field "_" D.int
-        |> D.andThen
-            (\i___ ->
-                case i___ of
-                    0 ->
-                        D.succeed A.Type0
+    D.lazy
+        (\_ ->
+            D.field "_" D.int
+                |> D.andThen
+                    (\i___ ->
+                        case i___ of
+                            0 ->
+                                D.succeed A.Type0
 
-                    _ ->
-                        D.fail ("I can't decode \"Type0\", unknown variant with index " ++ String.fromInt i___ ++ ".")
-            )
+                            _ ->
+                                D.fail ("I can't decode \"Type0\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                    )
+        )
 
 
 type1 : Decoder A.Type1
 type1 =
-    D.map A.Type1 D.string
+    D.lazy (\_ -> D.map A.Type1 D.string)
 
 
 type2 : Decoder A.Type2
 type2 =
-    D.field "_" D.int
-        |> D.andThen
-            (\i___ ->
-                case i___ of
-                    0 ->
-                        D.map2 A.Type2 (D.field "a" D.string) (D.field "b" D.string)
+    D.lazy
+        (\_ ->
+            D.field "_" D.int
+                |> D.andThen
+                    (\i___ ->
+                        case i___ of
+                            0 ->
+                                D.map2 A.Type2 (D.field "a" D.string) (D.field "b" D.string)
 
-                    _ ->
-                        D.fail ("I can't decode \"Type2\", unknown variant with index " ++ String.fromInt i___ ++ ".")
-            )
+                            _ ->
+                                D.fail ("I can't decode \"Type2\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                    )
+        )
 
 
 type10 : Decoder A.Type10
 type10 =
-    D.field "_" D.int
-        |> D.andThen
-            (\i___ ->
-                case i___ of
-                    0 ->
-                        D.map8 A.Type10 (D.field "a" D.string) (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) |> D_.apply (D.field "i" D.string) |> D_.apply (D.field "j" D.string)
+    D.lazy
+        (\_ ->
+            D.field "_" D.int
+                |> D.andThen
+                    (\i___ ->
+                        case i___ of
+                            0 ->
+                                D.map8 A.Type10 (D.field "a" D.string) (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) |> D_.apply (D.field "i" D.string) |> D_.apply (D.field "j" D.string)
 
-                    _ ->
-                        D.fail ("I can't decode \"Type10\", unknown variant with index " ++ String.fromInt i___ ++ ".")
-            )
+                            _ ->
+                                D.fail ("I can't decode \"Type10\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                    )
+        )
 
 
 record0 : Decoder A.Record0
@@ -123,22 +132,25 @@ typeUnqualified =
 
 sampleType : Decoder comparable -> (Decoder b -> (Decoder c -> Decoder (A.SampleType comparable b c)))
 sampleType comparable b c =
-    D.field "_" D.int
-        |> D.andThen
-            (\i___ ->
-                case i___ of
-                    0 ->
-                        D.succeed A.Foo
+    D.lazy
+        (\_ ->
+            D.field "_" D.int
+                |> D.andThen
+                    (\i___ ->
+                        case i___ of
+                            0 ->
+                                D.succeed A.Foo
 
-                    1 ->
-                        D.map A.Bar (D.field "a" (D_.tuple3 comparable b c))
+                            1 ->
+                                D.map A.Bar (D.field "a" (D_.tuple3 comparable b c))
 
-                    2 ->
-                        D.map3 A.Bas (D.field "a" (D.map (\v1 -> { a = v1 }) (D.field "a" comparable))) (D.field "b" (D.map (\v1 -> { b = v1 }) (D.field "b" b))) (D.field "c" (D.map (\v1 -> { c = v1 }) (D.field "c" c)))
+                            2 ->
+                                D.map3 A.Bas (D.field "a" (D.map (\v1 -> { a = v1 }) (D.field "a" comparable))) (D.field "b" (D.map (\v1 -> { b = v1 }) (D.field "b" b))) (D.field "c" (D.map (\v1 -> { c = v1 }) (D.field "c" c)))
 
-                    _ ->
-                        D.fail ("I can't decode \"SampleType\", unknown variant with index " ++ String.fromInt i___ ++ ".")
-            )
+                            _ ->
+                                D.fail ("I can't decode \"SampleType\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                    )
+        )
 
 
 sampleRecord : Decoder comparable -> (Decoder b -> (Decoder c -> Decoder (A.SampleRecord comparable b c)))
