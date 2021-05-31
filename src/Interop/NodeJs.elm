@@ -14,14 +14,6 @@ getArguments =
         |> JavaScript.decode (Decode.list Decode.string)
 
 
-{-| To get stdin.
--}
-getStdin : Task JavaScript.Error (Maybe String)
-getStdin =
-    JavaScript.run "await (process.stdin.isTTY ? null : require('fs/promises').readFile(0, 'utf8'))"
-        |> JavaScript.decode (Decode.nullable Decode.string)
-
-
 
 --
 
