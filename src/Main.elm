@@ -128,7 +128,7 @@ processFile_ binPath fullPath rawFile =
     in
     (case fullPath |> srcFolderPath of
         Just srcFolder ->
-            [ NodeJs.mkDir (srcFolder ++ "Utils/Json")
+            [ NodeJs.createDirectory (srcFolder ++ "Utils/Json")
             , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Encode_.elm") (srcFolder ++ "Utils/Json/Encode_.elm")
             , NodeJs.copyFile (binPath ++ "/../src/Utils/Json/Decode_.elm") (srcFolder ++ "Utils/Json/Decode_.elm")
             ]
@@ -136,7 +136,7 @@ processFile_ binPath fullPath rawFile =
         Nothing ->
             []
     )
-        ++ [ NodeJs.mkDir (dirname ++ "/" ++ basename)
+        ++ [ NodeJs.createDirectory (dirname ++ "/" ++ basename)
            , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Encode.elm") (Encode.fromFile file)
            , NodeJs.writeFile (dirname ++ "/" ++ basename ++ "/Decode.elm") (Decode.fromFile file)
            ]

@@ -62,32 +62,24 @@ fileRealPath _ =
 --
 
 
-{-| To create directory recursively.
--}
-mkDir : String -> Task JavaScript.Error ()
-mkDir _ =
+createDirectory : String -> Task JavaScript.Error ()
+createDirectory _ =
     JavaScript.run "await require('fs/promises').mkdir(_v0, { recursive: true })"
         |> JavaScript.decode (Decode.succeed ())
 
 
-{-| To read file.
--}
 readFile : String -> Task JavaScript.Error String
 readFile _ =
     JavaScript.run "await require('fs/promises').readFile(_v0, 'utf8')"
         |> JavaScript.decode Decode.string
 
 
-{-| To write file.
--}
 writeFile : String -> String -> Task JavaScript.Error ()
 writeFile _ _ =
     JavaScript.run "await require('fs/promises').writeFile(_v0, _v1)"
         |> JavaScript.decode (Decode.succeed ())
 
 
-{-| To copy file.
--}
 copyFile : String -> String -> Task JavaScript.Error ()
 copyFile _ _ =
     JavaScript.run "await require('fs/promises').copyFile(_v0, _v1)"
