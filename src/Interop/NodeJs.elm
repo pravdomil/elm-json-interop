@@ -40,12 +40,6 @@ exit _ =
 --
 
 
-scriptFilename : Task JavaScript.Error String
-scriptFilename =
-    JavaScript.run "__filename"
-        |> JavaScript.decode Decode.string
-
-
 scriptDirname : Task JavaScript.Error String
 scriptDirname =
     JavaScript.run "__dirname"
