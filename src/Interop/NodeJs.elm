@@ -5,11 +5,11 @@ import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
 
 
-{-| To get program arguments.
+{-| Get program arguments.
 <https://stackoverflow.com/questions/9725675/is-there-a-standard-format-for-command-line-shell-help-text>
 -}
-getArguments : Task JavaScript.Error (List String)
-getArguments =
+arguments : Task JavaScript.Error (List String)
+arguments =
     JavaScript.run "process.argv"
         |> JavaScript.decode (Decode.list Decode.string)
 

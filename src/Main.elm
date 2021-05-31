@@ -91,7 +91,7 @@ mainTask =
                                 "JSON encoders/decoders have been generated for " ++ fileCount v ++ "."
                             )
         )
-        (NodeJs.getArguments
+        (NodeJs.arguments
             |> Task.mapError JavaScriptError
         )
 
