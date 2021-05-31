@@ -106,7 +106,7 @@ processFile path =
         (\a b ->
             Task.andThen
                 (\c ->
-                    processFile_ a b c
+                    processFileHelper a b c
                         |> Task.mapError JavaScriptError
                 )
                 (readAndParseElmFile b)
@@ -120,8 +120,8 @@ processFile path =
         |> Task.andThen identity
 
 
-processFile_ : String -> String -> RawFile -> Task JavaScript.Error String
-processFile_ binPath fullPath rawFile =
+processFileHelper : String -> String -> RawFile -> Task JavaScript.Error String
+processFileHelper binPath fullPath rawFile =
     let
         ( dirname, basename ) =
             fullPath |> split
