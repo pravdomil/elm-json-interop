@@ -7,12 +7,19 @@ import Json.Decode as Decode exposing (Decoder)
 import Task exposing (Task)
 
 
-run : String -> Task Exception Decode.Value
+run : String -> Task Error Decode.Value
 run _ =
-    Task.fail (Exception "Compiled file needs to be processed via elm-ffi command.")
+    let
+        _ =
+            anyDecoder
+
+        _ =
+            Exception
+    in
+    Task.fail FileNotPatched
 
 
-decode : Decoder a -> Task Exception Decode.Value -> Task Exception a
+decode : Decoder a -> Task Error Decode.Value -> Task Error a
 decode decoder a =
     a
         |> Task.andThen
@@ -22,18 +29,37 @@ decode decoder a =
                         Task.succeed b
 
                     Err b ->
-                        Task.fail (Exception ("TypeError: " ++ Decode.errorToString b))
+                        Task.fail (DecodeError b)
             )
+
+
+anyDecoder : Decoder a
+anyDecoder =
+    Decode.fail "Compiled file needs to be processed via elm-ffi command."
 
 
 
 --
 
 
-type Exception
-    = Exception String
+type Error
+    = FileNotPatched
+    | Exception Decode.Value
+    | DecodeError Decode.Error
 
 
-exceptionToString : Exception -> String
-exceptionToString (Exception a) =
-    a
+errorToString : Error -> String
+errorToString a =
+    case a of
+        FileNotPatched ->
+            "Compiled file needs to be processed via elm-ffi command."
+
+        Exception b ->
+            "Got JavaScript exception:\n"
+                ++ (b
+                        |> Decode.decodeValue (Decode.field "message" Decode.string)
+                        |> Result.withDefault "No message provided."
+                   )
+
+        DecodeError b ->
+            "Cannot decode JavaScript value because:\n" ++ Decode.errorToString b

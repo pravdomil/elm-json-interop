@@ -6,9 +6,9 @@ import Elm.RawFile exposing (RawFile)
 import Elm.Syntax.File exposing (File)
 import Generators.Decode as Decode
 import Generators.Encode as Encode
-import Interop.JavaScript as JavaScript exposing (Exception)
+import Interop.JavaScript as JavaScript
 import Interop.NodeJs as NodeJs
-import Parser exposing (DeadEnd)
+import Parser
 import Regex
 import Task exposing (Task)
 import Utils.Imports as Imports
@@ -26,8 +26,8 @@ main =
 
 type Error
     = BadArguments
-    | CannotParse String (List DeadEnd)
-    | Exception JavaScript.Exception
+    | CannotParse String (List Parser.DeadEnd)
+    | JavaScriptError JavaScript.Error
 
 
 mainCmd : Cmd ()
@@ -36,7 +36,7 @@ mainCmd =
         |> Task.andThen
             (\v ->
                 NodeJs.consoleLog v
-                    |> Task.mapError Exception
+                    |> Task.mapError JavaScriptError
             )
         |> Task.onError
             (\v ->
@@ -47,8 +47,8 @@ mainCmd =
                     CannotParse b c ->
                         "I can't parse \"" ++ b ++ "\", because: " ++ Parser.deadEndsToString c ++ "."
 
-                    Exception b ->
-                        "elm-json-interop failed: " ++ JavaScript.exceptionToString b
+                    JavaScriptError b ->
+                        "elm-json-interop failed: " ++ JavaScript.errorToString b
                 )
                     |> NodeJs.consoleError
                     |> Task.andThen (\_ -> NodeJs.processExit 1)
@@ -92,7 +92,7 @@ mainTask =
                             )
         )
         (NodeJs.getArguments
-            |> Task.mapError Exception
+            |> Task.mapError JavaScriptError
         )
 
 
@@ -103,16 +103,16 @@ processFile path =
             Task.andThen
                 (\c ->
                     processFile_ a b c
-                        |> Task.mapError Exception
+                        |> Task.mapError JavaScriptError
                 )
                 (readAndParseElmFile b)
         )
-        (NodeJs.dirname__ |> Task.mapError Exception)
-        (NodeJs.realPath path |> Task.mapError Exception)
+        (NodeJs.dirname__ |> Task.mapError JavaScriptError)
+        (NodeJs.realPath path |> Task.mapError JavaScriptError)
         |> Task.andThen identity
 
 
-processFile_ : String -> String -> RawFile -> Task Exception String
+processFile_ : String -> String -> RawFile -> Task JavaScript.Error String
 processFile_ binPath fullPath rawFile =
     let
         ( dirname, basename ) =
@@ -144,7 +144,7 @@ readAndParseElmFile : String -> Task Error RawFile
 readAndParseElmFile a =
     a
         |> NodeJs.readFile
-        |> Task.mapError Exception
+        |> Task.mapError JavaScriptError
         |> Task.andThen
             (\v ->
                 v
