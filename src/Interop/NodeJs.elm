@@ -18,26 +18,20 @@ arguments =
 --
 
 
-{-| To call console.log function.
--}
-consoleLog : String -> Task JavaScript.Error ()
-consoleLog _ =
+log : String -> Task JavaScript.Error ()
+log _ =
     JavaScript.run "console.log(_v0)"
         |> JavaScript.decode (Decode.succeed ())
 
 
-{-| To call console.error function.
--}
-consoleError : String -> Task JavaScript.Error ()
-consoleError _ =
+logError : String -> Task JavaScript.Error ()
+logError _ =
     JavaScript.run "console.error(_v0)"
         |> JavaScript.decode (Decode.succeed ())
 
 
-{-| To kill process with exit code.
--}
-processExit : Int -> Task JavaScript.Error ()
-processExit _ =
+exit : Int -> Task JavaScript.Error ()
+exit _ =
     JavaScript.run "process.exit(_v0)"
         |> JavaScript.decode (Decode.succeed ())
 

@@ -35,7 +35,7 @@ mainCmd =
     mainTask
         |> Task.andThen
             (\v ->
-                NodeJs.consoleLog v
+                NodeJs.log v
                     |> Task.mapError JavaScriptError
             )
         |> Task.onError
@@ -50,8 +50,8 @@ mainCmd =
                     JavaScriptError b ->
                         "elm-json-interop failed: " ++ JavaScript.errorToString b
                 )
-                    |> NodeJs.consoleError
-                    |> Task.andThen (\_ -> NodeJs.processExit 1)
+                    |> NodeJs.logError
+                    |> Task.andThen (\_ -> NodeJs.exit 1)
             )
         |> Task.attempt (\_ -> ())
 
