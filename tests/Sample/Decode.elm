@@ -13,15 +13,15 @@ type0 : Decoder A.Type0
 type0 =
     D.lazy
         (\_ ->
-            D.field "_" D.int
+            D.field "a" D.int
                 |> D.andThen
-                    (\i___ ->
-                        case i___ of
+                    (\a___ ->
+                        case a___ of
                             0 ->
                                 D.succeed A.Type0
 
                             _ ->
-                                D.fail ("I can't decode \"Type0\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                                D.fail ("I can't decode \"Type0\", unknown variant with index " ++ String.fromInt a___ ++ ".")
                     )
         )
 
@@ -35,15 +35,15 @@ type2 : Decoder A.Type2
 type2 =
     D.lazy
         (\_ ->
-            D.field "_" D.int
+            D.field "a" D.int
                 |> D.andThen
-                    (\i___ ->
-                        case i___ of
+                    (\a___ ->
+                        case a___ of
                             0 ->
-                                D.map2 A.Type2 (D.field "a" D.string) (D.field "b" D.string)
+                                D.map2 A.Type2 (D.field "b" D.string) (D.field "c" D.string)
 
                             _ ->
-                                D.fail ("I can't decode \"Type2\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                                D.fail ("I can't decode \"Type2\", unknown variant with index " ++ String.fromInt a___ ++ ".")
                     )
         )
 
@@ -52,15 +52,15 @@ type10 : Decoder A.Type10
 type10 =
     D.lazy
         (\_ ->
-            D.field "_" D.int
+            D.field "a" D.int
                 |> D.andThen
-                    (\i___ ->
-                        case i___ of
+                    (\a___ ->
+                        case a___ of
                             0 ->
-                                D.map8 A.Type10 (D.field "a" D.string) (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) |> D_.apply (D.field "i" D.string) |> D_.apply (D.field "j" D.string)
+                                D.map8 A.Type10 (D.field "b" D.string) (D.field "c" D.string) (D.field "d" D.string) (D.field "e" D.string) (D.field "f" D.string) (D.field "g" D.string) (D.field "h" D.string) (D.field "i" D.string) |> D_.apply (D.field "j" D.string) |> D_.apply (D.field "k" D.string)
 
                             _ ->
-                                D.fail ("I can't decode \"Type10\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                                D.fail ("I can't decode \"Type10\", unknown variant with index " ++ String.fromInt a___ ++ ".")
                     )
         )
 
@@ -134,21 +134,21 @@ sampleType : Decoder comparable -> (Decoder b -> (Decoder c -> Decoder (A.Sample
 sampleType comparable b c =
     D.lazy
         (\_ ->
-            D.field "_" D.int
+            D.field "a" D.int
                 |> D.andThen
-                    (\i___ ->
-                        case i___ of
+                    (\a___ ->
+                        case a___ of
                             0 ->
                                 D.succeed A.Foo
 
                             1 ->
-                                D.map A.Bar (D.field "a" (D_.tuple3 comparable b c))
+                                D.map A.Bar (D.field "b" (D_.tuple3 comparable b c))
 
                             2 ->
-                                D.map3 A.Bas (D.field "a" (D.map (\v1 -> { a = v1 }) (D.field "a" comparable))) (D.field "b" (D.map (\v1 -> { b = v1 }) (D.field "b" b))) (D.field "c" (D.map (\v1 -> { c = v1 }) (D.field "c" c)))
+                                D.map3 A.Bas (D.field "b" (D.map (\v1 -> { a = v1 }) (D.field "a" comparable))) (D.field "c" (D.map (\v1 -> { b = v1 }) (D.field "b" b))) (D.field "d" (D.map (\v1 -> { c = v1 }) (D.field "c" c)))
 
                             _ ->
-                                D.fail ("I can't decode \"SampleType\", unknown variant with index " ++ String.fromInt i___ ++ ".")
+                                D.fail ("I can't decode \"SampleType\", unknown variant with index " ++ String.fromInt a___ ++ ".")
                     )
         )
 

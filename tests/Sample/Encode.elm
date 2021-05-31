@@ -14,7 +14,7 @@ type0 =
     \v1 ->
         case v1 of
             A.Type0 ->
-                E.object [ ( "_", E.int 0 ) ]
+                E.object [ ( "a", E.int 0 ) ]
 
 
 type1 : Encoder A.Type1
@@ -27,7 +27,7 @@ type2 =
     \v1 ->
         case v1 of
             A.Type2 v2 v3 ->
-                E.object [ ( "_", E.int 0 ), ( "a", E.string v2 ), ( "b", E.string v3 ) ]
+                E.object [ ( "a", E.int 0 ), ( "b", E.string v2 ), ( "c", E.string v3 ) ]
 
 
 type10 : Encoder A.Type10
@@ -35,7 +35,7 @@ type10 =
     \v1 ->
         case v1 of
             A.Type10 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 ->
-                E.object [ ( "_", E.int 0 ), ( "a", E.string v2 ), ( "b", E.string v3 ), ( "c", E.string v4 ), ( "d", E.string v5 ), ( "e", E.string v6 ), ( "f", E.string v7 ), ( "g", E.string v8 ), ( "h", E.string v9 ), ( "i", E.string v10 ), ( "j", E.string v11 ) ]
+                E.object [ ( "a", E.int 0 ), ( "b", E.string v2 ), ( "c", E.string v3 ), ( "d", E.string v4 ), ( "e", E.string v5 ), ( "f", E.string v6 ), ( "g", E.string v7 ), ( "h", E.string v8 ), ( "i", E.string v9 ), ( "j", E.string v10 ), ( "k", E.string v11 ) ]
 
 
 record0 : Encoder A.Record0
@@ -123,15 +123,15 @@ sampleType comparable b c =
     \v1 ->
         case v1 of
             A.Foo ->
-                E.object [ ( "_", E.int 0 ) ]
+                E.object [ ( "a", E.int 0 ) ]
 
             A.Bar v2 ->
-                E.object [ ( "_", E.int 1 ), ( "a", E_.tuple3 comparable b c v2 ) ]
+                E.object [ ( "a", E.int 1 ), ( "b", E_.tuple3 comparable b c v2 ) ]
 
             A.Bas v2 v3 v4 ->
                 E.object
-                    [ ( "_", E.int 2 )
-                    , ( "a"
+                    [ ( "a", E.int 2 )
+                    , ( "b"
                       , (\v5 ->
                             E.object
                                 [ ( "a"
@@ -141,7 +141,7 @@ sampleType comparable b c =
                         )
                             v2
                       )
-                    , ( "b"
+                    , ( "c"
                       , (\v5 ->
                             E.object
                                 [ ( "b"
@@ -151,7 +151,7 @@ sampleType comparable b c =
                         )
                             v3
                       )
-                    , ( "c"
+                    , ( "d"
                       , (\v5 ->
                             E.object
                                 [ ( "c"

@@ -13,4 +13,4 @@ sampleType2 =
     \v1 ->
         case v1 of
             A.SampleType2 ->
-                E.object [ ( "_", E.int 0 ) ]
+                E.object [ ( "a", E.int 0 ) ]
