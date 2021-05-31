@@ -20,7 +20,7 @@ suite =
             "Type0"
             Sample.Encode.type0
             Sample.Decode.type0
-            """{"_":0}"""
+            """{"a":0}"""
             Type0
         , test_
             "Type1"
@@ -32,13 +32,13 @@ suite =
             "Type2"
             Sample.Encode.type2
             Sample.Decode.type2
-            """{"_":0,"a":"1","b":"2"}"""
+            """{"a":0,"b":"1","c":"2"}"""
             (Type2 "1" "2")
         , test_
             "Type10"
             Sample.Encode.type10
             Sample.Decode.type10
-            """{"_":0,"a":"1","b":"2","c":"3","d":"4","e":"5","f":"6","g":"7","h":"8","i":"9","j":"10"}"""
+            """{"a":0,"b":"1","c":"2","d":"3","e":"4","f":"5","g":"6","h":"7","i":"8","j":"9","k":"10"}"""
             (Type10 "1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
 
         --
@@ -72,7 +72,7 @@ suite =
             "TypeQualified"
             Sample.Encode.typeQualified
             Sample.Decode.typeQualified
-            """{"_":0}"""
+            """{"a":0}"""
             SampleType2
         , test_
             "TypeQualifiedViaAlias"
@@ -92,7 +92,7 @@ suite =
             "SampleType"
             (Sample.Encode.sampleType Encode.string Encode.string Encode.string)
             (Sample.Decode.sampleType Decode.string Decode.string Decode.string)
-            """{"_":2,"a":{"a":"a"},"b":{"b":"b"},"c":{"c":"c"}}"""
+            """{"a":2,"b":{"a":"a"},"c":{"b":"b"},"d":{"c":"c"}}"""
             (Bas { a = "a" } { b = "b" } { c = "c" })
 
         --
@@ -100,7 +100,7 @@ suite =
             "SampleRecord"
             (Sample.Encode.sampleRecord Encode.string Encode.string Encode.string)
             (Sample.Decode.sampleRecord Decode.string Decode.string Decode.string)
-            """{"unit":{},"bool":true,"int":1,"float":3.141592653589793,"char":"a","string":"a","list":["a"],"array":["a"],"maybe":null,"result":{"_":1,"a":"a"},"set":["a"],"dict":[["a","b"]],"tuple":{"a":"a","b":"b"},"tuple3":{"a":"a","b":"b","c":"c"},"record":{"a":"a","b":"b","c":"c"}}"""
+            """{"unit":{},"bool":true,"int":1,"float":3.141592653589793,"char":"a","string":"a","list":["a"],"array":["a"],"maybe":null,"result":{"a":1,"b":"a"},"set":["a"],"dict":[["a","b"]],"tuple":{"a":"a","b":"b"},"tuple3":{"a":"a","b":"b","c":"c"},"record":{"a":"a","b":"b","c":"c"}}"""
             (SampleRecord
                 ()
                 True
