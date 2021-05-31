@@ -175,7 +175,7 @@ srcFolderPath path =
         |> Maybe.map .match
 
 
-{-| To get dirname and basename.
+{-| Get dirname and basename.
 -}
 split : String -> ( String, String )
 split a =
