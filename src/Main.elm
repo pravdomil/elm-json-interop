@@ -111,8 +111,12 @@ processFile path =
                 )
                 (readAndParseElmFile b)
         )
-        (NodeJs.scriptDirname |> Task.mapError JavaScriptError)
-        (NodeJs.fileRealPath path |> Task.mapError JavaScriptError)
+        (NodeJs.scriptDirname
+            |> Task.mapError JavaScriptError
+        )
+        (NodeJs.fileRealPath path
+            |> Task.mapError JavaScriptError
+        )
         |> Task.andThen identity
 
 
