@@ -40,26 +40,20 @@ exit _ =
 --
 
 
-{-| To get \_\_filename.
--}
-filename__ : Task JavaScript.Error String
-filename__ =
+scriptFilename : Task JavaScript.Error String
+scriptFilename =
     JavaScript.run "__filename"
         |> JavaScript.decode Decode.string
 
 
-{-| To get \_\_dirname.
--}
-dirname__ : Task JavaScript.Error String
-dirname__ =
+scriptDirname : Task JavaScript.Error String
+scriptDirname =
     JavaScript.run "__dirname"
         |> JavaScript.decode Decode.string
 
 
-{-| To get real path.
--}
-realPath : String -> Task JavaScript.Error String
-realPath _ =
+fileRealPath : String -> Task JavaScript.Error String
+fileRealPath _ =
     JavaScript.run "await require('fs/promises').realpath(_v0, 'utf8')"
         |> JavaScript.decode Decode.string
 
