@@ -17,11 +17,7 @@ import Utils.Task_ as Task_
 
 main : Program () () ()
 main =
-    Platform.worker
-        { init = \_ -> ( (), mainCmd )
-        , update = \_ _ -> ( (), Cmd.none )
-        , subscriptions = \_ -> Sub.none
-        }
+    JavaScript.worker (mainTask |> Task.mapError errorToString)
 
 
 
@@ -32,32 +28,6 @@ type Error
     = BadArguments
     | CannotParse String (List Parser.DeadEnd)
     | JavaScriptError JavaScript.Error
-
-
-mainCmd : Cmd ()
-mainCmd =
-    mainTask
-        |> Task.andThen
-            (\v ->
-                NodeJs.log v
-                    |> Task.mapError JavaScriptError
-            )
-        |> Task.onError
-            (\v ->
-                (case v of
-                    BadArguments ->
-                        "Usage: elm-json-interop <File.elm>..."
-
-                    CannotParse b c ->
-                        "I can't parse \"" ++ b ++ "\", because: " ++ Parser.deadEndsToString c ++ "."
-
-                    JavaScriptError b ->
-                        "elm-json-interop failed: " ++ JavaScript.errorToString b
-                )
-                    |> NodeJs.logError
-                    |> Task.andThen (\_ -> NodeJs.exit 1)
-            )
-        |> Task.attempt (\_ -> ())
 
 
 mainTask : Task Error String
@@ -191,3 +161,16 @@ split a =
 
         _ ->
             ( a, "" )
+
+
+errorToString : Error -> String
+errorToString v =
+    case v of
+        BadArguments ->
+            "Usage: elm-json-interop <File.elm>..."
+
+        CannotParse b c ->
+            "I can't parse \"" ++ b ++ "\", because: " ++ Parser.deadEndsToString c ++ "."
+
+        JavaScriptError b ->
+            "elm-json-interop failed: " ++ JavaScript.errorToString b
