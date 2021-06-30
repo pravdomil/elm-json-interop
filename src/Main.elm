@@ -17,7 +17,7 @@ import Utils.Task_ as Task_
 
 main : Program () () ()
 main =
-    JavaScript.worker (mainTask |> Task.mapError errorToString)
+    JavaScript.cli (mainTask |> Task.mapError errorToString)
 
 
 

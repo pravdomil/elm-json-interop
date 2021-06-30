@@ -69,8 +69,8 @@ errorToString a =
 --
 
 
-worker : Task String String -> Program () () ()
-worker a =
+cli : Task String String -> Program () () ()
+cli a =
     let
         cmd : Cmd ()
         cmd =
