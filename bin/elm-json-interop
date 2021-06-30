@@ -2625,6 +2625,10 @@ var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString
 
 	return _Utils_Tuple3(newOffset, row, col);
 });
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
@@ -2705,15 +2709,7 @@ var $elm$core$Set$toList = function (_v0) {
 	return $elm$core$Dict$keys(dict);
 };
 var $elm$core$Basics$GT = 2;
-var $author$project$Main$JavaScriptError = function (a) {
-	return {$: 2, a: a};
-};
 var $elm$core$Task$andThen = _Scheduler_andThen;
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
-var $elm$core$Basics$append = _Utils_append;
 var $elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -2873,6 +2869,7 @@ var $elm$core$Maybe$Just = function (a) {
 var $elm$core$Maybe$Nothing = {$: 1};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
+var $elm$core$Basics$append = _Utils_append;
 var $elm$json$Json$Encode$encode = _Json_encode;
 var $elm$core$String$fromInt = _String_fromNumber;
 var $elm$core$String$join = F2(
@@ -3268,9 +3265,6 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
-var $elm$parser$Parser$deadEndsToString = function (deadEnds) {
-	return 'TODO deadEndsToString';
-};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$string = _Json_decodeString;
@@ -3301,10 +3295,109 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 			return 'Cannot decode JavaScript value because:\n' + $elm$json$Json$Decode$errorToString(b);
 	}
 };
+var $elm$core$Task$fail = _Scheduler_fail;
+var $elm$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			$elm$core$Task$onError,
+			A2($elm$core$Basics$composeL, $elm$core$Task$fail, convert),
+			task);
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Interop$JavaScript$Exception = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Interop$JavaScript$anyDecoder = _Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });
+var $author$project$Interop$JavaScript$run = function (_v0) {
+	var _v1 = $author$project$Interop$JavaScript$anyDecoder;
+	var _v2 = $author$project$Interop$JavaScript$Exception;
+	return $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);
+};
+var $elm$core$Platform$worker = _Platform_worker;
+var $author$project$Interop$JavaScript$cli = function (a) {
+	var logError = function (_v9) {
+		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(console.error(_v9)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+	};
+	var log = function (_v8) {
+		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(console.log(_v8)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+	};
+	var exit = function (_v7) {
+		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.exit(_v7)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+	};
+	var cmd = A2(
+		$elm$core$Task$attempt,
+		function (_v6) {
+			return 0;
+		},
+		A2(
+			$elm$core$Task$onError,
+			function (v) {
+				return A2(
+					$elm$core$Task$mapError,
+					$author$project$Interop$JavaScript$errorToString,
+					A2(
+						$elm$core$Task$andThen,
+						function (_v5) {
+							return exit(1);
+						},
+						logError(v)));
+			},
+			A2(
+				$elm$core$Task$andThen,
+				function (v) {
+					return A2(
+						$elm$core$Task$mapError,
+						$author$project$Interop$JavaScript$errorToString,
+						A2(
+							$elm$core$Task$andThen,
+							function (_v4) {
+								return exit(0);
+							},
+							log(v)));
+				},
+				a)));
+	return $elm$core$Platform$worker(
+		{
+			b2: function (_v0) {
+				return _Utils_Tuple2(0, cmd);
+			},
+			cu: function (_v1) {
+				return $elm$core$Platform$Sub$none;
+			},
+			cy: F2(
+				function (_v2, _v3) {
+					return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
+				})
+		});
+};
+var $elm$parser$Parser$deadEndsToString = function (deadEnds) {
+	return 'TODO deadEndsToString';
+};
+var $author$project$Main$errorToString = function (v) {
+	switch (v.$) {
+		case 0:
+			return 'Usage: elm-json-interop <File.elm>...';
+		case 1:
+			var b = v.a;
+			var c = v.b;
+			return 'I can\'t parse \"' + (b + ('\", because: ' + ($elm$parser$Parser$deadEndsToString(c) + '.')));
+		default:
+			var b = v.a;
+			return 'elm-json-interop failed: ' + $author$project$Interop$JavaScript$errorToString(b);
+	}
+};
+var $author$project$Main$BadArguments = {$: 0};
+var $author$project$Main$JavaScriptError = function (a) {
+	return {$: 2, a: a};
+};
 var $author$project$Interop$JavaScript$DecodeError = function (a) {
 	return {$: 2, a: a};
 };
-var $elm$core$Task$fail = _Scheduler_fail;
 var $author$project$Interop$JavaScript$decode = F2(
 	function (decoder, a) {
 		return A2(
@@ -3322,37 +3415,6 @@ var $author$project$Interop$JavaScript$decode = F2(
 			},
 			a);
 	});
-var $author$project$Interop$JavaScript$Exception = function (a) {
-	return {$: 1, a: a};
-};
-var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
-var $elm$json$Json$Decode$fail = _Json_fail;
-var $author$project$Interop$JavaScript$anyDecoder = _Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });
-var $author$project$Interop$JavaScript$run = function (_v0) {
-	var _v1 = $author$project$Interop$JavaScript$anyDecoder;
-	var _v2 = $author$project$Interop$JavaScript$Exception;
-	return $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);
-};
-var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $author$project$Interop$NodeJs$exit = function (_v0) {
-	return A2(
-		$author$project$Interop$JavaScript$decode,
-		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.exit(_v0)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
-};
-var $author$project$Interop$NodeJs$log = function (_v0) {
-	return A2(
-		$author$project$Interop$JavaScript$decode,
-		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(console.log(_v0)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
-};
-var $author$project$Interop$NodeJs$logError = function (_v0) {
-	return A2(
-		$author$project$Interop$JavaScript$decode,
-		$elm$json$Json$Decode$succeed(0),
-		_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(console.error(_v0)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
-};
-var $author$project$Main$BadArguments = {$: 0};
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Interop$NodeJs$arguments = A2(
 	$author$project$Interop$JavaScript$decode,
@@ -3379,19 +3441,13 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
-var $elm$core$Task$mapError = F2(
-	function (convert, task) {
-		return A2(
-			$elm$core$Task$onError,
-			A2($elm$core$Basics$composeL, $elm$core$Task$fail, convert),
-			task);
-	});
 var $author$project$Interop$NodeJs$fileRealPath = function (_v0) {
 	return A2(
 		$author$project$Interop$JavaScript$decode,
 		$elm$json$Json$Decode$string,
 		_Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await require('fs/promises').realpath(_v0, 'utf8')) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
 };
+var $elm$json$Json$Decode$succeed = _Json_succeed;
 var $author$project$Interop$NodeJs$copyFile = F2(
 	function (_v0, _v1) {
 		return A2(
@@ -13427,60 +13483,7 @@ var $author$project$Main$mainTask = function () {
 		},
 		A2($elm$core$Task$mapError, $author$project$Main$JavaScriptError, $author$project$Interop$NodeJs$arguments));
 }();
-var $author$project$Main$mainCmd = A2(
-	$elm$core$Task$attempt,
-	function (_v2) {
-		return 0;
-	},
-	A2(
-		$elm$core$Task$onError,
-		function (v) {
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v1) {
-					return $author$project$Interop$NodeJs$exit(1);
-				},
-				$author$project$Interop$NodeJs$logError(
-					function () {
-						switch (v.$) {
-							case 0:
-								return 'Usage: elm-json-interop <File.elm>...';
-							case 1:
-								var b = v.a;
-								var c = v.b;
-								return 'I can\'t parse \"' + (b + ('\", because: ' + ($elm$parser$Parser$deadEndsToString(c) + '.')));
-							default:
-								var b = v.a;
-								return 'elm-json-interop failed: ' + $author$project$Interop$JavaScript$errorToString(b);
-						}
-					}()));
-		},
-		A2(
-			$elm$core$Task$andThen,
-			function (v) {
-				return A2(
-					$elm$core$Task$mapError,
-					$author$project$Main$JavaScriptError,
-					$author$project$Interop$NodeJs$log(v));
-			},
-			$author$project$Main$mainTask)));
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$core$Platform$worker = _Platform_worker;
-var $author$project$Main$main = $elm$core$Platform$worker(
-	{
-		b2: function (_v0) {
-			return _Utils_Tuple2(0, $author$project$Main$mainCmd);
-		},
-		cu: function (_v1) {
-			return $elm$core$Platform$Sub$none;
-		},
-		cy: F2(
-			function (_v2, _v3) {
-				return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
-			})
-	});
+var $author$project$Main$main = $author$project$Interop$JavaScript$cli(
+	A2($elm$core$Task$mapError, $author$project$Main$errorToString, $author$project$Main$mainTask));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)()}});}(this));
