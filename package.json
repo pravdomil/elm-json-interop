@@ -1,5 +1,8 @@
 {
   "name": "elm-json-interop",
   "version": "3.0.0",
-  "bin": "bin/elm-json-interop"
+  "bin": "bin/elm-json-interop",
+  "dependencies": {
+    "elm-ffi": "github:pravdomil/elm-ffi"
+  }
 }

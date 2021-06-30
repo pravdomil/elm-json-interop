@@ -9,6 +9,9 @@ set -u
 # Be in project root.
 cd "${0%/*}/.."
 
+# Have dependencies from npm ready.
+npm i
+
 # Compile our app.
 elm make src/Main.elm --output bin/elm-json-interop.js --optimize
 elm-ffi --shebang --run bin/elm-json-interop.js
