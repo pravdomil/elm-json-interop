@@ -99,7 +99,7 @@ cli a =
 
         exit : Int -> Task Error Decode.Value
         exit _ =
-            run "exit(_v7)"
+            run "process.exit(_v7)"
     in
     Platform.worker
         { init = \_ -> ( (), cmd )
