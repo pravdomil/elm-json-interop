@@ -30,7 +30,7 @@ type Error
     | JavaScriptError JavaScript.Error
 
 
-mainTask : { args : List String, stdin : String } -> Task Error String
+mainTask : { args : List String } -> Task Error String
 mainTask { args } =
     let
         fileCount : List a -> String
