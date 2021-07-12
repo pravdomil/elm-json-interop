@@ -60,7 +60,7 @@ mainTask { args } =
                 |> Task.sequence
                 |> Task.map
                     (\v ->
-                        "JSON encoders/decoders generated for " ++ fileCount v ++ "."
+                        "JSON encoders/decoders generated for " ++ fileCount v ++ ".\n"
                     )
 
 
