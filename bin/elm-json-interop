@@ -3265,28 +3265,7 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
-var $author$project$Interop$JavaScript$DecodeError = function (a) {
-	return {$: 2, a: a};
-};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
-var $elm$core$Task$fail = _Scheduler_fail;
-var $author$project$Interop$JavaScript$decode = F2(
-	function (decoder, a) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (v) {
-				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
-				if (!_v0.$) {
-					var b = _v0.a;
-					return $elm$core$Task$succeed(b);
-				} else {
-					var b = _v0.a;
-					return $elm$core$Task$fail(
-						$author$project$Interop$JavaScript$DecodeError(b));
-				}
-			},
-			a);
-	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $elm$core$Result$withDefault = F2(
@@ -3316,7 +3295,21 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 			return 'Cannot decode JavaScript value because:\n' + $elm$json$Json$Decode$errorToString(b);
 	}
 };
-var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$Interop$JavaScript$Exception = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $author$project$Interop$JavaScript$anyDecoder = _Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });
+var $elm$core$Task$fail = _Scheduler_fail;
+var $author$project$Interop$JavaScript$run = function (_v0) {
+	var _v1 = $author$project$Interop$JavaScript$anyDecoder;
+	var _v2 = $author$project$Interop$JavaScript$Exception;
+	return $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);
+};
+var $author$project$Interop$JavaScript$exit = function (_v0) {
+	return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.exit(_v0)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+};
 var $elm$core$Task$mapError = F2(
 	function (convert, task) {
 		return A2(
@@ -3328,36 +3321,14 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Interop$JavaScript$Exception = function (a) {
-	return {$: 1, a: a};
-};
-var $author$project$Interop$JavaScript$FileNotPatched = {$: 0};
-var $elm$json$Json$Decode$fail = _Json_fail;
-var $author$project$Interop$JavaScript$anyDecoder = _Json_decodePrim(function(a) { return $elm$core$Result$Ok(a) });
-var $author$project$Interop$JavaScript$run = function (_v0) {
-	var _v1 = $author$project$Interop$JavaScript$anyDecoder;
-	var _v2 = $author$project$Interop$JavaScript$Exception;
-	return $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);
-};
 var $elm$core$Platform$worker = _Platform_worker;
-var $author$project$Interop$JavaScript$cli = function (fn) {
-	var writeStdout = function (_v9) {
-		return _Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await require('fs/promises').writeFile('/dev/stdout', _v9)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
-	};
-	var writeStderr = function (_v8) {
-		return _Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await require('fs/promises').writeFile('/dev/stderr', _v9)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
-	};
-	var readStdin = A2(
-		$author$project$Interop$JavaScript$decode,
-		$elm$json$Json$Decode$string,
-		_Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await (process.stdin.isTTY ? '' : require('fs/promises').readFile('/dev/stdin', 'utf8'))) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
-	var readArgs = A2(
-		$author$project$Interop$JavaScript$decode,
-		$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-		_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.argv) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
-	var exit = function (_v7) {
-		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.exit(_v7)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
-	};
+var $author$project$Interop$JavaScript$writeStderr = function (_v0) {
+	return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.stderr.write(_v0)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+};
+var $author$project$Interop$JavaScript$writeStdout = function (_v0) {
+	return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.stdout.write(_v0)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+};
+var $author$project$Interop$JavaScript$cliHelper = function (a) {
 	var cmd = A2(
 		$elm$core$Task$attempt,
 		function (_v6) {
@@ -3372,9 +3343,9 @@ var $author$project$Interop$JavaScript$cli = function (fn) {
 					A2(
 						$elm$core$Task$andThen,
 						function (_v5) {
-							return exit(1);
+							return $author$project$Interop$JavaScript$exit(1);
 						},
-						writeStderr(v)));
+						$author$project$Interop$JavaScript$writeStderr(v)));
 			},
 			A2(
 				$elm$core$Task$andThen,
@@ -3385,24 +3356,11 @@ var $author$project$Interop$JavaScript$cli = function (fn) {
 						A2(
 							$elm$core$Task$andThen,
 							function (_v4) {
-								return exit(0);
+								return $author$project$Interop$JavaScript$exit(0);
 							},
-							writeStdout(v)));
+							$author$project$Interop$JavaScript$writeStdout(v)));
 				},
-				A2(
-					$elm$core$Task$andThen,
-					fn,
-					A2(
-						$elm$core$Task$mapError,
-						$author$project$Interop$JavaScript$errorToString,
-						A3(
-							$elm$core$Task$map2,
-							F2(
-								function (v1, v2) {
-									return {aa: v1, ct: v2};
-								}),
-							readArgs,
-							readStdin))))));
+				a)));
 	return $elm$core$Platform$worker(
 		{
 			b2: function (_v0) {
@@ -3416,6 +3374,46 @@ var $author$project$Interop$JavaScript$cli = function (fn) {
 					return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
 				})
 		});
+};
+var $author$project$Interop$JavaScript$DecodeError = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$Interop$JavaScript$decode = F2(
+	function (decoder, a) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (v) {
+				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
+				if (!_v0.$) {
+					var b = _v0.a;
+					return $elm$core$Task$succeed(b);
+				} else {
+					var b = _v0.a;
+					return $elm$core$Task$fail(
+						$author$project$Interop$JavaScript$DecodeError(b));
+				}
+			},
+			a);
+	});
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$Interop$JavaScript$readArgs = A2(
+	$author$project$Interop$JavaScript$decode,
+	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
+	_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.argv) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
+var $author$project$Interop$JavaScript$cli = function (fn) {
+	return $author$project$Interop$JavaScript$cliHelper(
+		A2(
+			$elm$core$Task$andThen,
+			fn,
+			A2(
+				$elm$core$Task$mapError,
+				$author$project$Interop$JavaScript$errorToString,
+				A2(
+					$elm$core$Task$map,
+					function (v) {
+						return {aa: v};
+					},
+					$author$project$Interop$JavaScript$readArgs))));
 };
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
