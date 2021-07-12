@@ -1859,8 +1859,8 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 		flagDecoder,
 		args,
 		impl.b2,
-		impl.cy,
-		impl.cu,
+		impl.cz,
+		impl.cv,
 		function() { return function() {} }
 	);
 });
@@ -2625,10 +2625,6 @@ var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString
 
 	return _Utils_Tuple3(newOffset, row, col);
 });
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
@@ -2710,6 +2706,10 @@ var $elm$core$Set$toList = function (_v0) {
 };
 var $elm$core$Basics$GT = 2;
 var $elm$core$Task$andThen = _Scheduler_andThen;
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var $elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -3265,7 +3265,28 @@ var $elm$core$Task$attempt = F2(
 						$elm$core$Result$Ok),
 					task)));
 	});
+var $author$project$Interop$JavaScript$DecodeError = function (a) {
+	return {$: 2, a: a};
+};
 var $elm$json$Json$Decode$decodeValue = _Json_run;
+var $elm$core$Task$fail = _Scheduler_fail;
+var $author$project$Interop$JavaScript$decode = F2(
+	function (decoder, a) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (v) {
+				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
+				if (!_v0.$) {
+					var b = _v0.a;
+					return $elm$core$Task$succeed(b);
+				} else {
+					var b = _v0.a;
+					return $elm$core$Task$fail(
+						$author$project$Interop$JavaScript$DecodeError(b));
+				}
+			},
+			a);
+	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $elm$core$Result$withDefault = F2(
@@ -3295,7 +3316,7 @@ var $author$project$Interop$JavaScript$errorToString = function (a) {
 			return 'Cannot decode JavaScript value because:\n' + $elm$json$Json$Decode$errorToString(b);
 	}
 };
-var $elm$core$Task$fail = _Scheduler_fail;
+var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$core$Task$mapError = F2(
 	function (convert, task) {
 		return A2(
@@ -3319,13 +3340,21 @@ var $author$project$Interop$JavaScript$run = function (_v0) {
 	return $elm$core$Task$fail($author$project$Interop$JavaScript$FileNotPatched);
 };
 var $elm$core$Platform$worker = _Platform_worker;
-var $author$project$Interop$JavaScript$cli = function (a) {
-	var logError = function (_v9) {
-		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(console.error(_v9)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+var $author$project$Interop$JavaScript$cli = function (fn) {
+	var writeStdout = function (_v9) {
+		return _Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await require('fs/promises').writeFile('/dev/stdout', _v9)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
 	};
-	var log = function (_v8) {
-		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(console.log(_v8)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
+	var writeStderr = function (_v8) {
+		return _Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await require('fs/promises').writeFile('/dev/stderr', _v9)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
 	};
+	var readStdin = A2(
+		$author$project$Interop$JavaScript$decode,
+		$elm$json$Json$Decode$string,
+		_Scheduler_binding(async (callback) => { var result; try { result = { $: 0, a: _Json_wrap(await (process.stdin.isTTY ? '' : require('fs/promises').readFile('/dev/stdin', 'utf8'))) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
+	var readArgs = A2(
+		$author$project$Interop$JavaScript$decode,
+		$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
+		_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.argv) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
 	var exit = function (_v7) {
 		return _Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.exit(_v7)) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) });
 	};
@@ -3345,7 +3374,7 @@ var $author$project$Interop$JavaScript$cli = function (a) {
 						function (_v5) {
 							return exit(1);
 						},
-						logError(v)));
+						writeStderr(v)));
 			},
 			A2(
 				$elm$core$Task$andThen,
@@ -3358,23 +3387,41 @@ var $author$project$Interop$JavaScript$cli = function (a) {
 							function (_v4) {
 								return exit(0);
 							},
-							log(v)));
+							writeStdout(v)));
 				},
-				a)));
+				A2(
+					$elm$core$Task$andThen,
+					fn,
+					A2(
+						$elm$core$Task$mapError,
+						$author$project$Interop$JavaScript$errorToString,
+						A3(
+							$elm$core$Task$map2,
+							F2(
+								function (v1, v2) {
+									return {aa: v1, ct: v2};
+								}),
+							readArgs,
+							readStdin))))));
 	return $elm$core$Platform$worker(
 		{
 			b2: function (_v0) {
 				return _Utils_Tuple2(0, cmd);
 			},
-			cu: function (_v1) {
+			cv: function (_v1) {
 				return $elm$core$Platform$Sub$none;
 			},
-			cy: F2(
+			cz: F2(
 				function (_v2, _v3) {
 					return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
 				})
 		});
 };
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var $elm$parser$Parser$deadEndsToString = function (deadEnds) {
 	return 'TODO deadEndsToString';
 };
@@ -3392,34 +3439,6 @@ var $author$project$Main$errorToString = function (v) {
 	}
 };
 var $author$project$Main$BadArguments = {$: 0};
-var $author$project$Main$JavaScriptError = function (a) {
-	return {$: 2, a: a};
-};
-var $author$project$Interop$JavaScript$DecodeError = function (a) {
-	return {$: 2, a: a};
-};
-var $author$project$Interop$JavaScript$decode = F2(
-	function (decoder, a) {
-		return A2(
-			$elm$core$Task$andThen,
-			function (v) {
-				var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, v);
-				if (!_v0.$) {
-					var b = _v0.a;
-					return $elm$core$Task$succeed(b);
-				} else {
-					var b = _v0.a;
-					return $elm$core$Task$fail(
-						$author$project$Interop$JavaScript$DecodeError(b));
-				}
-			},
-			a);
-	});
-var $elm$json$Json$Decode$list = _Json_decodeList;
-var $author$project$Interop$NodeJs$arguments = A2(
-	$author$project$Interop$JavaScript$decode,
-	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
-	_Scheduler_binding(function (callback) { var result; try { result = { $: 0, a: _Json_wrap(process.argv) } } catch (e) { result = { $: 1, a: $author$project$Interop$JavaScript$Exception(_Json_wrap(e)) } }; result.$ === 0 ? callback(_Scheduler_succeed(result.a)) : callback(_Scheduler_fail(result.a)) }));
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -3441,6 +3460,9 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
+var $author$project$Main$JavaScriptError = function (a) {
+	return {$: 2, a: a};
+};
 var $author$project$Interop$NodeJs$fileRealPath = function (_v0) {
 	return A2(
 		$author$project$Interop$JavaScript$decode,
@@ -3598,11 +3620,6 @@ var $stil4m$elm_syntax$Elm$Syntax$Expression$Application = function (a) {
 var $stil4m$elm_syntax$Elm$Syntax$Expression$ParenthesizedExpression = function (a) {
 	return {$: 14, a: a};
 };
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $author$project$Utils$ElmSyntax$n = $stil4m$elm_syntax$Elm$Syntax$Node$Node($stil4m$elm_syntax$Elm$Syntax$Range$emptyRange);
 var $author$project$Utils$ElmSyntax$application = function (a) {
 	return $stil4m$elm_syntax$Elm$Syntax$Expression$Application(
@@ -8664,7 +8681,7 @@ var $author$project$Main$split = function (a) {
 };
 var $elm$regex$Regex$Match = F4(
 	function (match, index, number, submatches) {
-		return {b1: index, b6: match, cj: number, ct: submatches};
+		return {b1: index, b6: match, cj: number, cu: submatches};
 	});
 var $elm$regex$Regex$find = _Regex_findAtMost(_Regex_infinity);
 var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
@@ -13456,7 +13473,8 @@ var $author$project$Main$processFile = function (path) {
 				$author$project$Main$JavaScriptError,
 				$author$project$Interop$NodeJs$fileRealPath(path))));
 };
-var $author$project$Main$mainTask = function () {
+var $author$project$Main$mainTask = function (_v0) {
+	var args = _v0.aa;
 	var fileCount = function (b) {
 		var len = $elm$core$List$length(b);
 		var suffix = (len === 1) ? ' module' : ' modules';
@@ -13464,26 +13482,24 @@ var $author$project$Main$mainTask = function () {
 			$elm$core$String$fromInt(len),
 			suffix);
 	};
-	return A2(
-		$elm$core$Task$andThen,
-		function (args) {
-			var _v0 = A2($elm$core$List$drop, 2, args);
-			if (!_v0.b) {
-				return $elm$core$Task$fail($author$project$Main$BadArguments);
-			} else {
-				var a = _v0;
-				return A2(
-					$elm$core$Task$map,
-					function (v) {
-						return 'JSON encoders/decoders generated for ' + (fileCount(v) + '.');
-					},
-					$elm$core$Task$sequence(
-						A2($elm$core$List$map, $author$project$Main$processFile, a)));
-			}
-		},
-		A2($elm$core$Task$mapError, $author$project$Main$JavaScriptError, $author$project$Interop$NodeJs$arguments));
-}();
+	var _v1 = A2($elm$core$List$drop, 2, args);
+	if (!_v1.b) {
+		return $elm$core$Task$fail($author$project$Main$BadArguments);
+	} else {
+		var a = _v1;
+		return A2(
+			$elm$core$Task$map,
+			function (v) {
+				return 'JSON encoders/decoders generated for ' + (fileCount(v) + '.\n');
+			},
+			$elm$core$Task$sequence(
+				A2($elm$core$List$map, $author$project$Main$processFile, a)));
+	}
+};
 var $author$project$Main$main = $author$project$Interop$JavaScript$cli(
-	A2($elm$core$Task$mapError, $author$project$Main$errorToString, $author$project$Main$mainTask));
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Main$mainTask,
+		$elm$core$Task$mapError($author$project$Main$errorToString)));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)()}});}(this));
