@@ -17,7 +17,7 @@ import Utils.Task_ as Task_
 
 main : Program () () ()
 main =
-    JavaScript.cli (mainTask |> Task.mapError errorToString)
+    JavaScript.cli (mainTask >> Task.mapError errorToString)
 
 
 
@@ -30,8 +30,8 @@ type Error
     | JavaScriptError JavaScript.Error
 
 
-mainTask : Task Error String
-mainTask =
+mainTask : { args : List String, stdin : String } -> Task Error String
+mainTask { args } =
     let
         fileCount : List a -> String
         fileCount b =
@@ -50,24 +50,18 @@ mainTask =
             in
             String.fromInt len ++ suffix
     in
-    Task.andThen
-        (\args ->
-            case args |> List.drop 2 of
-                [] ->
-                    Task.fail BadArguments
+    case args |> List.drop 2 of
+        [] ->
+            Task.fail BadArguments
 
-                a ->
-                    a
-                        |> List.map processFile
-                        |> Task.sequence
-                        |> Task.map
-                            (\v ->
-                                "JSON encoders/decoders generated for " ++ fileCount v ++ "."
-                            )
-        )
-        (NodeJs.arguments
-            |> Task.mapError JavaScriptError
-        )
+        a ->
+            a
+                |> List.map processFile
+                |> Task.sequence
+                |> Task.map
+                    (\v ->
+                        "JSON encoders/decoders generated for " ++ fileCount v ++ "."
+                    )
 
 
 processFile : String -> Task Error String
